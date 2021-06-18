@@ -1,0 +1,19 @@
+name: iospi
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - gemmi
+  - griddataformats
+  - h5py
+  - imageio
+  - imageio-ffmpeg
+  - jupyterlab
+  - matplotlib
+  - mrcfile
+  - pdb2pqr
+  - pyyaml
+  - scikit-image
+  - scipy
+  - tqdm

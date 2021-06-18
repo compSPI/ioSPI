@@ -3,6 +3,13 @@
 # ioSPI
 Methods and tools to read and write data in all formats. Also provides methods to use other SPI tools developed outside of compSPI.
 
+## Installing
+
+```bash
+conda env create -f iospi.yml
+conda activate iospi
+```
+
 ## Contributing
 
 See our [contributing](https://github.com/compspi/compspi/blob/master/docs/contributing.rst) guidelines!
