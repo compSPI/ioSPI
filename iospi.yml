@@ -3,7 +3,6 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.9
   - gemmi
   - griddataformats
   - h5py
@@ -13,6 +12,7 @@ dependencies:
   - matplotlib
   - mrcfile
   - pdb2pqr
+  - python=3.9
   - pyyaml
   - scikit-image
   - scipy
