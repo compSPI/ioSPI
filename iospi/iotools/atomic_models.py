@@ -4,16 +4,10 @@ import gemmi
 
 
 def file2model(filepath):
-<<<<<<< HEAD
     ''' file2model
     '''
     _, file_ext = os.path.splitext(filepath)
     if(file_ext == '.cif'):
-=======
-    """file2model"""
-    filename, file_ext = os.path.splitext(filepath)
-    if file_ext == ".cif":
->>>>>>> 7d31c060328551d741deda3a3621a82f5a795d87
         cif_block = gemmi.cif.read(filepath)[0]
         st = gemmi.make_structure_from_block(cif_block)
     elif file_ext == ".pdb":
