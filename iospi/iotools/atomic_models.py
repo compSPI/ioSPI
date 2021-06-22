@@ -14,18 +14,18 @@ def read_gemmi_model(path, i_model=0, clean=True):
 
     Parameters
     ----------
-    path: (string)
+    path: string
         Path to PDB or mmCIF file.
-    i_model: (integer)
+    i_model: integer
         Optional, default: 0
         Index of the returned model in the Gemmi Structure.
-    clean: (bool)
+    clean: bool
         Optional, default: True
         If True, use Gemmi remove_* methods to clean up structure.
 
     Returns
     -------
-    model: (Gemmi Class)
+    model: Gemmi Class
         Gemmi model
 
     Example
@@ -77,9 +77,9 @@ def write_gemmi_model(path, model=gemmi.Model()):
 
     Parameters
     ----------
-    path: (string)
+    path: string
         Path to PDB or mmCIF file.
-    model: (Gemmi Class)
+    model: Gemmi Class
         Optional, default: gemmi.Model()
         Gemmi model
 

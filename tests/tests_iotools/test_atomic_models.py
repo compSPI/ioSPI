@@ -39,7 +39,7 @@ class TestAtomicModels(unittest.TestCase):
 
     def test_read_gemmi_model_oserror(self):
         """Read Gemmi OSError test"""
-        path='non-existing-file.pdb'
+        path = 'non-existing-file.pdb'
         with self.assertRaises(OSError) as exception_context:
             _ = read_gemmi_model(path)
         self.assertEqual(

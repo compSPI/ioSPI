@@ -23,7 +23,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-18.04]
-        python-version: [3.6,3.7,3.8,3.9]
+        python-version: [3.7,3.8,3.9]
         test-folder : ['tests.tests_iotools']
       fail-fast: false
 
@@ -39,7 +39,7 @@ jobs:
         run:  |
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           $CONDA/bin/conda env update --file iospi.yml --name base
-          $CONDA/bin/conda install flake8
+          $CONDA/bin/conda install flake8-black
           $CONDA/bin/pip install nose2
       - name: linting [flake8]
         run: |
