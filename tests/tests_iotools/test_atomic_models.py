@@ -1,9 +1,10 @@
-"""Unit test for read/write of atomic models.
-"""
+"""Unit test for read/write of atomic models."""
 
 import unittest
 
-from iotools.atomic_models import read_gemmi_model
+import gemmi
+
+from iotools.atomic_models import read_gemmi_model, write_gemmi_model
 
 
 class TestAtomicModels(unittest.TestCase):
