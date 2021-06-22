@@ -47,11 +47,11 @@ def read_gemmi_model(path, i_model=0, clean=True):
             cif_block = gemmi.cif.read(path)[0]
             st = gemmi.make_structure_from_block(cif_block)
         else:
-            raise IOError("File format not recognized.")
+            raise ValueError("File format not recognized.")
     except OSError as ose:
-        print(ose)
-    except IOError as ioe:
-        print(ioe)
+        print(type(ose), '::', ose)
+    except ValueError as ve:
+        print(type(ve), '::', ve)
 
     if clean:
         st.remove_alternative_conformations()
@@ -99,9 +99,9 @@ def write_gemmi_model(path, model=gemmi.Model()):
         elif path.lower().endswith(".cif"):
             pass
         else:
-            raise IOError("File format not recognized.")
-    except IOError as ioe:
-        print(ioe)
+            raise ValueError("File format not recognized.")
+    except ValueError as ve:
+        print(ve)
 
     structure = gemmi.Structure()
     structure.add_model(model, pos=-1)

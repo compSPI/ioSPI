@@ -43,7 +43,7 @@ class TestAtomicModels(unittest.TestCase):
         with self.assertRaises(OSError) as exception_context:
             _ = read_gemmi_model(path)
         self.assertEqual(
-            str(exception_context.exception), OSError)
+            str(exception_context.exception), OSError
         )
 
     def test_read_gemmi_model_filename_extension_error(self):
@@ -54,5 +54,5 @@ class TestAtomicModels(unittest.TestCase):
         with self.assertRaises(Exception) as exception_context:
             _ = read_gemmi_model(path)
         self.assertEqual(
-            str(exception_context.exception), 'File format not recognized.')
+            str(exception_context.exception), 'File format not recognized.'
         )
