@@ -43,13 +43,13 @@ def read_gemmi_model(path, i_model=0, clean=True):
     try:
         if not os.path.exists(path):
             raise OSError
-        if path.lower().endswith('.pdb'):
+        if path.lower().endswith(".pdb"):
             st = gemmi.read_structure(path)
-        elif path.lower().endswith('.cif'):
+        elif path.lower().endswith(".cif"):
             cif_block = gemmi.cif.read(path)[0]
             st = gemmi.make_structure_from_block(cif_block)
         else:
-            raise Exception('File format not recognized.')
+            raise Exception("File format not recognized.")
     except OSError as ose:
         print(ose)
     except Exception as exc:
@@ -62,11 +62,11 @@ def read_gemmi_model(path, i_model=0, clean=True):
         st.remove_ligands_and_waters()
         st.remove_empty_chains()
 
-    if path.lower().endswith('.cif'):
+    if path.lower().endswith(".cif"):
         model = gemmi.make_assembly(
             st.assemblies[i_model], st[i_model], gemmi.HowToNameCopiedChain.AddNumber
         )
-    elif path.lower().endswith('.pdb'):
+    elif path.lower().endswith(".pdb"):
         model = st[i_model]
 
     return model
@@ -97,12 +97,12 @@ def write_gemmi_model(path, model=gemmi.Model()):
     """
 
     try:
-        if path.lower().endswith('.pdb'):
+        if path.lower().endswith(".pdb"):
             pass
-        elif path.lower().endswith('.cif'):
+        elif path.lower().endswith(".cif"):
             pass
         else:
-            raise Exception('File format not recognized.')
+            raise Exception("File format not recognized.")
     except Exception as exc:
         print(exc)
 
@@ -110,7 +110,7 @@ def write_gemmi_model(path, model=gemmi.Model()):
     structure.add_model(model, pos=-1)
     structure.renumber_models()
 
-    if path.lower().endswith('.cif'):
+    if path.lower().endswith(".cif"):
         structure.make_mmcif_document().write_file(path)
-    elif path.lower().endswith('.pdb'):
+    elif path.lower().endswith(".pdb"):
         structure.write_pdb(path)
