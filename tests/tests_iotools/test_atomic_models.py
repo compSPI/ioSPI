@@ -37,7 +37,6 @@ class TestAtomicModels(unittest.TestCase):
         actual = read_gemmi_model(path_pdb)
         self.assertIs(actual, expected)
 
-
     def test_read_gemmi_model_oserror(self):
         """Read Gemmi OSError test"""
         path='non-existing-file.pdb'

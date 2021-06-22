@@ -1,5 +1,4 @@
-"""Read and Write atomic models in various formats.
-"""
+"""Read and Write atomic models in various formats."""
 
 import os
 
@@ -48,11 +47,11 @@ def read_gemmi_model(path, i_model=0, clean=True):
             cif_block = gemmi.cif.read(path)[0]
             st = gemmi.make_structure_from_block(cif_block)
         else:
-            raise Exception("File format not recognized.")
+            raise IOError("File format not recognized.")
     except OSError as ose:
         print(ose)
-    except Exception as exc:
-        print(exc)
+    except IOError as ioe:
+        print(ioe)
 
     if clean:
         st.remove_alternative_conformations()
@@ -100,9 +99,9 @@ def write_gemmi_model(path, model=gemmi.Model()):
         elif path.lower().endswith(".cif"):
             pass
         else:
-            raise Exception("File format not recognized.")
-    except Exception as exc:
-        print(exc)
+            raise IOError("File format not recognized.")
+    except IOError as ioe:
+        print(ioe)
 
     structure = gemmi.Structure()
     structure.add_model(model, pos=-1)
