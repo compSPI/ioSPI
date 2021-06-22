@@ -39,7 +39,6 @@ def read_gemmi_model(path, i_model=0, clean=True):
     gemmi objects.
 
     """
-
     try:
         if not os.path.exists(path):
             raise OSError
@@ -95,7 +94,6 @@ def write_gemmi_model(path, model=gemmi.Model()):
     gemmi objects.
 
     """
-
     try:
         if path.lower().endswith(".pdb"):
             pass
