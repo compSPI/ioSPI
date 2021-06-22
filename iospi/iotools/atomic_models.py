@@ -49,9 +49,9 @@ def read_gemmi_model(path, i_model=0, clean=True):
         else:
             raise ValueError("File format not recognized.")
     except OSError as ose:
-        print(type(ose), '::', ose)
+        print(type(ose), "::", ose)
     except ValueError as ve:
-        print(type(ve), '::', ve)
+        print(type(ve), "::", ve)
 
     if clean:
         st.remove_alternative_conformations()

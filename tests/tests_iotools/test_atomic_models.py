@@ -12,8 +12,8 @@ class TestAtomicModels(unittest.TestCase):
 
     def test_write_gemmi_model_success(self):
         """Write Gemmi model success test"""
-        path_pdb = '.test.pdb'
-        path_cif = '.test.cif'
+        path_pdb = ".test.pdb"
+        path_cif = ".test.cif"
         expected = gemmi.Model()
 
         write_gemmi_model(path_cif)
@@ -26,8 +26,8 @@ class TestAtomicModels(unittest.TestCase):
 
     def test_read_gemmi_model_success(self):
         """Read Gemmi model success test"""
-        path_pdb = '.test.pdb'
-        path_cif = '.test.cif'
+        path_pdb = ".test.pdb"
+        path_cif = ".test.cif"
         expected = gemmi.Model()
 
         write_gemmi_model(path_cif)
@@ -40,20 +40,18 @@ class TestAtomicModels(unittest.TestCase):
 
     def test_read_gemmi_model_oserror(self):
         """Read Gemmi OSError test"""
-        path = 'non-existing-file.pdb'
+        path = "non-existing-file.pdb"
         with self.assertRaises(OSError) as exception_context:
             _ = read_gemmi_model(path)
-        self.assertEqual(
-            str(exception_context.exception), OSError
-        )
+        self.assertEqual(str(exception_context.exception), OSError)
 
     def test_read_gemmi_model_filename_extension_error(self):
         """Read Gemmi Filename Extension Error"""
-        path = '.test.txt'
-        with open(path, 'w'):
+        path = ".test.txt"
+        with open(path, "w"):
             pass
         with self.assertRaises(Exception) as exception_context:
             _ = read_gemmi_model(path)
         self.assertEqual(
-            str(exception_context.exception), 'File format not recognized.'
+            str(exception_context.exception), "File format not recognized."
         )
