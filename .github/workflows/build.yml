@@ -46,6 +46,5 @@ jobs:
           $CONDA/bin/flake8 --ignore=D,W503,W504 iospi tests
           $CONDA/bin/flake8 iospi/iotools
       - name: unit testing [nose2]
-        $CONDA/bin/pip install
         run: |
           $CONDA/bin/nose2 --with-coverage ${{matrix.test-folder}}
