@@ -13,7 +13,6 @@ dependencies:
   - mrcfile
   - pdb2pqr
   - pip
-  - python=3.9
   - pyyaml
   - scikit-image
   - scipy
