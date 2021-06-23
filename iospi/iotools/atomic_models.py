@@ -60,13 +60,14 @@ def read_gemmi_model(path, i_model=0, clean=True):
         st.remove_ligands_and_waters()
         st.remove_empty_chains()
 
+    model = st[i_model]
     if path.lower().endswith(".cif"):
+        assembly = st.assemblies[i_model]
         model = gemmi.make_assembly(
-            st.assemblies[i_model], st[i_model], \
-            gemmi.HowToNameCopiedChain.AddNumber
+            assembly, model, gemmi.HowToNameCopiedChain.AddNumber
         )
-    elif path.lower().endswith(".pdb"):
-        model = st[i_model]
+    #elif path.lower().endswith(".pdb"):
+    #    model = st[i_model]
 
     return model
 
