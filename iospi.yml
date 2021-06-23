@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - flake8-black
   - gemmi
   - griddataformats
   - h5py
@@ -18,4 +19,4 @@ dependencies:
   - scipy
   - tqdm
   - pip:
-    - mmcif-pdbx
+    - nose2
