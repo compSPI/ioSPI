@@ -66,7 +66,7 @@ def read_gemmi_model(path, i_model=0, clean=True):
         model = gemmi.make_assembly(
             assembly, model, gemmi.HowToNameCopiedChain.AddNumber
         )
-    #elif path.lower().endswith(".pdb"):
+    # elif path.lower().endswith(".pdb"):
     #    model = st[i_model]
 
     return model
