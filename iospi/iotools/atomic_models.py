@@ -62,7 +62,9 @@ def read_gemmi_model(path, i_model=0, clean=True):
 
     if path.lower().endswith(".cif"):
         model = gemmi.make_assembly(
-            st.assemblies[i_model], st[i_model], gemmi.HowToNameCopiedChain.AddNumber
+            st.assemblies[i_model],
+            st[i_model], 
+            gemmi.HowToNameCopiedChain.AddNumber
         )
     elif path.lower().endswith(".pdb"):
         model = st[i_model]
