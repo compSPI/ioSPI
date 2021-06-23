@@ -46,3 +46,6 @@ jobs:
       - name: unit testing [nose2]
         run: |
           $CONDA/bin/nose2 --with-coverage ${{matrix.test-folder}}
+      - name: uploading code coverage [codecov]
+        run: |
+          bash <(curl -s https://codecov.io/bash)
