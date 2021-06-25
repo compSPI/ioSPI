@@ -43,20 +43,21 @@ def read_gemmi_model(path, i_model=0, clean=True):
             is_pdb = path.lower().endswith(".pdb")
             is_cif = path.lower().endswith(".cif")
             if is_pdb:
-                return read_gemmi_model_from_pdb(path, i_model, clean)
+                model =  read_gemmi_model_from_pdb(path, i_model, clean)
             if is_cif:
-                return read_gemmi_model_from_cif(path, i_model, clean)
+                model = read_gemmi_model_from_cif(path, i_model, clean)
             if not is_pdb or not is_cif:
+                model = None
                 raise ValueError("File format not recognized.")
-                return None
         else:
+            model = None
             raise OSError
-            return None
     except OSError as ose:
         print(type(ose), "::", ose)
     except ValueError as ve:
         print(type(ve), "::", ve)
 
+    return model
 
 def read_gemmi_model_from_pdb(path, i_model=0, clean=True):
     """Read Gemmi Model from PDB file.
