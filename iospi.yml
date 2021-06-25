@@ -21,4 +21,6 @@ dependencies:
   - scipy
   - tqdm
   - pip:
-    - nose2
+    - pytest
+    - pytest-cov
+  #  - nose2

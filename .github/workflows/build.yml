@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: ${{matrix.python-version}}
 
-      - name: cache conda 
+      - name: cache conda
         uses: actions/cache@v1
         with:
           path: $CONDA
@@ -49,9 +49,16 @@ jobs:
         run: |
           $CONDA/bin/flake8 --ignore=D,W503,W504 iospi tests
           $CONDA/bin/flake8 iospi/iotools
-      - name: unit testing [nose2]
+      - name: unit testing [pytest]
         run: |
-          $CONDA/bin/nose2 --with-coverage ${{matrix.test-folder}}
+          #$CONDA/bin/nose2 --with-coverage ${{matrix.test-folder}}
+          $CONDA/bin/pytest --cov=./coverage/reports/ --cov-report=xml
       - name: uploading code coverage [codecov]
-        run: |
-          bash <(curl -s https://codecov.io/bash)
+        uses: codecov/codecov-action@v1
+        with:
+          files: ./coverage1.xml,./coverage2.xml
+          directory: ./coverage/reports/
+          flags: unittests
+          name: codecov-umbrella
+          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true

@@ -34,4 +34,5 @@ coverage:
 
 # Files to ignore
 ignore:
-  - "data" 
+  - "data"
+  - "coverage"

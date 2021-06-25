@@ -3,7 +3,7 @@
 import unittest
 
 import gemmi
-from iotools.atomic_models import read_gemmi_model, write_gemmi_model
+from iospi.iotools.atomic_models import read_gemmi_model, write_gemmi_model
 
 
 class TestAtomicModels(unittest.TestCase):
