@@ -157,21 +157,16 @@ def write_gemmi_model(path, model=gemmi.Model("model")):
     gemmi objects.
 
     """
-    try:
-        if path.lower().endswith(".pdb"):
-            pass
-        elif path.lower().endswith(".cif"):
-            pass
-        else:
-            raise ValueError("File format not recognized.")
-    except ValueError as ve:
-        print(ve)
+    is_pdb = path.lower().endswith(".pdb")
+    is_cif = path.lower().endswith(".cif")
+    if if not is_pdb or not is_cif:
+        raise ValueError("File format not recognized.")
 
     structure = gemmi.Structure()
     structure.add_model(model, pos=-1)
     structure.renumber_models()
 
-    if path.lower().endswith(".cif"):
+    if is_cif:
         structure.make_mmcif_document().write_file(path)
-    elif path.lower().endswith(".pdb"):
+    if is_pdb:
         structure.write_pdb(path)
