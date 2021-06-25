@@ -42,16 +42,21 @@ def read_gemmi_model(path, i_model=0, clean=True):
         if not os.path.exists(path):
             raise OSError
         if path.lower().endswith(".pdb"):
-            st = gemmi.read_structure(path)
+            pass
         elif path.lower().endswith(".cif"):
-            cif_block = gemmi.cif.read(path)[0]
-            st = gemmi.make_structure_from_block(cif_block)
+            pass
         else:
             raise ValueError("File format not recognized.")
     except OSError as ose:
         print(type(ose), "::", ose)
     except ValueError as ve:
         print(type(ve), "::", ve)
+
+    if path.lower().endswith(".pdb"):
+        st = gemmi.read_structure(path)
+    elif path.lower().endswith(".cif"):
+        cif_block = gemmi.cif.read(path)[0]
+        st = gemmi.make_structure_from_block(cif_block)
 
     if clean:
         st.remove_alternative_conformations()

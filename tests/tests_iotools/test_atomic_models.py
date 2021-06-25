@@ -28,7 +28,7 @@ class TestAtomicModels(unittest.TestCase):
         """Read Gemmi model success test"""
         path_pdb = ".test.pdb"
         path_cif = ".test.cif"
-        expected = gemmi.Model()
+        expected = gemmi.Model("model")
 
         write_gemmi_model(path_cif)
         actual = read_gemmi_model(path_cif)
