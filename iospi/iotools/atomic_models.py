@@ -72,7 +72,7 @@ def read_gemmi_model(path, i_model=0, clean=True):
     return model
 
 
-def write_gemmi_model(path, model=gemmi.Model('model')):
+def write_gemmi_model(path, model=gemmi.Model("model")):
     """Write Gemmi model to PDB or mmCIF file.
 
     Use Gemmi library to write an atomic model to file.
