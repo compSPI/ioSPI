@@ -52,12 +52,10 @@ def read_gemmi_model(path, i_model=0, clean=True):
         else:
             model = None
             raise OSError("File could not be found.")
-    except OSError
-    except ValueError 
-    #except OSError as ose:
-        #print(type(ose), "::", ose)
-    #except ValueError as ve:
-        #print(type(ve), "::", ve)
+    except OSError as ose:
+        print(ose)
+    except ValueError as ve:
+        print(ve)
 
     return model
 
