@@ -80,6 +80,7 @@ def read_gemmi_model_from_pdb(path, i_model=0, clean=True):
     model = st[i_model]
     return model
 
+
 def read_gemmi_model_from_cif(path, i_model=0, clean=True):
     """Read Gemmi Model from CIF file.
 
@@ -106,10 +107,9 @@ def read_gemmi_model_from_cif(path, i_model=0, clean=True):
         structure = clean_gemmi_structure(structure)
     model = st[i_model]
     assembly = st.assemblies[i_model]
-    model = gemmi.make_assembly(
-        assembly, model, gemmi.HowToNameCopiedChain.AddNumber
-    )
+    model = gemmi.make_assembly(assembly, model, gemmi.HowToNameCopiedChain.AddNumber)
     return model
+
 
 def clean_gemmi_structure(structure=None):
     """Clean Gemmi Structure.
@@ -134,6 +134,7 @@ def clean_gemmi_structure(structure=None):
         structure.remove_empty_chains()
 
     return structure
+
 
 def write_gemmi_model(path, model=gemmi.Model("model")):
     """Write Gemmi model to PDB or mmCIF file.
