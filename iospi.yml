@@ -3,24 +3,23 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - codecov
-  - coverage
+  #- codecov
+  #- coverage
   - flake8-black
   - gemmi
   #- griddataformats
   #- h5py
   #- imageio
   #- imageio-ffmpeg
-  - jupyterlab
-  - matplotlib
+  #- jupyterlab
+  #- matplotlib
   #- mrcfile
+  - numpy
   #- pdb2pqr
   - pip
+  - pytest
+  - pytest-cov
   #- pyyaml
   #- scikit-image
   #- scipy
   #- tqdm
-  - pip:
-    - pytest
-    - pytest-cov
-  #  - nose2

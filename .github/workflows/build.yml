@@ -45,6 +45,7 @@ jobs:
         run:  |
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           $CONDA/bin/conda env update --file iospi.yml --name base
+          $CONDA/bin/pip install -e .
       - name: linting [flake8]
         run: |
           $CONDA/bin/flake8 --ignore=D,W503,W504 iospi tests
