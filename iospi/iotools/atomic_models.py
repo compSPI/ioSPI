@@ -83,6 +83,7 @@ def read_gemmi_model_from_pdb(path, i_model=0, clean=True):
     model = structure[i_model]
     return model
 
+
 def read_gemmi_model_from_cif(path, i_model=0, clean=True):
     """Read Gemmi Model from CIF file.
 
@@ -113,6 +114,7 @@ def read_gemmi_model_from_cif(path, i_model=0, clean=True):
     )
     return model
 
+
 def clean_gemmi_structure(structure=None):
     """Clean Gemmi Structure.
 
@@ -135,6 +137,7 @@ def clean_gemmi_structure(structure=None):
         structure.remove_empty_chains()
 
     return structure
+
 
 def write_gemmi_model(path, model=gemmi.Model("model")):
     """Write Gemmi model to PDB or mmCIF file.
