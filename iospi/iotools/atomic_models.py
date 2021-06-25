@@ -40,13 +40,17 @@ def read_gemmi_model(path, i_model=0, clean=True):
     """
     try:
         if os.path.isfile(path):
-            if path.lower().endswith(".pdb"):
+            is_pdb = path.lower().endswith(".pdb")
+            is_cif = path.lower().endswith(".cif")
+            if is_pdb:
                 return read_gemmi_model_from_pdb(path, i_model, clean)
-            elif path.lower().endswith(".cif"):
+            if is_cif:
                 return read_gemmi_model_from_cif(path, i_model, clean)
-            else:
+            if not is_pdb or not is_cif:
+                return None
                 raise ValueError("File format not recognized.")
         else:
+            return None
             raise OSError
     except OSError as ose:
         print(type(ose), "::", ose)
@@ -73,11 +77,10 @@ def read_gemmi_model_from_pdb(path, i_model=0, clean=True):
     model: Gemmi Class
         Gemmi model
     """
-
     structure = gemmi.read_structure(path)
     if clean:
         structure = clean_gemmi_structure(structure)
-    model = st[i_model]
+    model = structure[i_model]
     return model
 
 def read_gemmi_model_from_cif(path, i_model=0, clean=True):
@@ -99,13 +102,12 @@ def read_gemmi_model_from_cif(path, i_model=0, clean=True):
     model: Gemmi Class
         Gemmi model
     """
-
     cif_block = gemmi.cif.read(path)[0]
     structure = gemmi.make_structure_from_block(cif_block)
     if clean:
         structure = clean_gemmi_structure(structure)
-    model = st[i_model]
-    assembly = st.assemblies[i_model]
+    model = structure[i_model]
+    assembly = structure.assemblies[i_model]
     model = gemmi.make_assembly(
         assembly, model, gemmi.HowToNameCopiedChain.AddNumber
     )
@@ -125,7 +127,6 @@ def clean_gemmi_structure(structure=None):
         Same object, cleaned up of unnecessary atoms.
 
     """
-
     if structure is not None:
         structure.remove_alternative_conformations()
         structure.remove_hydrogens()
