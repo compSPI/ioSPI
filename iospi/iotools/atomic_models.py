@@ -51,11 +51,13 @@ def read_gemmi_model(path, i_model=0, clean=True):
                 raise ValueError("File format not recognized.")
         else:
             model = None
-            raise OSError
-    except OSError as ose:
-        print(type(ose), "::", ose)
-    except ValueError as ve:
-        print(type(ve), "::", ve)
+            raise OSError("File could not be found.")
+    except OSError
+    except ValueError 
+    #except OSError as ose:
+        #print(type(ose), "::", ose)
+    #except ValueError as ve:
+        #print(type(ve), "::", ve)
 
     return model
 
