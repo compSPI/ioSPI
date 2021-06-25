@@ -39,12 +39,9 @@ def read_gemmi_model(path, i_model=0, clean=True):
 
     """
     try:
-        if not os.path.exists(path):
-            raise OSError
-        if path.lower().endswith(".pdb"):
-            pass
-        elif path.lower().endswith(".cif"):
-            pass
+        if path.lower().endswith(".pdb") or path.lower().endswith(".cif"):
+            if not os.path.exists(path):
+                raise OSError
         else:
             raise ValueError("File format not recognized.")
     except OSError as ose:
