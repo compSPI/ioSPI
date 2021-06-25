@@ -14,18 +14,14 @@ class TestAtomicModels(unittest.TestCase):
         """Read Gemmi model success test"""
         for path in ".test.pdb" ".test.cif":
             write_gemmi_model(path)
-            self.assertIs(
-                read_gemmi_model(path), gemmi.Model("model")
-            )
+            self.assertIs(read_gemmi_model(path), gemmi.Model("model"))
 
     def test_read_gemmi_model_oserror(self):
         """Read Gemmi OSError test"""
         path = "non-existing-file.pdb"
         with self.assertRaises(OSError) as exception_context:
             _ = read_gemmi_model(path)
-        self.assertEqual(
-            str(exception_context.exception), "File could not be found."
-        )
+        self.assertEqual(str(exception_context.exception), "File could not be found.")
 
     def test_read_gemmi_model_filename_extension_error(self):
         """Read Gemmi Filename Extension Error"""
