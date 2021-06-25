@@ -43,7 +43,7 @@ def read_gemmi_model(path, i_model=0, clean=True):
             is_pdb = path.lower().endswith(".pdb")
             is_cif = path.lower().endswith(".cif")
             if is_pdb:
-                model =  read_gemmi_model_from_pdb(path, i_model, clean)
+                model = read_gemmi_model_from_pdb(path, i_model, clean)
             if is_cif:
                 model = read_gemmi_model_from_cif(path, i_model, clean)
             if not is_pdb or not is_cif:
@@ -58,6 +58,7 @@ def read_gemmi_model(path, i_model=0, clean=True):
         print(type(ve), "::", ve)
 
     return model
+
 
 def read_gemmi_model_from_pdb(path, i_model=0, clean=True):
     """Read Gemmi Model from PDB file.
@@ -110,7 +111,8 @@ def read_gemmi_model_from_cif(path, i_model=0, clean=True):
         structure = clean_gemmi_structure(structure)
     model = structure[i_model]
     assembly = structure.assemblies[i_model]
-    model = gemmi.make_assembly(assembly, model, gemmi.HowToNameCopiedChain.AddNumber)
+    chain_naming = gemmi.HowToNameCopiedChain.AddNumber
+    model = gemmi.make_assembly(assembly, model, chain_naming)
     return model
 
 
