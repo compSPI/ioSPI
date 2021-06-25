@@ -109,9 +109,7 @@ def read_gemmi_model_from_cif(path, i_model=0, clean=True):
         structure = clean_gemmi_structure(structure)
     model = structure[i_model]
     assembly = structure.assemblies[i_model]
-    model = gemmi.make_assembly(
-        assembly, model, gemmi.HowToNameCopiedChain.AddNumber
-    )
+    model = gemmi.make_assembly(assembly, model, gemmi.HowToNameCopiedChain.AddNumber)
     return model
 
 
