@@ -2,9 +2,10 @@
 
 import unittest
 
+from iospi.iotools.atomic_models import read_gemmi_model
+
 # import gemmi
 
-from iospi.iotools.atomic_models import read_gemmi_model
 
 # import gemmi
 
