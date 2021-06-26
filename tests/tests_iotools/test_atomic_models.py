@@ -13,7 +13,7 @@ class TestAtomicModels(unittest.TestCase):
     def test_read_or_write_gemmi_model_success(self):
         """Read Gemmi model success test"""
         expected = gemmi.Model("model")
-        for path in ".test.pdb" ".test.cif":
+        for path in "test.pdb" "test.cif":
             write_gemmi_model(path)
             actual = read_gemmi_model(path)
             self.assertIs(actual, expected)
@@ -29,7 +29,7 @@ class TestAtomicModels(unittest.TestCase):
 
     def test_read_gemmi_model_filename_extension_error(self):
         """Read Gemmi Filename Extension Error"""
-        path = ".test.txt"
+        path = "test.txt"
         expected = "File format not recognized."
         with open(path, "w"):
             pass
