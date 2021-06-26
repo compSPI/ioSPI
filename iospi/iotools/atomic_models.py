@@ -45,7 +45,7 @@ def read_gemmi_model(path, i_model=0, clean=True):
             model = read_gemmi_model_from_pdb(path, i_model, clean)
         if is_cif:
             model = read_gemmi_model_from_cif(path, i_model, clean)
-        if not is_pdb or not is_cif:
+        if not (is_pdb or is_cif):
             model = None
             raise ValueError("File format not recognized.")
     else:
@@ -159,7 +159,7 @@ def write_gemmi_model(path, model=gemmi.Model("model")):
     """
     is_pdb = path.lower().endswith(".pdb")
     is_cif = path.lower().endswith(".cif")
-    if not is_pdb or not is_cif:
+    if not (is_pdb or is_cif):
         raise ValueError("File format not recognized.")
 
     structure = gemmi.Structure()
