@@ -1,5 +1,10 @@
+# Specific formats ignored by ioSPI
+*.pdb
+*.cif
+*.mtz
+*.map
 
-# Created by https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks
+# What follows was created by https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,jupyternotebooks
 
 ### JupyterNotebooks ###

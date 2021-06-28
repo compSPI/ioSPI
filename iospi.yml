@@ -3,20 +3,9 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - flake8-black
   - gemmi
-  - griddataformats
-  - h5py
-  - imageio
-  - imageio-ffmpeg
-  - jupyterlab
-  - matplotlib
-  - mrcfile
-  - pdb2pqr
+  - numpy
   - pip
-  - python=3.9
-  - pyyaml
-  - scikit-image
-  - scipy
-  - tqdm
-  - pip:
-    - mmcif-pdbx
+  - pytest
+  - pytest-cov
