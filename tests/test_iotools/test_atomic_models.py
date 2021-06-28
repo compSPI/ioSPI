@@ -29,3 +29,8 @@ class TestAtomicModels:
         os.remove(path)
         actual = str(exception_context.value)
         assert expected in actual
+
+    @staticmethod
+    def test_placeholder():
+        """Test placeholder."""
+        print("Test placeholder.")
