@@ -49,7 +49,7 @@ jobs:
       - name: linting [flake8]
         run: |
           $CONDA/bin/flake8 --ignore=D,W503,W504 iospi tests
-          $CONDA/bin/flake8 iospi/iotools
+          $CONDA/bin/flake8 iospi/iotools tests/test_iotools
       - name: unit testing [pytest]
         run: |
           $CONDA/bin/pytest --cov=./coverage/reports/ --cov-report=xml
