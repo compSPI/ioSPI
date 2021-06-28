@@ -5,7 +5,7 @@ import os
 from iospi.iotools.atomic_models import read_gemmi_model
 
 
-class TestAtomicModels():
+class TestAtomicModels:
     """Test for reading and writing atomic models."""
 
     def test_read_gemmi_model_oserror(self):
