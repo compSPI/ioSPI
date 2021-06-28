@@ -52,7 +52,7 @@ jobs:
           $CONDA/bin/flake8 iospi/iotools tests/test_iotools
       - name: unit testing [pytest]
         run: |
-          $CONDA/bin/pytest --cov=./coverage/reports/ --cov-report=xml
+          $CONDA/bin/pytest
       - name: uploading code coverage [codecov]
         uses: codecov/codecov-action@v1
         with:
