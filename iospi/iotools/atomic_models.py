@@ -1,4 +1,4 @@
-"""Read and Write atomic models in various formats."""
+"""Read and write atomic models in various formats."""
 
 import os
 
@@ -14,12 +14,12 @@ def read_gemmi_model(path, i_model=0, clean=True):
 
     Parameters
     ----------
-    path: string
+    path : string
         Path to PDB or mmCIF file.
-    i_model: integer
+    i_model : integer
         Optional, default: 0
         Index of the returned model in the Gemmi Structure.
-    clean: bool
+    clean : bool
         Optional, default: True
         If True, use Gemmi remove_* methods to clean up structure.
 
@@ -43,9 +43,9 @@ def read_gemmi_model(path, i_model=0, clean=True):
         is_cif = path.lower().endswith(".cif")
         if is_pdb:
             model = read_gemmi_model_from_pdb(path, i_model, clean)
-        if is_cif:
+        elif is_cif:
             model = read_gemmi_model_from_cif(path, i_model, clean)
-        if not (is_pdb or is_cif):
+        else:
             model = None
             raise ValueError("File format not recognized.")
     else:
@@ -59,18 +59,18 @@ def read_gemmi_model_from_pdb(path, i_model=0, clean=True):
 
     Parameters
     ----------
-    path: string
+    path : string
         Path to PDB file.
-    i_model: integer
+    i_model : integer
         Optional, default: 0
         Index of the returned model in the Gemmi Structure.
-    clean: bool
+    clean : bool
         Optional, default: True
         If True, use Gemmi remove_* methods to clean up structure.
 
     Returns
     -------
-    model: Gemmi Class
+    model : Gemmi Class
         Gemmi model
     """
     structure = gemmi.read_structure(path)
@@ -85,18 +85,18 @@ def read_gemmi_model_from_cif(path, i_model=0, clean=True):
 
     Parameters
     ----------
-    path: string
+    path : string
         Path to mmCIF file.
-    i_model: integer
+    i_model : integer
         Optional, default: 0
         Index of the returned model in the Gemmi Structure.
-    clean: bool
+    clean : bool
         Optional, default: True
         If True, use Gemmi remove_* methods to clean up structure.
 
     Returns
     -------
-    model: Gemmi Class
+    model : Gemmi Class
         Gemmi model
     """
     cif_block = gemmi.cif.read(path)[0]
@@ -115,12 +115,12 @@ def clean_gemmi_structure(structure=None):
 
     Parameters
     ----------
-    structure: Gemmi Class
+    structure : Gemmi Class
         Gemmi Structure object
 
     Returns
     -------
-    structure: Gemmi Class
+    structure : Gemmi Class
         Same object, cleaned up of unnecessary atoms.
 
     """
@@ -141,15 +141,11 @@ def write_gemmi_model(path, model=gemmi.Model("model")):
 
     Parameters
     ----------
-    path: string
+    path : string
         Path to PDB or mmCIF file.
-    model: Gemmi Class
+    model : Gemmi Class
         Optional, default: gemmi.Model()
         Gemmi model
-
-    Example
-    -------
-    TO DO
 
     Reference
     ---------
