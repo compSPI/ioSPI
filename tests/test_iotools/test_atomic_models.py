@@ -1,13 +1,14 @@
 """Unit test for read/write of atomic models."""
 
 import os
-
 import unittest
 
 from iospi.iotools.atomic_models import read_gemmi_model
 
+
 class TestAtomicModels(unittest.TestCase):
     """Test for reading and writing atomic models."""
+
     def test_read_gemmi_model_oserror(self):
         """Read with Gemmi - OSError test"""
         path = "non-existing-file.pdb"
