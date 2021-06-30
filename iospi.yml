@@ -9,3 +9,4 @@ dependencies:
   - pip
   - pytest
   - pytest-cov
+  - h5py
