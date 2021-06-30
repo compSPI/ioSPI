@@ -11,7 +11,6 @@ from PIL import Image
 
 CUDA = torch.cuda.is_available()
 
-
 KWARGS = {'num_workers': 1, 'pin_memory': True} if CUDA else {}
 
 
