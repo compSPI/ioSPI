@@ -39,14 +39,16 @@ class TestDataset:
         assert ds.hinted_tuple_hook(list1) == [4, 6]
 
     def test_open_dataset(self):
-        dataset1 = ds.open_dataset("data_test.npy", new_size=64, is_3d=False)
-        dataset2 = ds.open_dataset("data_test.npy", new_size=32, is_3d=False)
+        dataset1 = ds.open_dataset(
+            "./cryo/data_test.npy", new_size=64, is_3d=False)
+        dataset2 = ds.open_dataset(
+            "./cryo/data_test.npy", new_size=32, is_3d=False)
         assert type(dataset1) is torch.Tensor
         assert dataset1.shape == torch.Size([1, 1, 64, 64])
         assert dataset2.shape == torch.Size([1, 1, 32, 32])
 
     def test_load_parameters(self):
-        parameters = ds.load_parameters("vae_parameters.json")
+        parameters = ds.load_parameters("./cryo/vae_parameters.json")
         assert len(parameters) == 5
         assert "skip_z" in parameters[2].keys()
         assert "enc_c" in parameters[2].keys()
