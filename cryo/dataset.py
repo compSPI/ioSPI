@@ -1,6 +1,5 @@
 """Open datasets and process them to be used by a neural network."""
 
-
 import json
 import os
 import numpy as np
