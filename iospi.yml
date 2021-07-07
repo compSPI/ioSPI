@@ -1,4 +1,4 @@
-name: iospi
+name: ioSPI
 channels:
   - conda-forge
   - defaults

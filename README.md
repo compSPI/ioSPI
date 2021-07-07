@@ -6,11 +6,10 @@ Methods and tools to read and write data in all formats. Also provides methods t
 ## Installing
 
 ```bash
-conda env create -f iospi.yml
-conda activate iospi
+conda env create -f ioSPI.yml
+conda activate ioSPI
 ```
 
 ## Contributing
 
 See our [contributing](https://github.com/compspi/compspi/blob/master/docs/contributing.rst) guidelines!
-

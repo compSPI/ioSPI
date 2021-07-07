@@ -5,7 +5,7 @@ import setuptools
 requirements = []
 
 setuptools.setup(
-    name="iospi",
+    name="ioSPI",
     maintainer="Frederic Poitevin",
     version="0.0.1",
     maintainer_email="frederic.poitevin@stanford.edu",
