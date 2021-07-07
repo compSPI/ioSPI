@@ -38,18 +38,18 @@ jobs:
         uses: actions/cache@v1
         with:
           path: $CONDA
-          key: ${{ runner.os }}-conda-${{ hashFiles('iospi.yml') }}
+          key: ${{ runner.os }}-conda-${{ hashFiles('ioSPI.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
       - name: install dependencies
         run:  |
           # $CONDA is an environment variable pointing to the root of the miniconda directory
-          $CONDA/bin/conda env update --file iospi.yml --name base
+          $CONDA/bin/conda env update --file ioSPI.yml --name base
           $CONDA/bin/pip install -e .
       - name: linting [flake8]
         run: |
-          $CONDA/bin/flake8 --ignore=D,W503,W504 iospi tests
-          $CONDA/bin/flake8 iospi/iotools tests/test_iotools
+          $CONDA/bin/flake8 --ignore=D,W503,W504 ioSPI tests
+          $CONDA/bin/flake8 ioSPI/iotools tests/test_iotools
       - name: unit testing [pytest]
         run: |
           $CONDA/bin/pytest
