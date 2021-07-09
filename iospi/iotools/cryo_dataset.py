@@ -46,7 +46,7 @@ def open_dataset(path, size, is_3d):
     if is_3d:
         dataset = torch.Tensor(dataset)
         dataset = normalize_torch(dataset)
-        dataset = dataset.reshape((len(dataset),)+(1,)+img_shape[1:])
+        dataset = dataset.reshape((len(dataset),) + (1,) + img_shape[1:])
     else:
         if len(img_shape) == 3:
             for i in range(n_imgs):
