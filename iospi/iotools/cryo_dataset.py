@@ -50,12 +50,14 @@ def open_dataset(path, size, is_3d):
         if len(img_shape) == 3:
             for i in range(n_imgs):
                 new_dataset.append(
-                    np.asarray(Image.fromarray(dataset[i]).resize([size, size]))
+                    np.asarray(Image.fromarray(dataset[i]).resize([size,
+                                                                   size]))
                 )
         elif img_shape.ndim == 4:
             for i in range(n_imgs):
                 new_dataset.append(
-                    np.asarray(Image.fromarray(dataset[i][0]).resize([size, size]))
+                    np.asarray(Image.fromarray(dataset[i][0]).resize([size,
+                                                                      size]))
                 )
         dataset = torch.Tensor(new_dataset)
         dataset = normalize_torch(dataset)
@@ -115,8 +117,10 @@ def split_dataset(dataset, batch_size, frac_val):
     n_imgs = len(dataset)
     n_val = int(n_imgs * frac_val)
     trainset, testset = random_split(dataset, [n_imgs - n_val, n_val])
-    trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True, **KWARGS)
-    testloader = DataLoader(testset, batch_size=batch_size, shuffle=False, **KWARGS)
+    trainloader = DataLoader(trainset, batch_size=batch_size,
+                             shuffle=True, **KWARGS)
+    testloader = DataLoader(testset, batch_size=batch_size,
+                            shuffle=False, **KWARGS)
     return trainset, testset, trainloader, testloader
 
 
