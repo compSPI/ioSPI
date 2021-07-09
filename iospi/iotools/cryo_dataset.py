@@ -113,8 +113,8 @@ def split_dataset(dataset, batch_size, frac_val):
         Ready to be used by the NN for test images.
     """
     n_imgs = len(dataset)
-    n_val = int(n_imgs*frac_val)
-    trainset, testset = random_split(dataset, [n_imgs-n_val, n_val])
+    n_val = int(n_imgs * frac_val)
+    trainset, testset = random_split(dataset, [n_imgs - n_val, n_val])
     trainloader = DataLoader(
         trainset, batch_size=batch_size, shuffle=True, **KWARGS)
     testloader = DataLoader(
