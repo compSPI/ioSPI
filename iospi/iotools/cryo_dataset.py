@@ -1,6 +1,5 @@
 """Open datasets and process them to be used by a neural network."""
 
-
 import functools
 import h5py
 import json
@@ -12,7 +11,7 @@ from torch.utils.data import DataLoader, random_split
 
 CUDA = torch.cuda.is_available()
 
-KWARGS = {'num_workers': 1, 'pin_memory': True} if CUDA else {}
+KWARGS = {"num_workers": 1, "pin_memory": True} if CUDA else {}
 
 
 def open_dataset(path, size, is_3d):
@@ -35,8 +34,8 @@ def open_dataset(path, size, is_3d):
     if not os.path.exists(path):
         raise OSError
     if path.lower().endswith(".h5"):
-        data_dict = h5py.File(path, 'r')
-        all_datasets = data_dict['particles'][:]
+        data_dict = h5py.File(path, "r")
+        all_datasets = data_dict["particles"][:]
     else:
         all_datasets = np.load(path)
     dataset = np.asarray(all_datasets)
