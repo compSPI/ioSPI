@@ -49,17 +49,18 @@ def open_dataset(path, size, is_3d):
     else:
         if len(img_shape) == 3:
             for i in range(n_imgs):
-                new_dataset.append(np.asarray(Image.fromarray(
-                    dataset[i]).resize([size, size])))
+                new_dataset.append(
+                    np.asarray(Image.fromarray(dataset[i]).resize([size, size]))
+                )
         elif img_shape.ndim == 4:
             for i in range(n_imgs):
-                new_dataset.append(np.asarray(Image.fromarray(
-                    dataset[i][0]).resize([size, size])))
+                new_dataset.append(
+                    np.asarray(Image.fromarray(dataset[i][0]).resize([size, size]))
+                )
         dataset = torch.Tensor(new_dataset)
         dataset = normalize_torch(dataset)
         if len(img_shape) != 4:
-            dataset = dataset.reshape(
-                (img_shape[0], 1, size, size))
+            dataset = dataset.reshape((img_shape[0], 1, size, size))
     return dataset
 
 
@@ -114,10 +115,8 @@ def split_dataset(dataset, batch_size, frac_val):
     n_imgs = len(dataset)
     n_val = int(n_imgs * frac_val)
     trainset, testset = random_split(dataset, [n_imgs - n_val, n_val])
-    trainloader = DataLoader(
-        trainset, batch_size=batch_size, shuffle=True, **KWARGS)
-    testloader = DataLoader(
-        testset, batch_size=batch_size, shuffle=False, **KWARGS)
+    trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True, **KWARGS)
+    testloader = DataLoader(testset, batch_size=batch_size, shuffle=False, **KWARGS)
     return trainset, testset, trainloader, testloader
 
 
@@ -136,8 +135,8 @@ def hinted_tuple_hook(obj):
     obj: *
         Value of a dic.
     """
-    if '__tuple__' in obj:
-        return tuple(obj['items'])
+    if "__tuple__" in obj:
+        return tuple(obj["items"])
     return obj
 
 
@@ -172,5 +171,6 @@ def load_parameters(path):
         constants["conv_dim"] = len(constants["img_shape"][1:])
         constants["dataset_name"] = paths["simulated_2d"]
         constants["dim_data"] = functools.reduce(
-            (lambda x, y: x * y), constants["img_shape"])
+            (lambda x, y: x * y), constants["img_shape"]
+        )
         return paths, shapes, constants, search_space, meta_param_names
