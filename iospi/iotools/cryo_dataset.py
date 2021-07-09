@@ -85,7 +85,7 @@ def normalize_torch(dataset, scale="linear"):
             if max_data == min_data:
                 raise ZeroDivisionError
             dataset[i] = (data - min_data) / (max_data - min_data)
-        return dataset
+    return dataset
 
 
 def split_dataset(dataset, batch_size, frac_val):
