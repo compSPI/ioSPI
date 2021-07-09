@@ -45,18 +45,16 @@ class TestDataset:
         assert cryo_dataset.hinted_tuple_hook(list1) == [4, 6]
 
     def test_open_dataset(self):
-        dataset1 = cryo_dataset.open_dataset(
-            "data_test_cryo_dataset.npy", size=64, is_3d=False
-        )
-        dataset2 = cryo_dataset.open_dataset(
-            "data_test_cryo_dataset.npy", size=32, is_3d=False
-        )
+        path = ".\tests\test_iotools\data_test_cryo_dataset.npy"
+        dataset1 = cryo_dataset.open_dataset(path, size=64, is_3d=False)
+        dataset2 = cryo_dataset.open_dataset(path, size=32, is_3d=False)
         assert type(dataset1) is torch.Tensor
         assert dataset1.shape == torch.Size([1, 1, 64, 64])
         assert dataset2.shape == torch.Size([1, 1, 32, 32])
 
     def test_load_parameters(self):
-        parameters = cryo_dataset.load_parameters("vae_parameters.json")
+        path = ".\tests\test_iotools\vae_parameters.json"
+        parameters = cryo_dataset.load_parameters(path)
         assert len(parameters) == 5
         assert "skip_z" in parameters[2].keys()
         assert "enc_c" in parameters[2].keys()
