@@ -22,14 +22,14 @@ def open_dataset(path, size, is_3d):
     path : string
         Path (myfile.h5 or myfile.npy).
     size : int
-        length of the image side.
+        Length of the image side.
     is_3d : boolean
         If 2d or 3d.
 
     Returns
     -------
     dataset: torch,
-        greyscale images.
+        Greyscale images.
     """
     if not os.path.exists(path):
         raise OSError
@@ -46,14 +46,15 @@ def open_dataset(path, size, is_3d):
     if is_3d:
         dataset = torch.Tensor(dataset)
         dataset = normalize_torch(dataset)
-        dataset = dataset.reshape((len(dataset),) + (1,) + img_shape[1:])
+        if len(dataset.shape) == 4:
+            dataset = dataset.reshape((len(dataset),) + (1,) + img_shape[1:])
     else:
         if len(img_shape) == 3:
             for i in range(n_imgs):
                 new_dataset.append(
                     np.asarray(Image.fromarray(dataset[i]).resize([s, s]))
                 )
-        elif img_shape.ndim == 4:
+        elif len(img_shape) == 4:
             for i in range(n_imgs):
                 new_dataset.append(
                     np.asarray(Image.fromarray(dataset[i][0]).resize([s, s]))
@@ -117,9 +118,10 @@ def split_dataset(dataset, batch_size, frac_val):
     n_val = int(n_imgs * frac_val)
     trainset, testset = random_split(dataset, [n_imgs - n_val, n_val])
 
-    tr = DataLoader(trainset, batch_size=batch_size, shuffle=True, **KWARGS)
-    te = DataLoader(testset, batch_size=batch_size, shuffle=False, **KWARGS)
-    trainloader, testloader = tr, te
+    trainloader = DataLoader(
+        trainset, batch_size=batch_size, shuffle=True, **KWARGS)
+    testloader = DataLoader(
+        testset, batch_size=batch_size, shuffle=False, **KWARGS)
     return trainset, testset, trainloader, testloader
 
 
@@ -135,7 +137,7 @@ def hinted_tuple_hook(obj):
     -------
     tuple,
         Transform the value of a dic into dic.
-    obj: *
+    obj : *
         Value of a dic.
     """
     if "__tuple__" in obj:
