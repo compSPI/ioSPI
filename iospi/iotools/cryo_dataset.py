@@ -42,7 +42,6 @@ def open_dataset(path, size, is_3d):
     img_shape = dataset.shape
     n_imgs = img_shape[0]
     new_dataset = []
-    s = size
     if is_3d:
         dataset = torch.Tensor(dataset)
         dataset = normalize_torch(dataset)
@@ -51,18 +50,16 @@ def open_dataset(path, size, is_3d):
     else:
         if len(img_shape) == 3:
             for i in range(n_imgs):
-                new_dataset.append(
-                    np.asarray(Image.fromarray(dataset[i]).resize([s, s]))
-                )
+                image = Image.fromarray(dataset[i]).resize([size, size])
+                new_dataset.append(np.asarray(image))
         elif len(img_shape) == 4:
             for i in range(n_imgs):
-                new_dataset.append(
-                    np.asarray(Image.fromarray(dataset[i][0]).resize([s, s]))
-                )
+                image = Image.fromarray(dataset[i][0]).resize([size, size])
+                new_dataset.append(np.asarray(image))
         dataset = torch.Tensor(new_dataset)
         dataset = normalize_torch(dataset)
         if len(img_shape) != 4:
-            dataset = dataset.reshape((img_shape[0], 1, s, s))
+            dataset = dataset.reshape((img_shape[0], 1, size, size))
     return dataset
 
 
@@ -74,7 +71,7 @@ def normalize_torch(dataset, scale="linear"):
     dataset : torch tensor
         Images.
     scale : string
-        Methods of normalization
+        Methods of normalization.
 
     Returns
     -------
