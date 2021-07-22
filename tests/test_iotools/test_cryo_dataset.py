@@ -1,7 +1,7 @@
 """Test cryo_datasets."""
 import torch
 import numpy as np
-from ioSPI.iotools import cryo_dataset
+from iospi.iotools import cryo_dataset
 
 
 class TestDataset:
