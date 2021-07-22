@@ -1,12 +1,13 @@
 """Open datasets and process them to be used by a neural network."""
 
 import functools
-import h5py
 import json
-import numpy as np
 import os
-from PIL import Image
+
+import h5py
+import numpy as np
 import torch
+from PIL import Image
 from torch.utils.data import DataLoader, random_split
 
 CUDA = torch.cuda.is_available()
@@ -115,10 +116,8 @@ def split_dataset(dataset, batch_size, frac_val):
     n_val = int(n_imgs * frac_val)
     trainset, testset = random_split(dataset, [n_imgs - n_val, n_val])
 
-    trainloader = DataLoader(
-        trainset, batch_size=batch_size, shuffle=True, **KWARGS)
-    testloader = DataLoader(
-        testset, batch_size=batch_size, shuffle=False, **KWARGS)
+    trainloader = DataLoader(trainset, batch_size=batch_size, shuffle=True, **KWARGS)
+    testloader = DataLoader(testset, batch_size=batch_size, shuffle=False, **KWARGS)
     return trainset, testset, trainloader, testloader
 
 
