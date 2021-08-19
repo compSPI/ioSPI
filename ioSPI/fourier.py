@@ -7,7 +7,8 @@ from numba import jit
 def neg_pos_2d(arr2d):
     """Apply checkerboard pattern.
 
-    Each pixel switches from positive to negative in checker board pattern.
+    Each pixel switches from positive to negative in
+    checker board pattern.
 
     Parameters
     ----------
@@ -32,7 +33,8 @@ def neg_pos_2d(arr2d):
 def make_neg_pos_3d(arr3d):
     """Apply checkerboard pattern.
 
-    Each pixel switches from positive to negative in checker board pattern.
+    Each pixel switches from positive to negative in
+    checker board pattern.
 
     Parameters
     ----------
@@ -55,7 +57,11 @@ def make_neg_pos_3d(arr3d):
 
 
 def fft3d(
-    arr3d, mode, neg_pos_3d=None, numpy_fft=pyfftw.interfaces.numpy_fft, only_real=False
+    arr3d,
+    mode,
+    neg_pos_3d=None,
+    numpy_fft=pyfftw.interfaces.numpy_fft,
+    only_real=False
 ):
     """3D FFT
 
@@ -68,7 +74,8 @@ def fft3d(
     mode : str
         Forward or reverse
     neg_pos_3d : numpy.ndarray, shape (N,N,N)
-        Optinal precomputed array. If None (default) passed, computes on the fly.
+        Optinal precomputed array. If None (default) passed,
+        computes on the fly.
     numpy_fft : func
         Function backend for performing the fft.
     only_real : bool
@@ -111,7 +118,7 @@ def do_fft(arr, d=3, only_real=False, **kwargs):
         Dimension.
     only_real : bool
         If True, return only real part of transform.
-        
+
     Returns
     -------
     arr_f : numpy.ndarray, shape (N,N) or (N,N,N)
@@ -137,7 +144,7 @@ def do_ifft(arr_f, d=3, only_real=True, **kwargs):
         Dimension.
     only_real : bool
         If True, return only real part of transform.
-        
+
     Returns
     -------
     arr : numpy.ndarray, shape (N,N) or (N,N,N)
@@ -151,7 +158,11 @@ def do_ifft(arr_f, d=3, only_real=True, **kwargs):
 
 
 def fft2d(
-    arr2d, mode, numpy_fft=pyfftw.interfaces.numpy_fft, only_real=False, batch=False
+    arr2d,
+    mode,
+    numpy_fft=pyfftw.interfaces.numpy_fft,
+    only_real=False,
+    batch=False
 ):
     """2D FFT
 
@@ -179,7 +190,8 @@ def fft2d(
     assert (arr2d.ndim == 2 and not batch) or (batch and arr2d.ndim == 3)
     n1, n2 = arr2d.shape[-2:]
     assert n1 == n2
-    # we apply an alterating +1/-1 multiplicative before we go to/from Fourier space.
+    # we apply an alterating +1/-1 multiplicative
+    # before we go to/from Fourier space.
     # Later we apply this again to the transform.
     arr2d = neg_pos_2d(arr2d.reshape(-1, n1, n1).copy())
 
@@ -198,4 +210,3 @@ def fft2d(
         arr2d_f = arr2d_f.reshape(n1, n2)
 
     return arr2d_f
-
