@@ -125,9 +125,9 @@ def do_fft(arr, d=3, only_real=False, **kwargs):
         Output array.
     """
     if d == 2:
-        arr_f = fft2d(arr, mode="f", **kwargs)
+        arr_f = fft2d(arr, mode="f", only_real=only_real, **kwargs)
     elif d == 3:
-        arr_f = fft3d(arr, mode="f", **kwargs)
+        arr_f = fft3d(arr, mode="f", only_real=only_real, **kwargs)
     return arr_f
 
 
