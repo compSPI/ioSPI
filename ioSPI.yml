@@ -12,3 +12,6 @@ dependencies:
   - h5py==2.10.0
   - pytorch
   - pillow==8.2.0
+  - numba
+  - pyfftw
+  - geomstats
