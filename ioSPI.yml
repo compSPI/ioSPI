@@ -14,4 +14,3 @@ dependencies:
   - pillow==8.2.0
   - numba
   - pyfftw
-  - geomstats
