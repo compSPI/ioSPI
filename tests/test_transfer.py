@@ -3,6 +3,7 @@ from ioSPI import transfer
 
 
 def test_ctf_freqs():
+    """Test for ctf_freq."""
     N = (np.random.randint(low=8, high=128) // 2) * 2
     freq_1d = transfer.ctf_freqs(N, d=1)
     assert freq_1d.shape == (N // 2,)
@@ -18,6 +19,7 @@ def test_ctf_freqs():
 
 
 def test_eval_ctf():
+    """Test for eval_ctf."""
     N = (np.random.randint(low=8, high=128) // 2) * 2
     freq_A_2d, angles_rad = transfer.ctf_freqs(N, d=2)
     ac = np.random.uniform(low=0.07, high=0.1)
@@ -40,6 +42,7 @@ def test_eval_ctf():
 
 
 def test_random_ctfs():
+    """Test for random_ctfs."""
     N = (np.random.randint(low=8, high=128) // 2) * 2
     n_particles = np.random.randint(low=3, high=7)
     df_min = np.random.uniform(low=5000, high=30000)
@@ -66,6 +69,7 @@ def test_random_ctfs():
         do_log=False,
     )
     assert ctfs.shape == (n_particles, N, N)
-    assert df_min - df_diff_max <= df1s.min()
-    assert df1s.max() <= df_max + df_diff_max
+    for dfs in [df1s, df2s]:
+        assert df_min - df_diff_max <= dfs.min()
+        assert dfs.max() <= df_max + df_diff_max
     assert df_ang_min <= df_ang_deg.min() and df_ang_deg.max() <= df_ang_max
