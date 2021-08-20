@@ -3,11 +3,6 @@ import numpy as np
 
 
 def ctf_freqs(N, psize=1.0, d=2):
-    """
-    :param N: pixels
-    :param psize: pixel size in Å
-    :param d: dimension
-    """
     """Make CTF Frequencies.
 
     Makes 1 or 2 D array of fourier space frequenceis
@@ -19,7 +14,7 @@ def ctf_freqs(N, psize=1.0, d=2):
     d : int, 1 or 2
         Dimension.
     psize : float
-        Pixel size in A
+        Pixel size in Å
 
     Returns
     -------
@@ -35,7 +30,8 @@ def ctf_freqs(N, psize=1.0, d=2):
         freq_pix_1d = np.arange(0, 0.5, 1 / N)
         freq_1d = freq_pix_1d * psize
         return freq_1d
-    if d == 2:
+    else:
+        # assert d == 2
         freq_pix_1d = np.arange(-0.5, 0.5, 1 / N)
         x, y = np.meshgrid(freq_pix_1d, freq_pix_1d)
         rho = np.sqrt(x ** 2 + y ** 2)
