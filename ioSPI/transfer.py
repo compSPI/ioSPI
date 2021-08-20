@@ -30,14 +30,14 @@ def ctf_freqs(N, psize=1.0, d=2):
         freq_pix_1d = np.arange(0, 0.5, 1 / N)
         freq_1d = freq_pix_1d * psize
         return freq_1d
-    else:
-        # assert d == 2
-        freq_pix_1d = np.arange(-0.5, 0.5, 1 / N)
-        x, y = np.meshgrid(freq_pix_1d, freq_pix_1d)
-        rho = np.sqrt(x ** 2 + y ** 2)
-        angles_rad = np.arctan2(y, x)
-        freq_A_2d = rho * psize
-        return (freq_A_2d, angles_rad)
+
+    # assert d == 2
+    freq_pix_1d = np.arange(-0.5, 0.5, 1 / N)
+    x, y = np.meshgrid(freq_pix_1d, freq_pix_1d)
+    rho = np.sqrt(x ** 2 + y ** 2)
+    angles_rad = np.arctan2(y, x)
+    freq_A_2d = rho * psize
+    return (freq_A_2d, angles_rad)
 
 
 @nb.jit(cache=True, nopython=True, nogil=True)
