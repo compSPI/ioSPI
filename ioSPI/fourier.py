@@ -142,8 +142,8 @@ def fft2d(
     arr2d_f : numpy.ndarray, shape (N,N) or (num_exposures,N,N)
         Output array.
     """
-    # TODO: look into pyfftw.interfaces.numpy_fft.irfftn .
-    # TODO: throw error instead of using assert
+    # needs work: look into pyfftw.interfaces.numpy_fft.irfftn .
+    # needs work: throw error instead of using assert
     # assert (arr2d.ndim == 2 and not batch) or (batch and arr2d.ndim == 3)
     n1, n2 = arr2d.shape[-2:]
     # assert n1 == n2
