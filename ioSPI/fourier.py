@@ -18,7 +18,7 @@ def make_neg_pos_2d(arr2d_shape):
 
     Returns
     -------
-    neg_pos_2d : numpy.ndarray, shape (n_particle,N_fourier_pixels,N_fourier_pixels)
+    neg_pos_2d : numpy.ndarray, shape (n_particle,N_fft_pix,N_fft_pix)
         Checkerboard array.
     """
     # assert arr2d.ndim == 3  # extra axis
@@ -42,12 +42,12 @@ def make_neg_pos_3d(arr3d_shape):
 
     Parameters
     ----------
-    arr3d_shape : tuple (N_fourier_pixels,N_fourier_pixels,N_fourier_pixels)
+    arr3d_shape : tuple (N_fft_pix,N_fft_pix,N_fft_pix)
         Input shape tuple.
 
     Returns
     -------
-    neg_pos_3d : numpy.ndarray, shape (N,N,N)
+    neg_pos_3d : numpy.ndarray, shape (N_fft_pix,N_fft_pix,N_fft_pix)
         Checkerboard array.
     """
     R1, R2, R3 = arr3d_shape
