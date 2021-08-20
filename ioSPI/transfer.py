@@ -45,7 +45,9 @@ def ctf_freqs(N, psize=1.0, d=2):
 
 
 @nb.jit(cache=True, nopython=True, nogil=True)
-def eval_ctf(s, a, def1, def2, angast=0, phase=0, kv=300, ac=0.1, cs=2.0, bf=0, lp=0):
+def eval_ctf(
+    s, a, def1, def2, angast=0, phase=0, kv=300, ac=0.1, cs=2.0, bf=0, lp=0
+):
     """
     Evaluate CTF.
 
@@ -148,15 +150,19 @@ def random_ctfs(
         Option to log progress.
     """
     dfs = np.random.uniform(low=df_min, high=df_max, size=n_particles)
-    df_diff = np.random.uniform(low=df_diff_min, high=df_diff_max, size=n_particles)
+    df_diff = np.random.uniform(
+        low=df_diff_min, high=df_diff_max, size=n_particles
+    )
     df1s = dfs - df_diff / 2
     df2s = dfs + df_diff / 2
-    df_ang_deg = np.random.uniform(low=df_ang_min, high=df_ang_max, size=n_particles)
+    df_ang_deg = np.random.uniform(
+        low=df_ang_min, high=df_ang_max, size=n_particles
+    )
     ctfs = np.empty((n_particles, N, N))
     freq_A_2d, angles_rad = ctf_freqs(N, psize, d=2)
     for idx in range(n_particles):
         if do_log and idx % max(1, (n_particles // 10)) == 0:
-            print(idx) # needs work: logger
+            print(idx)  # needs work: logger
         ctfs[idx] = eval_ctf(
             freq_A_2d,
             angles_rad,
