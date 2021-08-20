@@ -63,7 +63,7 @@ def fft3d(
     mode,
     neg_pos_3d=None,
     numpy_fft=pyfftw.interfaces.numpy_fft,
-    only_real=False
+    only_real=False,
 ):
     """3D FFT
 
@@ -120,7 +120,7 @@ def fft2d(
     mode,
     numpy_fft=pyfftw.interfaces.numpy_fft,
     only_real=False,
-    batch=False
+    batch=False,
 ):
     """2D FFT
 
