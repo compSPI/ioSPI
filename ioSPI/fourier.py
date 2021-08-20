@@ -90,7 +90,6 @@ def fft3d(
     arr3d_f : numpy.ndarray, shape (N,N,N)
         Output array.
     """
-
     # compute on the fly if not precomputed
     if neg_pos_3d is None:
         neg_pos_3d = make_neg_pos_3d(arr3d)
