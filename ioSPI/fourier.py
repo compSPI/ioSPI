@@ -98,7 +98,7 @@ def fft3d(
     """
     # compute on the fly if not precomputed
     if neg_pos_3d is None:
-        neg_pos_3d = make_neg_pos_3d(arr3d)
+        neg_pos_3d = make_neg_pos_3d(arr3d.shape)
         # extra multiplication for mod 4
         if arr3d.shape[0] % 4 != 0:
             neg_pos_3d *= -1
