@@ -59,7 +59,11 @@ def make_neg_pos_3d(arr3d):
 
 
 def fft3d(
-    arr3d, mode, neg_pos_3d=None, numpy_fft=pyfftw.interfaces.numpy_fft, only_real=False
+    arr3d,
+    mode,
+    neg_pos_3d=None,
+    numpy_fft=pyfftw.interfaces.numpy_fft,
+    only_real=False
 ):
     """3D FFT
 
@@ -112,7 +116,11 @@ def fft3d(
 
 
 def fft2d(
-    arr2d, mode, numpy_fft=pyfftw.interfaces.numpy_fft, only_real=False, batch=False
+    arr2d,
+    mode,
+    numpy_fft=pyfftw.interfaces.numpy_fft,
+    only_real=False,
+    batch=False
 ):
     """2D FFT
 
