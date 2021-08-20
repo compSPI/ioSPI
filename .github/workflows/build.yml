@@ -24,7 +24,7 @@ jobs:
       matrix:
         os: [ubuntu-18.04]
         python-version: [3.7,3.8,3.9]
-        test-folder : ['tests.tests_iotools']
+        test-folder : ['tests.tests_iotools', 'tests']
       fail-fast: false
 
     steps:
