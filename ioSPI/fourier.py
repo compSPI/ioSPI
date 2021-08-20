@@ -4,7 +4,7 @@ from numba import jit
 
 
 @jit
-def neg_pos_2d(arr2d):
+def make_neg_pos_2d(arr2d_shape):
     """Apply checkerboard pattern for 2D FFT.
 
     Each pixel switches from positive to negative in checker board pattern.
@@ -13,25 +13,27 @@ def neg_pos_2d(arr2d):
 
     Parameters
     ----------
-    arr2d : numpy.ndarray, shape (n_particle,N_fourier_pixels,N_fourier_pixels)
-        Input array.
+    arr2d_shape : tuple (n_particle,N_fourier_pixels,N_fourier_pixels)
+        Input shape tuple.
 
     Returns
     -------
-    arr2d : numpy.ndarray, shape (n_particle,N_fourier_pixels,N_fourier_pixels)
-        Output array.
+    neg_pos_2d : numpy.ndarray, shape (n_particle,N_fourier_pixels,N_fourier_pixels)
+        Checkerboard array.
     """
     # assert arr2d.ndim == 3  # extra axis
-    for n_particle in range(arr2d.shape[0]):
-        for r in range(arr2d.shape[1]):
-            for c in range(arr2d.shape[2]):
-                if (r + c) % 2:
-                    arr2d[n_particle, r, c] *= -1
-    return arr2d
+    n_particle, R1, R2 = arr2d_shape
+    neg_pos_2d = np.ones(arr2d_shape)
+    for particle in range(n_particle):
+        for r1 in range(R1):
+            for r2 in range(R2):
+                if (r1 + r2) % 2:
+                    neg_pos_2d[particle, r1, r2] *= -1
+    return neg_pos_2d
 
 
 @jit
-def make_neg_pos_3d(arr3d):
+def make_neg_pos_3d(arr3d_shape):
     """Apply checkerboard pattern for 3D FFT.
 
     Each pixel switches from positive to negative in checker board pattern.
@@ -40,21 +42,21 @@ def make_neg_pos_3d(arr3d):
 
     Parameters
     ----------
-    arr3d : numpy.ndarray, shape (N,N,N)
-        Input array.
+    arr3d_shape : tuple (N_fourier_pixels,N_fourier_pixels,N_fourier_pixels)
+        Input shape tuple.
 
     Returns
     -------
     neg_pos_3d : numpy.ndarray, shape (N,N,N)
-        Output array.
+        Checkerboard array.
     """
-    R1, R2, R3 = arr3d.shape
-    neg_pos_3d = np.ones(arr3d.shape)
+    R1, R2, R3 = arr3d_shape
+    neg_pos_3d = np.ones(arr3d_shape)
     for r1 in range(R1):
         for r2 in range(R2):
             for r3 in range(R3):
                 if (r1 + r2 + r3) % 2:
-                    neg_pos_3d[r1, r2, r3] *= -1.0
+                    neg_pos_3d[r1, r2, r3] *= -1
     return neg_pos_3d
 
 
@@ -162,7 +164,9 @@ def fft2d(
     # (even number of pixels, one to right of centre)
 
     # reshape to 3 dimensions
-    arr2d = neg_pos_2d(arr2d.reshape(-1, n1, n1).copy())
+    arr2d = arr2d.reshape(-1, n1, n1)
+    neg_pos_2d = neg_pos_2d(arr2d.shape)
+    neg_pos_2d *= neg_pos_2d
 
     if mode == "forward":
         arr2d_f = numpy_fft.fftn(arr2d, axes=(-2, -1))
@@ -174,7 +178,7 @@ def fft2d(
     if only_real:
         arr2d_f = arr2d_f.real
 
-    arr2d_f = neg_pos_2d(arr2d_f.copy())
+    arr2d_f *= neg_pos_2d
     if not batch:
         arr2d_f = arr2d_f.reshape(n1, n2)
 
