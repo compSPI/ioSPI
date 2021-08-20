@@ -78,8 +78,8 @@ def test_fft2d():
     assert arr2d_r.shape == (N, N)
 
     arr2d_batch = arr3d[: N // 2]
-    arr2d_batch_f = fourier.fft2d(arr2d, batch=True, mode="forward")
+    arr2d_batch_f = fourier.fft2d(arr2d_batch, batch=True, mode="forward")
     arr2d_manual_batch_f = np.zeros((N // 2, N, N), dtype=np.complex128)
     for n in range(N // 2):
-        arr2d_manual_batch_f[n] = fourier.fft2d(arr2d, mode="forward")
+        arr2d_manual_batch_f[n] = fourier.fft2d(arr2d_batch[n], mode="forward")
     assert np.allclose(arr2d_manual_batch_f, arr2d_batch_f)
