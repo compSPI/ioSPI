@@ -7,7 +7,7 @@ from numba import jit
 def neg_pos_2d(arr2d):
     """Apply checkerboard pattern for 2D FFT.
 
-    Each pixel switches from positive to negative in checker board pattern. 
+    Each pixel switches from positive to negative in checker board pattern.
     Equivalent to fft shifting
     https://dsp.stackexchange.com/questions/9039/centering-zero-frequency-for-discrete-fourier-transform
 
@@ -21,7 +21,7 @@ def neg_pos_2d(arr2d):
     arr2d : numpy.ndarray, shape (n_particle,N_fourier_pixels,N_fourier_pixels)
         Output array.
     """
-    #assert arr2d.ndim == 3  # extra axis
+    # assert arr2d.ndim == 3  # extra axis
     for n_particle in range(arr2d.shape[0]):
         for r in range(arr2d.shape[1]):
             for c in range(arr2d.shape[2]):
@@ -34,7 +34,7 @@ def neg_pos_2d(arr2d):
 def make_neg_pos_3d(arr3d):
     """Apply checkerboard pattern for 3D FFT.
 
-    Each pixel switches from positive to negative in checker board pattern. 
+    Each pixel switches from positive to negative in checker board pattern.
     Equivalent to fft shifting
     https://dsp.stackexchange.com/questions/9039/centering-zero-frequency-for-discrete-fourier-transform
 
@@ -59,11 +59,7 @@ def make_neg_pos_3d(arr3d):
 
 
 def fft3d(
-    arr3d,
-    mode,
-    neg_pos_3d=None,
-    numpy_fft=pyfftw.interfaces.numpy_fft,
-    only_real=False
+    arr3d, mode, neg_pos_3d=None, numpy_fft=pyfftw.interfaces.numpy_fft, only_real=False
 ):
     """3D FFT
 
@@ -72,7 +68,7 @@ def fft3d(
     before we go to/from Fourier space.
     Later we apply this again to the transform.
     The checkerboard pattern is applied instead of fft shifting
-    to have the dc component in centre of image 
+    to have the dc component in centre of image
     (even number of pixels, one to right of centre).
 
     Parameters
@@ -96,14 +92,14 @@ def fft3d(
     """
 
     # compute on the fly if not precomputed
-    if neg_pos_3d is None: 
+    if neg_pos_3d is None:
         neg_pos_3d = make_neg_pos_3d(arr3d)
         # extra multiplication for mod 4
         if arr3d.shape[0] % 4 != 0:
             neg_pos_3d *= -1
 
     if mode == "forward":
-        arr3d_f = numpy_fft.fftn(neg_pos_3d * arr3d) 
+        arr3d_f = numpy_fft.fftn(neg_pos_3d * arr3d)
         arr3d_f /= np.sqrt(np.prod(arr3d_f.shape))
     elif mode == "inverse":
         arr3d_f = numpy_fft.ifftn(neg_pos_3d * arr3d)
@@ -117,11 +113,7 @@ def fft3d(
 
 
 def fft2d(
-    arr2d,
-    mode,
-    numpy_fft=pyfftw.interfaces.numpy_fft,
-    only_real=False,
-    batch=False
+    arr2d, mode, numpy_fft=pyfftw.interfaces.numpy_fft, only_real=False, batch=False
 ):
     """2D FFT
 
@@ -129,7 +121,7 @@ def fft2d(
     before we go to/from Fourier space.
     Later we apply this again to the transform.
     The checkerboard pattern is applied instead of fft shifting
-    to have the dc component in centre of image 
+    to have the dc component in centre of image
     (even number of pixels, one to right of centre).
 
     Parameters
@@ -152,16 +144,18 @@ def fft2d(
     """
     # TODO: look into pyfftw.interfaces.numpy_fft.irfftn .
     # TODO: throw error instead of using assert
-    #assert (arr2d.ndim == 2 and not batch) or (batch and arr2d.ndim == 3)
+    # assert (arr2d.ndim == 2 and not batch) or (batch and arr2d.ndim == 3)
     n1, n2 = arr2d.shape[-2:]
-    #assert n1 == n2
+    # assert n1 == n2
     # we apply an alterating +1/-1 multiplicative
     # before we go to/from Fourier space.
     # Later we apply this again to the transform.
     # checkerboard pattern applied instead of fft shifting
-    # to have dc component in centre of image 
+    # to have dc component in centre of image
     # (even number of pixels, one to right of centre)
-    arr2d = neg_pos_2d(arr2d.reshape(-1, n1, n1).copy()) # reshape to 3 dimensions
+
+    # reshape to 3 dimensions
+    arr2d = neg_pos_2d(arr2d.reshape(-1, n1, n1).copy())
 
     if mode == "forward":
         arr2d_f = numpy_fft.fftn(arr2d, axes=(-2, -1))
@@ -230,4 +224,3 @@ def do_ifft(arr_f, d=3, only_real=True, **kwargs):
     elif d == 3:
         arr = fft3d(arr_f, mode="inverse", only_real=only_real, **kwargs)
     return arr
-
