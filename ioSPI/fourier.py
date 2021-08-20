@@ -165,7 +165,7 @@ def fft2d(
 
     # reshape to 3 dimensions
     arr2d = arr2d.reshape(-1, n1, n1)
-    neg_pos_2d = neg_pos_2d(arr2d.shape)
+    neg_pos_2d = make_neg_pos_2d(arr2d.shape)
     neg_pos_2d *= neg_pos_2d
 
     if mode == "forward":
