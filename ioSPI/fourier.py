@@ -21,13 +21,13 @@ def make_neg_pos_2d(arr2d_shape):
     neg_pos_2d : numpy.ndarray, shape (n_particle,N_fft_pix,N_fft_pix)
         Checkerboard array.
     """
-    n_particle, R1, R2 = arr2d_shape
+    n_particle, n_pixels_1, n_pixels_2 = arr2d_shape
     neg_pos_2d = np.ones(arr2d_shape)
     for particle in range(n_particle):
-        for r1 in range(R1):
-            for r2 in range(R2):
-                if (r1 + r2) % 2:
-                    neg_pos_2d[particle, r1, r2] *= -1
+        for pix_1 in range(n_pixels_1):
+            for pix_2 in range(n_pixels_2):
+                if (pix_1 + pix_2) % 2:
+                    neg_pos_2d[particle, pix_1, pix_2] *= -1
     return neg_pos_2d
 
 
@@ -49,13 +49,13 @@ def make_neg_pos_3d(arr3d_shape):
     neg_pos_3d : numpy.ndarray, shape (N_fft_pix,N_fft_pix,N_fft_pix)
         Checkerboard array.
     """
-    R1, R2, R3 = arr3d_shape
+    num_pix_1, num_pix_2, num_pix_3 = arr3d_shape
     neg_pos_3d = np.ones(arr3d_shape)
-    for r1 in range(R1):
-        for r2 in range(R2):
-            for r3 in range(R3):
-                if (r1 + r2 + r3) % 2:
-                    neg_pos_3d[r1, r2, r3] *= -1
+    for pix_1 in range(num_pix_1):
+        for pix_2 in range(num_pix_2):
+            for pix_3 in range(num_pix_3):
+                if (pix_1 + pix_2 + pix_3) % 2:
+                    neg_pos_3d[pix_1, pix_2, pix_3] *= -1
     return neg_pos_3d
 
 
@@ -78,11 +78,11 @@ def fft3d(
 
     Parameters
     ----------
-    arr3d : numpy.ndarray, shape (N,N,N)
+    arr3d : numpy.ndarray, shape (n_pixels,n_pixels,n_pixels)
         Input array.
     mode : str
         Forward or reverse
-    neg_pos_3d : numpy.ndarray, shape (N,N,N)
+    neg_pos_3d : numpy.ndarray, shape (n_pixels,n_pixels,n_pixels)
         Optional precomputed array. If None (default) passed,
         computes on the fly.
     numpy_fft : func
@@ -92,7 +92,7 @@ def fft3d(
 
     Returns
     -------
-    arr3d_f : numpy.ndarray, shape (N,N,N)
+    arr3d_f : numpy.ndarray, shape (n_pixels,n_pixels,n_pixels)
         Output array.
     """
     # compute on the fly if not precomputed
@@ -134,7 +134,8 @@ def fft2d(
 
     Parameters
     ----------
-    arr2d : numpy.ndarray, shape (N,N) or (num_exposures,N,N)
+    arr2d : numpy.ndarray, shape (n_pixels,n_pixels,n_pixels)
+    or (num_exposures,n_pixels,n_pixels)
         Input array.
     mode : str
         Forward or reverse
@@ -150,14 +151,10 @@ def fft2d(
     arr2d_f : numpy.ndarray, shape (N,N) or (num_exposures,N,N)
         Output array.
     """
-    # needs work: look into pyfftw.interfaces.numpy_fft.irfftn .
-    # needs work: throw error instead of using assert
-    # assert (arr2d.ndim == 2 and not batch) or (batch and arr2d.ndim == 3)
     n1, n2 = arr2d.shape[-2:]
-    # assert n1 == n2
     # we apply an alterating +1/-1 multiplicative
     # before we go to/from Fourier space.
-    # Later we apply this again to the transform.
+    # later we apply this again to the transform.
     # checkerboard pattern applied instead of fft shifting
     # to have dc component in centre of image
     # (even number of pixels, one to right of centre)
@@ -191,7 +188,8 @@ def do_fft(arr, d=3, only_real=False, **kwargs):
 
     Parameters
     ----------
-    arr : numpy.ndarray, shape (N,N) or (N,N,N)
+    arr : numpy.ndarray, shape
+    (n_pixels,n_pixels) or (n_pixels,n_pixels,n_pixels)
         Input array.
     d : int, 2 or 3
         Dimension.
@@ -200,7 +198,9 @@ def do_fft(arr, d=3, only_real=False, **kwargs):
 
     Returns
     -------
-    arr_f : numpy.ndarray, shape (N,N) or (N,N,N)
+    arr_f : numpy.ndarray, shape
+    (n_pixels,n_pixels) or (n_pixels,n_pixels,n_pixels)
+
         Output array.
     """
     if d == 2:
@@ -217,7 +217,8 @@ def do_ifft(arr_f, d=3, only_real=True, **kwargs):
 
     Parameters
     ----------
-    arr_f : numpy.ndarray, shape (N,N) or (N,N,N)
+    arr_f : numpy.ndarray, shape
+    (n_pixels,n_pixels) or (n_pixels,n_pixels,n_pixels)
         Input array.
     d : int, 2 or 3
         Dimension.
@@ -226,7 +227,8 @@ def do_ifft(arr_f, d=3, only_real=True, **kwargs):
 
     Returns
     -------
-    arr : numpy.ndarray, shape (N,N) or (N,N,N)
+    arr : numpy.ndarray, shape
+    (n_pixels,n_pixels) or (n_pixels,n_pixels,n_pixels)
         Output array.
     """
     if d == 2:

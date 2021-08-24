@@ -2,9 +2,11 @@ import numpy as np
 from ioSPI import fourier
 
 
-N = 128
-arr2d = np.random.normal(size=N * N).reshape(N, N)
-arr3d = np.random.normal(size=N * N * N).reshape(N, N, N)
+n_pixels = (np.random.randint(low=8, high=128) // 2) * 2
+arr2d = np.random.normal(size=n_pixels * n_pixels).reshape(n_pixels, n_pixels)
+arr3d = np.random.normal(size=n_pixels * n_pixels * n_pixels).reshape(
+    n_pixels, n_pixels, n_pixels
+)
 
 
 def test_do_fft():
@@ -15,7 +17,7 @@ def test_do_fft():
     for arr, d in zip([arr2d, arr3d], [2, 3]):
         arr_f = fourier.do_fft(arr, d=d)
         assert arr_f.dtype == "complex128"
-        assert arr_f.shape == tuple([N] * d)
+        assert arr_f.shape == tuple([n_pixels] * d)
         assert np.isclose(
             np.var(arr), np.var(arr_f), atol=1e-3
         )  # change atol if N different
@@ -31,7 +33,7 @@ def test_do_ifft():
     for arr, d in zip([arr2d, arr3d], [2, 3]):
         arr_i = fourier.do_ifft(arr, d=d)
         assert arr_i.dtype == "float64"
-        assert arr_i.shape == tuple([N] * d)
+        assert arr_i.shape == tuple([n_pixels] * d)
 
         arr_i = fourier.do_ifft(arr, d=d, only_real=False)
         assert arr_i.dtype == "complex128"
@@ -46,12 +48,12 @@ def test_do_fft_and_ifft():
 
 def test_make_neg_pos_2d():
     """Test 2D checkerboard."""
-    neg_pos_2d = fourier.make_neg_pos_2d(arr2d.reshape(1, N, N).shape)
-    assert np.allclose(neg_pos_2d ** 2, np.ones((1, N, N)))
+    neg_pos_2d = fourier.make_neg_pos_2d(
+        arr2d.reshape(1, n_pixels, n_pixels).shape
+    )
+    assert np.allclose(neg_pos_2d ** 2, np.ones((1, n_pixels, n_pixels)))
     assert np.isclose(0, neg_pos_2d.mean())
-    idx_rand_1, idx_rand_2 = (
-        np.random.randint(low=0, high=N, size=2) // 2
-    ) * 2
+    idx_rand_1, idx_rand_2 = np.random.randint(low=0, high=n_pixels, size=2)
     expected_value = 1
     if (idx_rand_1 + idx_rand_2) % 2:
         expected_value *= -1
@@ -61,11 +63,13 @@ def test_make_neg_pos_2d():
 def test_make_neg_pos_3d():
     """Test 3D checkerboard."""
     neg_pos_3d = fourier.make_neg_pos_3d(arr3d.shape)
-    assert np.allclose(neg_pos_3d ** 2, np.ones((N, N, N)))
+    assert np.allclose(
+        neg_pos_3d ** 2, np.ones((n_pixels, n_pixels, n_pixels))
+    )
     assert np.isclose(0, neg_pos_3d.mean())
-    idx_rand_1, idx_rand_2, idx_rand_3 = (
-        np.random.randint(low=0, high=N, size=3) // 2
-    ) * 2
+    idx_rand_1, idx_rand_2, idx_rand_3 = np.random.randint(
+        low=0, high=n_pixels, size=3
+    )
     expected_value = 1
     if (idx_rand_1 + idx_rand_2 + idx_rand_3) % 2:
         expected_value *= -1
@@ -77,21 +81,26 @@ def test_make_neg_pos_3d():
 def test_fft3d():
     """Test 3d fft core function."""
     arr3d_f = fourier.fft3d(arr3d, mode="forward")
-    assert arr3d_f.shape == (N, N, N)
+    assert arr3d_f.shape == (n_pixels, n_pixels, n_pixels)
     arr3d_r = fourier.fft3d(arr3d_f, mode="inverse")
-    assert arr3d_r.shape == (N, N, N)
+    assert arr3d_r.shape == (n_pixels, n_pixels, n_pixels)
 
 
 def test_fft2d():
     """Test 2d fft core function."""
     arr2d_f = fourier.fft2d(arr2d, mode="forward")
-    assert arr2d_f.shape == (N, N)
+    assert arr2d_f.shape == (n_pixels, n_pixels, n_pixels)
     arr2d_r = fourier.fft2d(arr2d_f, mode="inverse")
-    assert arr2d_r.shape == (N, N)
+    assert arr2d_r.shape == (n_pixels, n_pixels, n_pixels)
 
-    arr2d_batch = arr3d[: N // 2]
+    n_particles = n_pixels // 2
+    arr2d_batch = arr3d[:n_particles]
     arr2d_batch_f = fourier.fft2d(arr2d_batch, batch=True, mode="forward")
-    arr2d_manual_batch_f = np.zeros((N // 2, N, N), dtype=np.complex128)
-    for n in range(N // 2):
-        arr2d_manual_batch_f[n] = fourier.fft2d(arr2d_batch[n], mode="forward")
+    arr2d_manual_batch_f = np.zeros(
+        (n_particles, n_pixels, n_pixels), dtype=np.complex128
+    )
+    for particle in range(n_particles):
+        arr2d_manual_batch_f[particle] = fourier.fft2d(
+            arr2d_batch[particle], mode="forward"
+        )
     assert np.allclose(arr2d_manual_batch_f, arr2d_batch_f)
