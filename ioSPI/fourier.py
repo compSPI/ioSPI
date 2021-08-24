@@ -21,7 +21,6 @@ def make_neg_pos_2d(arr2d_shape):
     neg_pos_2d : numpy.ndarray, shape (n_particle,N_fft_pix,N_fft_pix)
         Checkerboard array.
     """
-    # assert arr2d.ndim == 3  # extra axis
     n_particle, R1, R2 = arr2d_shape
     neg_pos_2d = np.ones(arr2d_shape)
     for particle in range(n_particle):
