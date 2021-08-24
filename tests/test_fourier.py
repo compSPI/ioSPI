@@ -2,7 +2,6 @@ import numpy as np
 from ioSPI import fourier
 
 
-# right way to use as global in testing environment?
 N = 128
 arr2d = np.random.normal(size=N * N).reshape(N, N)
 arr3d = np.random.normal(size=N * N * N).reshape(N, N, N)
@@ -34,9 +33,6 @@ def test_do_ifft():
         assert arr_i.dtype == "float64"
         assert arr_i.shape == tuple([N] * d)
 
-        # needs work: normalization constant
-        # assert np.isclose(np.var(arr_i),np.var(arr),atol=1e-3)
-
         arr_i = fourier.do_ifft(arr, d=d, only_real=False)
         assert arr_i.dtype == "complex128"
 
@@ -50,9 +46,16 @@ def test_do_fft_and_ifft():
 
 def test_make_neg_pos_2d():
     """Test 2D checkerboard."""
-    neg_pos_3d = fourier.make_neg_pos_2d(arr3d.shape)
-    assert np.allclose(neg_pos_3d ** 2, np.ones((N, N, N)))
-    assert np.isclose(0, neg_pos_3d.mean())
+    neg_pos_2d = fourier.make_neg_pos_2d(arr2d.reshape(1, N, N).shape)
+    assert np.allclose(neg_pos_2d ** 2, np.ones((1, N, N)))
+    assert np.isclose(0, neg_pos_2d.mean())
+    idx_rand_1, idx_rand_2 = (
+        np.random.randint(low=0, high=N, size=2) // 2
+    ) * 2
+    expected_value = 1
+    if (idx_rand_1 + idx_rand_2) % 2:
+        expected_value *= -1
+    assert np.isclose(neg_pos_2d[0, idx_rand_1, idx_rand_2], expected_value)
 
 
 def test_make_neg_pos_3d():
@@ -60,6 +63,15 @@ def test_make_neg_pos_3d():
     neg_pos_3d = fourier.make_neg_pos_3d(arr3d.shape)
     assert np.allclose(neg_pos_3d ** 2, np.ones((N, N, N)))
     assert np.isclose(0, neg_pos_3d.mean())
+    idx_rand_1, idx_rand_2, idx_rand_3 = (
+        np.random.randint(low=0, high=N, size=3) // 2
+    ) * 2
+    expected_value = 1
+    if (idx_rand_1 + idx_rand_2 + idx_rand_3) % 2:
+        expected_value *= -1
+    assert np.isclose(
+        neg_pos_3d[idx_rand_1, idx_rand_2, idx_rand_3], expected_value
+    )
 
 
 def test_fft3d():
