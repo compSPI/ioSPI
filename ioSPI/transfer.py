@@ -1,15 +1,16 @@
 import numba as nb
 import numpy as np
+import logging
 
 
-def ctf_freqs(N, psize=1.0, d=2):
+def ctf_freqs(n_pixels, psize=1.0, d=2):
     """Make CTF Frequencies.
 
     Makes 1 or 2 D array of fourier space frequenceis
 
     Parameters
     ----------
-    N : int
+    n_pixels : int
         Number of pixels.
     d : int, 1 or 2
         Dimension.
@@ -20,24 +21,24 @@ def ctf_freqs(N, psize=1.0, d=2):
     -------
     freq_1d : numpy.ndarray, shape (N//2,)
         Frequencies in 1D, with dc at left most.
-    freq_A_2d : numpy.ndarray, shape (N,N)
+    freq_mag_2d : numpy.ndarray, shape (N,N)
         Magnitude of 2D frequency vector, with -ve frequencies in left half,
         and dc and +ve frequencies in right half.
     angles_rad : numpy.ndarray, shape (N,N)
         Angle of 2D frequency vector.
     """
     if d == 1:
-        freq_pix_1d = np.arange(0, 0.5, 1 / N)
+        freq_pix_1d = np.arange(0, 0.5, 1 / n_pixels)
         freq_1d = freq_pix_1d * psize
         return freq_1d
 
     # assert d == 2
-    freq_pix_1d = np.arange(-0.5, 0.5, 1 / N)
+    freq_pix_1d = np.arange(-0.5, 0.5, 1 / n_pixels)
     x, y = np.meshgrid(freq_pix_1d, freq_pix_1d)
     rho = np.sqrt(x ** 2 + y ** 2)
     angles_rad = np.arctan2(y, x)
-    freq_A_2d = rho * psize
-    return (freq_A_2d, angles_rad)
+    freq_mag_2d = rho * psize
+    return (freq_mag_2d, angles_rad)
 
 
 @nb.jit(cache=True, nopython=True, nogil=True)
@@ -51,7 +52,7 @@ def eval_ctf(
 
 
     s : np.ndarray, shape (N,N)
-        Precomputed frequency grid for CTF evaluation.
+        Precomputed frequency magnitude grid for CTF evaluation.
     a : np.ndarray, shape (N,N)
         Precomputed frequency grid angles.
     def1 : float
@@ -98,7 +99,7 @@ def eval_ctf(
 
 
 def random_ctfs(
-    N,
+    n_pixels,
     psize,
     n_particles,
     df_min=15000,
@@ -115,8 +116,13 @@ def random_ctfs(
     do_log=True,
 ):
     """
-    N : int
-        Number of pixels.
+    Sample random CTFs.
+
+    Sample num_particles random CTFs, where the defoci and
+    angle of astigmatism are drawn from a uniform distribution.
+
+    num_pixels : int
+        Number of pixels along an axis.
     prise : float
         Pixel size (A).
     n_particles : int
@@ -154,13 +160,13 @@ def random_ctfs(
     df_ang_deg = np.random.uniform(
         low=df_ang_min, high=df_ang_max, size=n_particles
     )
-    ctfs = np.empty((n_particles, N, N))
-    freq_A_2d, angles_rad = ctf_freqs(N, psize, d=2)
+    ctfs = np.empty((n_particles, n_pixels, n_pixels))
+    freq_mag_2d, angles_rad = ctf_freqs(n_pixels, psize, d=2)
     for idx in range(n_particles):
         if do_log and idx % max(1, (n_particles // 10)) == 0:
-            print(idx)  # needs work: logger
+            logging.debug(idx)  # needs work: logger
         ctfs[idx] = eval_ctf(
-            freq_A_2d,
+            freq_mag_2d,
             angles_rad,
             def1=df1s[idx],
             def2=df2s[idx],
