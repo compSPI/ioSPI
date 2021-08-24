@@ -89,9 +89,9 @@ def test_fft3d():
 def test_fft2d():
     """Test 2d fft core function."""
     arr2d_f = fourier.fft2d(arr2d, mode="forward")
-    assert arr2d_f.shape == (n_pixels, n_pixels, n_pixels)
+    assert arr2d_f.shape == (n_pixels, n_pixels)
     arr2d_r = fourier.fft2d(arr2d_f, mode="inverse")
-    assert arr2d_r.shape == (n_pixels, n_pixels, n_pixels)
+    assert arr2d_r.shape == (n_pixels, n_pixels)
 
     n_particles = n_pixels // 2
     arr2d_batch = arr3d[:n_particles]
