@@ -1,5 +1,5 @@
 import numpy as np
-from iospi import fourier
+from ioSPI import fourier
 
 
 # right way to use as global in testing environment?
