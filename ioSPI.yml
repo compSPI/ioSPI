@@ -5,12 +5,12 @@ channels:
 dependencies:
   - flake8-black
   - gemmi
+  - numba
   - numpy
+  - h5py>=2.10.0
+  - pillow>=8.2.0
   - pip
+  - pyfftw
   - pytest
   - pytest-cov
-  - h5py==2.10.0
   - pytorch
-  - pillow==8.2.0
-  - numba
-  - pyfftw
