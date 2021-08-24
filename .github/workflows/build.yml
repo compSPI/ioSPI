@@ -48,7 +48,7 @@ jobs:
           $CONDA/bin/pip install -e .
       - name: linting [flake8]
         run: |
-          $CONDA/bin/flake8 --ignore=D,W503,W504,BLK100 ioSPI tests
+          $CONDA/bin/flake8 --ignore=D,W503,W504 ioSPI tests
           $CONDA/bin/flake8 ioSPI/iotools tests/test_iotools
       - name: unit testing [pytest]
         run: |
