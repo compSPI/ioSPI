@@ -46,29 +46,29 @@ def test_do_fft_and_ifft():
     assert np.allclose(arr2d_r, arr2d)
 
 
-def test_make_checharboard_2d():
+def test_make_checkerboard_2d():
     """Test 2D checkerboard."""
-    checharboard_2d = fourier.make_checharboard_2d(
+    checkerboard_2d = fourier.make_checkerboard_2d(
         arr2d.reshape(1, n_pixels, n_pixels).shape
     )
-    assert np.allclose(checharboard_2d ** 2, np.ones((1, n_pixels, n_pixels)))
-    assert np.isclose(0, checharboard_2d.mean())
+    assert np.allclose(checkerboard_2d ** 2, np.ones((1, n_pixels, n_pixels)))
+    assert np.isclose(0, checkerboard_2d.mean())
     idx_rand_1, idx_rand_2 = np.random.randint(low=0, high=n_pixels, size=2)
     expected_value = 1
     if (idx_rand_1 + idx_rand_2) % 2:
         expected_value *= -1
     assert np.isclose(
-        checharboard_2d[0, idx_rand_1, idx_rand_2], expected_value
+        checkerboard_2d[0, idx_rand_1, idx_rand_2], expected_value
     )
 
 
-def test_make_checharboard_3d():
+def test_make_checkerboard_3d():
     """Test 3D checkerboard."""
-    checharboard_3d = fourier.make_checharboard_3d(arr3d.shape)
+    checkerboard_3d = fourier.make_checkerboard_3d(arr3d.shape)
     assert np.allclose(
-        checharboard_3d ** 2, np.ones((n_pixels, n_pixels, n_pixels))
+        checkerboard_3d ** 2, np.ones((n_pixels, n_pixels, n_pixels))
     )
-    assert np.isclose(0, checharboard_3d.mean())
+    assert np.isclose(0, checkerboard_3d.mean())
     idx_rand_1, idx_rand_2, idx_rand_3 = np.random.randint(
         low=0, high=n_pixels, size=3
     )
@@ -76,7 +76,7 @@ def test_make_checharboard_3d():
     if (idx_rand_1 + idx_rand_2 + idx_rand_3) % 2:
         expected_value *= -1
     assert np.isclose(
-        checharboard_3d[idx_rand_1, idx_rand_2, idx_rand_3], expected_value
+        checkerboard_3d[idx_rand_1, idx_rand_2, idx_rand_3], expected_value
     )
 
 
