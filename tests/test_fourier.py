@@ -57,7 +57,9 @@ def test_make_checharboard_2d():
     expected_value = 1
     if (idx_rand_1 + idx_rand_2) % 2:
         expected_value *= -1
-    assert np.isclose(checharboard_2d[0, idx_rand_1, idx_rand_2], expected_value)
+    assert np.isclose(
+        checharboard_2d[0, idx_rand_1, idx_rand_2], expected_value
+    )
 
 
 def test_make_checharboard_3d():
