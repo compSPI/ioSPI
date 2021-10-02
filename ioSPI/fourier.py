@@ -4,7 +4,7 @@ from numba import jit
 
 
 @jit
-def make_neg_pos_2d(arr2d_shape):
+def make_checkerboard_2d(arr2d_shape):
     """Apply checkerboard pattern for 2D FFT.
 
     Each pixel switches from positive to negative in checker board pattern.
@@ -18,21 +18,21 @@ def make_neg_pos_2d(arr2d_shape):
 
     Returns
     -------
-    neg_pos_2d : numpy.ndarray, shape (n_particle,N_fft_pix,N_fft_pix)
+    checkerboard_2d : numpy.ndarray, shape (n_particle,N_fft_pix,N_fft_pix)
         Checkerboard array.
     """
     n_particle, n_pixels_1, n_pixels_2 = arr2d_shape
-    neg_pos_2d = np.ones(arr2d_shape)
+    checkerboard_2d = np.ones(arr2d_shape)
     for particle in range(n_particle):
         for pix_1 in range(n_pixels_1):
             for pix_2 in range(n_pixels_2):
                 if (pix_1 + pix_2) % 2:
-                    neg_pos_2d[particle, pix_1, pix_2] *= -1
-    return neg_pos_2d
+                    checkerboard_2d[particle, pix_1, pix_2] *= -1
+    return checkerboard_2d
 
 
 @jit
-def make_neg_pos_3d(arr3d_shape):
+def make_checkerboard_3d(arr3d_shape):
     """Apply checkerboard pattern for 3D FFT.
 
     Each pixel switches from positive to negative in checker board pattern.
@@ -46,23 +46,23 @@ def make_neg_pos_3d(arr3d_shape):
 
     Returns
     -------
-    neg_pos_3d : numpy.ndarray, shape (N_fft_pix,N_fft_pix,N_fft_pix)
+    checkerboard_3d : numpy.ndarray, shape (N_fft_pix,N_fft_pix,N_fft_pix)
         Checkerboard array.
     """
     num_pix_1, num_pix_2, num_pix_3 = arr3d_shape
-    neg_pos_3d = np.ones(arr3d_shape)
+    checkerboard_3d = np.ones(arr3d_shape)
     for pix_1 in range(num_pix_1):
         for pix_2 in range(num_pix_2):
             for pix_3 in range(num_pix_3):
                 if (pix_1 + pix_2 + pix_3) % 2:
-                    neg_pos_3d[pix_1, pix_2, pix_3] *= -1
-    return neg_pos_3d
+                    checkerboard_3d[pix_1, pix_2, pix_3] *= -1
+    return checkerboard_3d
 
 
 def fft3d(
     arr3d,
     mode,
-    neg_pos_3d=None,
+    checkerboard_3d=None,
     numpy_fft=pyfftw.interfaces.numpy_fft,
     only_real=False,
 ):
@@ -81,7 +81,7 @@ def fft3d(
         Input array.
     mode : str, {"forward", "inverse"}
         Forward or inverse
-    neg_pos_3d : numpy.ndarray, shape (n_pixels,n_pixels,n_pixels)
+    checkerboard_3d : numpy.ndarray, shape (n_pixels,n_pixels,n_pixels)
         Optional precomputed array. If None (default) passed,
         computes on the fly.
     numpy_fft : func
@@ -95,23 +95,23 @@ def fft3d(
         Output array.
     """
     # compute on the fly if not precomputed
-    if neg_pos_3d is None:
-        neg_pos_3d = make_neg_pos_3d(arr3d.shape)
+    if checkerboard_3d is None:
+        checkerboard_3d = make_checkerboard_3d(arr3d.shape)
         # extra multiplication for mod 4
         if arr3d.shape[0] % 4 != 0:
-            neg_pos_3d *= -1
+            checkerboard_3d *= -1
 
     if mode == "forward":
-        arr3d_f = numpy_fft.fftn(neg_pos_3d * arr3d)
+        arr3d_f = numpy_fft.fftn(checkerboard_3d * arr3d)
         arr3d_f /= np.sqrt(np.prod(arr3d_f.shape))
     elif mode == "inverse":
-        arr3d_f = numpy_fft.ifftn(neg_pos_3d * arr3d)
+        arr3d_f = numpy_fft.ifftn(checkerboard_3d * arr3d)
         arr3d_f *= np.sqrt(np.prod(arr3d_f.shape))
 
     if only_real:
         arr3d_f = arr3d_f.real
 
-    arr3d_f *= neg_pos_3d
+    arr3d_f *= checkerboard_3d
     return arr3d_f
 
 
@@ -154,8 +154,8 @@ def fft2d(
 
     # reshape to 3 dimensions
     arr2d = arr2d.reshape(-1, n1, n1)
-    neg_pos_2d = make_neg_pos_2d(arr2d.shape)
-    neg_pos_2d *= neg_pos_2d
+    checkerboard_2d = make_checkerboard_2d(arr2d.shape)
+    checkerboard_2d *= checkerboard_2d
 
     if mode == "forward":
         arr2d_f = numpy_fft.fftn(arr2d, axes=(-2, -1))
@@ -167,7 +167,7 @@ def fft2d(
     if only_real:
         arr2d_f = arr2d_f.real
 
-    arr2d_f *= neg_pos_2d
+    arr2d_f *= checkerboard_2d
     if not batch:
         arr2d_f = arr2d_f.reshape(n1, n2)
 
