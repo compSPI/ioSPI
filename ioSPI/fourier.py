@@ -174,7 +174,7 @@ def fft2d(
     return arr2d_f
 
 
-def do_fft(arr, d=3, only_real=False, **kwargs):
+def do_fft(arr, dim=3, only_real=False, **kwargs):
     """Wraps forward FFT.
 
     Computes forward fast fourier transform for 2 or 3 dimensions.
@@ -184,7 +184,7 @@ def do_fft(arr, d=3, only_real=False, **kwargs):
     arr : numpy.ndarray, shape
     (n_pixels,n_pixels) or (n_pixels,n_pixels,n_pixels)
         Input array.
-    d : int, 2 or 3
+    dim : int, 2 or 3
         Dimension.
     only_real : bool
         If True, return only real part of transform.
@@ -196,14 +196,14 @@ def do_fft(arr, d=3, only_real=False, **kwargs):
 
         Output array.
     """
-    if d == 2:
+    if dim == 2:
         arr_f = fft2d(arr, mode="forward", only_real=only_real, **kwargs)
-    elif d == 3:
+    elif dim == 3:
         arr_f = fft3d(arr, mode="forward", only_real=only_real, **kwargs)
     return arr_f
 
 
-def do_ifft(arr_f, d=3, only_real=True, **kwargs):
+def do_ifft(arr_f, dim=3, only_real=True, **kwargs):
     """Wraps inverse FFT.
 
     Computes inverse fast fourier transform for 2 or 3 dimensions.
@@ -213,7 +213,7 @@ def do_ifft(arr_f, d=3, only_real=True, **kwargs):
     arr_f : numpy.ndarray, shape
     (n_pixels,n_pixels) or (n_pixels,n_pixels,n_pixels)
         Input array.
-    d : int, 2 or 3
+    dim : int, 2 or 3
         Dimension.
     only_real : bool
         If True, return only real part of transform.
@@ -224,8 +224,8 @@ def do_ifft(arr_f, d=3, only_real=True, **kwargs):
     (n_pixels,n_pixels) or (n_pixels,n_pixels,n_pixels)
         Output array.
     """
-    if d == 2:
+    if dim == 2:
         arr = fft2d(arr_f, mode="inverse", only_real=only_real, **kwargs)
-    elif d == 3:
+    elif dim == 3:
         arr = fft3d(arr_f, mode="inverse", only_real=only_real, **kwargs)
     return arr
