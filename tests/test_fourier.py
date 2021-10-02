@@ -14,59 +14,59 @@ def test_do_fft():
 
     Conservation of variance due to gaussian white noise input.
     """
-    for arr, d in zip([arr2d, arr3d], [2, 3]):
-        arr_f = fourier.do_fft(arr, d=d)
+    for arr, dim in zip([arr2d, arr3d], [2, 3]):
+        arr_f = fourier.do_fft(arr, dim=dim)
         assert arr_f.dtype == "complex128"
-        assert arr_f.shape == tuple([n_pixels] * d)
+        assert arr_f.shape == tuple([n_pixels] * dim)
         assert np.isclose(
             np.var(arr), np.var(arr_f), atol=1e-3
         )  # change atol if N different
 
         assert np.allclose(
-            fourier.do_fft(arr, d=d, only_real=True),
-            fourier.do_fft(arr, d=d).real,
+            fourier.do_fft(arr, dim=dim, only_real=True),
+            fourier.do_fft(arr, dim=dim).real,
         )
 
 
 def test_do_ifft():
     """Test ifft wrapper."""
-    for arr, d in zip([arr2d, arr3d], [2, 3]):
-        arr_i = fourier.do_ifft(arr, d=d)
+    for arr, dim in zip([arr2d, arr3d], [2, 3]):
+        arr_i = fourier.do_ifft(arr, dim=dim)
         assert arr_i.dtype == "float64"
-        assert arr_i.shape == tuple([n_pixels] * d)
+        assert arr_i.shape == tuple([n_pixels] * dim)
 
-        arr_i = fourier.do_ifft(arr, d=d, only_real=False)
+        arr_i = fourier.do_ifft(arr, dim=dim, only_real=False)
         assert arr_i.dtype == "complex128"
 
 
 def test_do_fft_and_ifft():
     """Recover the original array after fft and ifft."""
-    arr2d_f = fourier.do_fft(arr2d, d=2)
-    arr2d_r = fourier.do_ifft(arr2d_f, d=2)
+    arr2d_f = fourier.do_fft(arr2d, dim=2)
+    arr2d_r = fourier.do_ifft(arr2d_f, dim=2)
     assert np.allclose(arr2d_r, arr2d)
 
 
-def test_make_neg_pos_2d():
+def test_make_checharboard_2d():
     """Test 2D checkerboard."""
-    neg_pos_2d = fourier.make_neg_pos_2d(
+    checharboard_2d = fourier.make_checharboard_2d(
         arr2d.reshape(1, n_pixels, n_pixels).shape
     )
-    assert np.allclose(neg_pos_2d ** 2, np.ones((1, n_pixels, n_pixels)))
-    assert np.isclose(0, neg_pos_2d.mean())
+    assert np.allclose(checharboard_2d ** 2, np.ones((1, n_pixels, n_pixels)))
+    assert np.isclose(0, checharboard_2d.mean())
     idx_rand_1, idx_rand_2 = np.random.randint(low=0, high=n_pixels, size=2)
     expected_value = 1
     if (idx_rand_1 + idx_rand_2) % 2:
         expected_value *= -1
-    assert np.isclose(neg_pos_2d[0, idx_rand_1, idx_rand_2], expected_value)
+    assert np.isclose(checharboard_2d[0, idx_rand_1, idx_rand_2], expected_value)
 
 
-def test_make_neg_pos_3d():
+def test_make_checharboard_3d():
     """Test 3D checkerboard."""
-    neg_pos_3d = fourier.make_neg_pos_3d(arr3d.shape)
+    checharboard_3d = fourier.make_checharboard_3d(arr3d.shape)
     assert np.allclose(
-        neg_pos_3d ** 2, np.ones((n_pixels, n_pixels, n_pixels))
+        checharboard_3d ** 2, np.ones((n_pixels, n_pixels, n_pixels))
     )
-    assert np.isclose(0, neg_pos_3d.mean())
+    assert np.isclose(0, checharboard_3d.mean())
     idx_rand_1, idx_rand_2, idx_rand_3 = np.random.randint(
         low=0, high=n_pixels, size=3
     )
@@ -74,7 +74,7 @@ def test_make_neg_pos_3d():
     if (idx_rand_1 + idx_rand_2 + idx_rand_3) % 2:
         expected_value *= -1
     assert np.isclose(
-        neg_pos_3d[idx_rand_1, idx_rand_2, idx_rand_3], expected_value
+        checharboard_3d[idx_rand_1, idx_rand_2, idx_rand_3], expected_value
     )
 
 
