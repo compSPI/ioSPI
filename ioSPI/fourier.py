@@ -151,12 +151,6 @@ def fft2d(
         Output array.
     """
     n1, n2 = arr2d.shape[-2:]
-    # we apply an alterating +1/-1 multiplicative
-    # before we go to/from Fourier space.
-    # later we apply this again to the transform.
-    # checkerboard pattern applied instead of fft shifting
-    # to have dc component in centre of image
-    # (even number of pixels, one to right of centre)
 
     # reshape to 3 dimensions
     arr2d = arr2d.reshape(-1, n1, n1)
