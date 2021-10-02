@@ -66,9 +66,8 @@ def fft3d(
     numpy_fft=pyfftw.interfaces.numpy_fft,
     only_real=False,
 ):
-    """3D FFT
+    """Computes 3D FFT.
 
-    Wraps fft2d
     Fast fourier transform. We apply an alterating +1/-1 multiplicative
     before we go to/from Fourier space.
     Later we apply this again to the transform.
@@ -123,7 +122,7 @@ def fft2d(
     only_real=False,
     batch=False,
 ):
-    """2D FFT
+    """Computes 2D FFT.
 
     Fast fourier transform. We apply an alterating +1/-1 multiplicative
     before we go to/from Fourier space.
@@ -182,7 +181,7 @@ def fft2d(
 
 
 def do_fft(arr, d=3, only_real=False, **kwargs):
-    """Forward FFT wrapper.
+    """Wraps forward FFT.
 
     Computes forward fast fourier transform for 2 or 3 dimensions.
 
@@ -211,7 +210,7 @@ def do_fft(arr, d=3, only_real=False, **kwargs):
 
 
 def do_ifft(arr_f, d=3, only_real=True, **kwargs):
-    """Inverse FFT wrapper.
+    """Wraps inverse FFT.
 
     Computes inverse fast fourier transform for 2 or 3 dimensions.
 
