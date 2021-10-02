@@ -79,8 +79,8 @@ def fft3d(
     ----------
     arr3d : numpy.ndarray, shape (n_pixels,n_pixels,n_pixels)
         Input array.
-    mode : str
-        Forward or reverse
+    mode : str, {"forward", "inverse"}
+        Forward or inverse
     neg_pos_3d : numpy.ndarray, shape (n_pixels,n_pixels,n_pixels)
         Optional precomputed array. If None (default) passed,
         computes on the fly.
@@ -136,8 +136,8 @@ def fft2d(
     arr2d : numpy.ndarray, shape (n_pixels,n_pixels,n_pixels)
     or (num_exposures,n_pixels,n_pixels)
         Input array.
-    mode : str
-        Forward or reverse
+    mode : str, {"forward", "inverse"}
+        Forward or inverse
     numpy_fft : func
         Function backend for performing the fft.
     only_real : bool
