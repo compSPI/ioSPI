@@ -1,0 +1,22 @@
+name: ioSPI
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - codecov
+  - coverage
+  - flake8-black
+  - flake8-docstrings
+  - flake8-import-order
+  - gemmi
+  - numba
+  - numpy
+  - h5py>=2.10.0
+  - pillow>=8.2.0
+  - pyfftw
+  - pytest
+  - pytest-cov
+  - pytorch
+  - pip:
+    - black==20.8b0
+    - pre-commit
