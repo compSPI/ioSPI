@@ -7,6 +7,8 @@ on:
     - 'README.md'
     - '.deepsource.toml'
     - '.gitignore'
+    - 'setup.py'
+
 
   pull_request:
     branches: [master]
@@ -14,6 +16,7 @@ on:
     - 'README.md'
     - '.deepsource.toml'
     - '.gitignore'
+    - 'setup.py'
 
 
 jobs:
@@ -29,6 +32,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Build using Python ${{matrix.python-version}}
         uses: actions/setup-python@v2
         with:
@@ -38,27 +43,21 @@ jobs:
         uses: actions/cache@v1
         with:
           path: $CONDA
-          key: ${{ runner.os }}-conda-${{ hashFiles('ioSPI.yml') }}
+          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
       - name: install dependencies
         run:  |
           # $CONDA is an environment variable pointing to the root of the miniconda directory
-          $CONDA/bin/conda env update --file ioSPI.yml --name base
+          $CONDA/bin/conda env update --file environment.yml --name base
           $CONDA/bin/pip install -e .
       - name: linting [flake8]
         run: |
-          $CONDA/bin/flake8 --ignore=D,W503,W504,BLK100 ioSPI tests
-          $CONDA/bin/flake8 ioSPI/iotools tests/test_iotools
+          $CONDA/bin/flake8 ioSPI tests
       - name: unit testing [pytest]
         run: |
-          $CONDA/bin/pytest
+          $CONDA/bin/pytest --cov-report term --cov-report xml:coverage.xml --cov=ioSPI ${{matrix.test-folder}}
       - name: uploading code coverage [codecov]
-        uses: codecov/codecov-action@v1
-        with:
-          files: ./coverage1.xml,./coverage2.xml
-          directory: ./coverage/reports/
-          flags: unittests
-          name: codecov-umbrella
-          path_to_write_report: ./coverage/codecov_report.txt
-          verbose: true
+        if: ${{matrix.python-version == 3.7}}
+        run: |
+          bash <(curl -s https://codecov.io/bash) -c
