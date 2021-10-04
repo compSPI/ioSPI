@@ -12,7 +12,7 @@ coverage:
        # advanced
         branches:
           - master
-        if_not_found: success
+        if_not_found: error
         if_ci_failed: error
         informational: False
         only_pulls: false
@@ -28,7 +28,7 @@ coverage:
         branches:
           - master
         if_no_uploads: error
-        if_not_found: success
+        if_not_found: error
         if_ci_failed: error
         only_pulls: false
 
