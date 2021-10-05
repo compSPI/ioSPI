@@ -2,6 +2,7 @@
 
 import os
 
+import gemmi
 import pytest
 
 from ioSPI.iotools.atomic_models import read_gemmi_model
@@ -34,3 +35,9 @@ class TestAtomicModels:
     def test_placeholder():
         """Test placeholder."""
         print("Test placeholder.")
+
+    def test_read_gemmi_model_pdb(self):
+        """Test read_gemmi_model for pdb."""
+        path = "2dhb.pdb"
+        model = read_gemmi_model(path)
+        assert model.__class__ is gemmi.Model
