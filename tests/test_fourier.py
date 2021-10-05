@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from ..ioSPI import fourier
+from ioSPI import fourier
 
 n_pixels = (np.random.randint(low=8, high=128) // 2) * 2
 arr2d = np.random.normal(size=n_pixels * n_pixels).reshape(n_pixels, n_pixels)
