@@ -2,5 +2,5 @@
 docstring-convention = numpy
 import_order_style = smarkets
 max-line-length = 88
-extend-ignore = E203
+extend-ignore = E203,I202
 exclude = ioSPI/__init__.py,tests/__init__.py,tests/test_iotools/__init__.py
