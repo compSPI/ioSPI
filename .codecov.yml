@@ -35,5 +35,4 @@ coverage:
 # Files to ignore
 ignore:
   - "data"
-  - "coverage"
   - "notebooks"
