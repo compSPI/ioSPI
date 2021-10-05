@@ -36,3 +36,4 @@ coverage:
 ignore:
   - "data"
   - "coverage"
+  - "notebooks"
