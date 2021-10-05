@@ -3,7 +3,7 @@
 import numpy as np
 import torch
 
-from ..ioSPI.iotools import cryo_dataset
+from ...ioSPI.iotools import cryo_dataset
 
 
 class TestDataset:
