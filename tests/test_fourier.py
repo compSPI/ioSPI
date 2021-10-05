@@ -21,7 +21,7 @@ def test_do_fft():
         assert arr_f.dtype == "complex128"
         assert arr_f.shape == tuple([n_pixels] * dim)
         assert np.isclose(
-            np.var(arr), np.var(arr_f), atol=1e-3
+            np.var(arr), np.var(arr_f), atol=1e-2
         )  # change atol if N different
 
         assert np.allclose(
