@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from ..ioSPI.iotools.atomic_models import read_gemmi_model
+from ioSPI.iotools.atomic_models import read_gemmi_model
 
 
 class TestAtomicModels:
