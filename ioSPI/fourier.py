@@ -29,7 +29,7 @@ def make_checkerboard_2d(arr2d_shape):
         for pix_1 in range(n_pixels_1):
             for pix_2 in range(n_pixels_2):
                 if (pix_1 + pix_2) % 2:
-                    checkerboard_2d[particle, pix_1, pix_2] *= -1
+                    checkerboard_2d[particle, pix_1, pix_2] *= -1.0
     return checkerboard_2d
 
 
