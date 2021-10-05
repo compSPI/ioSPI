@@ -13,5 +13,3 @@ conda activate ioSPI
 ## Contributing
 
 See our [contributing](https://github.com/compspi/compspi/blob/master/docs/contributing.rst) guidelines!
-
-gw
