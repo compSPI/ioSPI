@@ -4,7 +4,7 @@ coverage:
   status:
     project:
       default:
-        target: 90%
+        target: 50%
         threshold: 2%
         base: auto
         flags:
@@ -19,7 +19,7 @@ coverage:
     patch:
       default:
         # basic
-        target: 90%
+        target: 50%
         threshold: 2%
         base: auto
         flags:
