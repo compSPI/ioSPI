@@ -11,7 +11,7 @@ class TestAtomicModels:
     """Test for reading and writing atomic models."""
 
     def test_read_gemmi_model_oserror(self):
-        """Read with Gemmi - OSError test"""
+        """Read with Gemmi - OSError test."""
         path = "non-existing-file.pdb"
         expected = "File could not be found."
         with pytest.raises(OSError) as exception_context:
