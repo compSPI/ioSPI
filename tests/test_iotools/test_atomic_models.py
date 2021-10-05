@@ -41,3 +41,9 @@ class TestAtomicModels:
         path = "2dhb.pdb"
         model = read_gemmi_model(path)
         assert model.__class__ is gemmi.Model
+
+    def test_read_gemmi_model_cif(self):
+        """Test read_gemmi_model for cif."""
+        path = "2dhb.cif"
+        model = read_gemmi_model(path)
+        assert model.__class__ is gemmi.Model
