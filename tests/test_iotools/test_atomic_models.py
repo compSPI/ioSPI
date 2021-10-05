@@ -5,7 +5,7 @@ import os
 import gemmi
 import pytest
 
-from ioSPI.iotools.atomic_models import read_gemmi_model
+from ioSPI.iotools.atomic_models import read_gemmi_model, write_gemmi_model
 
 
 class TestAtomicModels:
@@ -46,4 +46,22 @@ class TestAtomicModels:
         """Test read_gemmi_model for cif."""
         path = "2dhb.cif"
         model = read_gemmi_model(path)
+        assert model.__class__ is gemmi.Model
+
+    def test_write_gemmi_model_pdb(self):
+        """Test test_write_gemmi_model_pdb."""
+        path_input = "2dhb.pdb"
+        model = read_gemmi_model(path_input)
+        path_output = "test_" + path_input
+        write_gemmi_model(path_output, model)
+        model = read_gemmi_model(path_output)
+        assert model.__class__ is gemmi.Model
+
+    def test_write_gemmi_model_cif(self):
+        """Test test_write_gemmi_model_cif."""
+        path_input = "2dhb.cif"
+        model = read_gemmi_model(path_input)
+        path_output = "test_" + path_input
+        write_gemmi_model(path_output, model)
+        model = read_gemmi_model(path_output)
         assert model.__class__ is gemmi.Model
