@@ -1,6 +1,8 @@
-import numpy as np
-from ioSPI import fourier
+"""Test fourier."""
 
+import numpy as np
+
+from ioSPI import fourier
 
 n_pixels = (np.random.randint(low=8, high=128) // 2) * 2
 arr2d = np.random.normal(size=n_pixels * n_pixels).reshape(n_pixels, n_pixels)
@@ -19,7 +21,7 @@ def test_do_fft():
         assert arr_f.dtype == "complex128"
         assert arr_f.shape == tuple([n_pixels] * dim)
         assert np.isclose(
-            np.var(arr), np.var(arr_f), atol=1e-3
+            np.var(arr), np.var(arr_f), atol=1e-2
         )  # change atol if N different
 
         assert np.allclose(
@@ -57,21 +59,15 @@ def test_make_checkerboard_2d():
     expected_value = 1
     if (idx_rand_1 + idx_rand_2) % 2:
         expected_value *= -1
-    assert np.isclose(
-        checkerboard_2d[0, idx_rand_1, idx_rand_2], expected_value
-    )
+    assert np.isclose(checkerboard_2d[0, idx_rand_1, idx_rand_2], expected_value)
 
 
 def test_make_checkerboard_3d():
     """Test 3D checkerboard."""
     checkerboard_3d = fourier.make_checkerboard_3d(arr3d.shape)
-    assert np.allclose(
-        checkerboard_3d ** 2, np.ones((n_pixels, n_pixels, n_pixels))
-    )
+    assert np.allclose(checkerboard_3d ** 2, np.ones((n_pixels, n_pixels, n_pixels)))
     assert np.isclose(0, checkerboard_3d.mean())
-    idx_rand_1, idx_rand_2, idx_rand_3 = np.random.randint(
-        low=0, high=n_pixels, size=3
-    )
+    idx_rand_1, idx_rand_2, idx_rand_3 = np.random.randint(low=0, high=n_pixels, size=3)
     expected_value = 1
     if (idx_rand_1 + idx_rand_2 + idx_rand_3) % 2:
         expected_value *= -1
