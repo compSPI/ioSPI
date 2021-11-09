@@ -1,12 +1,11 @@
 """Fourier."""
 
+import numba as nb
 import numpy as np
 import pyfftw.interfaces.numpy_fft
-from numba import jit
 
 
-@jit
-def make_checkerboard_2d(arr2d_shape):
+def make_checkerboard_2d_prejit(arr2d_shape):
     """Apply checkerboard pattern for 2D FFT.
 
     Each pixel switches from positive to negative in checker board pattern.
@@ -33,8 +32,12 @@ def make_checkerboard_2d(arr2d_shape):
     return checkerboard_2d
 
 
-@jit
-def make_checkerboard_3d(arr3d_shape):
+make_checkerboard_2d = nb.jit(cache=True, nopython=True, nogil=True)(
+    make_checkerboard_2d_prejit
+)
+
+
+def make_checkerboard_3d_prejit(arr3d_shape):
     """Apply checkerboard pattern for 3D FFT.
 
     Each pixel switches from positive to negative in checker board pattern.
@@ -59,6 +62,11 @@ def make_checkerboard_3d(arr3d_shape):
                 if (pix_1 + pix_2 + pix_3) % 2:
                     checkerboard_3d[pix_1, pix_2, pix_3] *= -1
     return checkerboard_3d
+
+
+make_checkerboard_3d = nb.jit(cache=True, nopython=True, nogil=True)(
+    make_checkerboard_3d_prejit
+)
 
 
 def fft3d(
