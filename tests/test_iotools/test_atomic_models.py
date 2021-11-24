@@ -69,4 +69,3 @@ class TestAtomicModels:
         write_gemmi_model(path_output, model)
         model = read_gemmi_model(path_output, assemble=False)
         assert model.__class__ is gemmi.Model
-        #assert True
