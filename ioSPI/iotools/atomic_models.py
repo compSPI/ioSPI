@@ -5,7 +5,7 @@ import os
 import gemmi
 
 
-def read_gemmi_model(path, i_model=0, clean=True):
+def read_gemmi_model(path, i_model=0, clean=True, assemble=True):
     """Read PDB or mmCIF file.
 
     Use Gemmi library to read PDB or mmCIF files and return a Gemmi model.
@@ -22,6 +22,9 @@ def read_gemmi_model(path, i_model=0, clean=True):
     clean : bool
         Optional, default: True
         If True, use Gemmi remove_* methods to clean up structure.
+    assemble: bool
+        Optional, default: True
+        If True, use Gemmi make_assembly to build biological object.
 
     Returns
     -------
@@ -42,9 +45,9 @@ def read_gemmi_model(path, i_model=0, clean=True):
         is_pdb = path.lower().endswith(".pdb")
         is_cif = path.lower().endswith(".cif")
         if is_pdb:
-            model = read_gemmi_model_from_pdb(path, i_model, clean)
+            model = read_gemmi_model_from_pdb(path, i_model, clean, assemble)
         elif is_cif:
-            model = read_gemmi_model_from_cif(path, i_model, clean)
+            model = read_gemmi_model_from_cif(path, i_model, clean, assemble)
         else:
             model = None
             raise ValueError("File format not recognized.")
@@ -54,7 +57,7 @@ def read_gemmi_model(path, i_model=0, clean=True):
     return model
 
 
-def read_gemmi_model_from_pdb(path, i_model=0, clean=True):
+def read_gemmi_model_from_pdb(path, i_model=0, clean=True, assemble=True):
     """Read Gemmi Model from PDB file.
 
     Parameters
@@ -67,6 +70,9 @@ def read_gemmi_model_from_pdb(path, i_model=0, clean=True):
     clean : bool
         Optional, default: True
         If True, use Gemmi remove_* methods to clean up structure.
+    assemble: bool
+        Optional, default: True
+        If True, use Gemmi make_assembly to build biological object.
 
     Returns
     -------
@@ -77,10 +83,14 @@ def read_gemmi_model_from_pdb(path, i_model=0, clean=True):
     if clean:
         structure = clean_gemmi_structure(structure)
     model = structure[i_model]
+    if assemble:
+        assembly = structure.assemblies[i_model]
+        chain_naming = gemmi.HowToNameCopiedChain.AddNumber
+        model = gemmi.make_assembly(assembly, model, chain_naming)
     return model
 
 
-def read_gemmi_model_from_cif(path, i_model=0, clean=True):
+def read_gemmi_model_from_cif(path, i_model=0, clean=True, assemble=True):
     """Read Gemmi Model from CIF file.
 
     Parameters
@@ -93,6 +103,9 @@ def read_gemmi_model_from_cif(path, i_model=0, clean=True):
     clean : bool
         Optional, default: True
         If True, use Gemmi remove_* methods to clean up structure.
+    assemble: bool
+        Optional, default: True
+        If True, use Gemmi make_assembly to build biological object.
 
     Returns
     -------
@@ -104,9 +117,10 @@ def read_gemmi_model_from_cif(path, i_model=0, clean=True):
     if clean:
         structure = clean_gemmi_structure(structure)
     model = structure[i_model]
-    assembly = structure.assemblies[i_model]
-    chain_naming = gemmi.HowToNameCopiedChain.AddNumber
-    model = gemmi.make_assembly(assembly, model, chain_naming)
+    if assemble:
+        assembly = structure.assemblies[i_model]
+        chain_naming = gemmi.HowToNameCopiedChain.AddNumber
+        model = gemmi.make_assembly(assembly, model, chain_naming)
     return model
 
 
