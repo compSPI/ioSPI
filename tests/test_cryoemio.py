@@ -5,8 +5,9 @@ import tempfile
 import h5py
 import mrcfile
 import numpy as np
+import yaml
 
-from simSPI import cryoemio
+from ioSPI import cryoemio
 
 
 def test_data_and_dic2hdf5():
@@ -26,6 +27,9 @@ def test_data_and_dic2hdf5():
 
 def test_fill_parameters_dictionary_max():
     """Test data_and_dic2hdf5 helper with a maximal selection of garbage parameters."""
+    tmp_yml = tempfile.NamedTemporaryFile(delete=False, suffix=".yml")
+    tmp_yml.close()
+
     mrc_file = "a.mrc"
     pdb_file = "a.pdb"
     voxel_size = 0.2
@@ -44,88 +48,103 @@ def test_fill_parameters_dictionary_max():
     seed = 210
     key = particle_mrcout.split(".mrc")[0]
 
-    out_dict = cryoemio.fill_parameters_dictionary(
-        mrc_file=mrc_file,
-        pdb_file=pdb_file,
-        voxel_size=voxel_size,
-        particle_name=particle_name,
-        particle_mrcout=particle_mrcout,
-        crd_file=crd_file,
-        sample_dimensions=sample_dimensions,
-        beam_params=beam_params,
-        dose=dose,
-        optics_params=optics_params,
-        defocus=defocus,
-        optics_defocout=optics_defocout,
-        detector_params=detector_params,
-        noise=noise,
-        log_file=log_file,
-        seed=seed,
-    )
+    try:
+        with open(tmp_yml.name, 'w') as f:
+            data = {
+                "mrc_file"=mrc_file,
+                "pdb_file"=pdb_file,
+                "voxel_size"=voxel_size,
+                "particle_name"=particle_name,
+                "particle_mrcout"=particle_mrcout,
+                "crd_file"=crd_file,
+                "sample_dimensions"=sample_dimensions,
+                "beam_params"=beam_params,
+                "dose"=dose,
+                "optics_params"=optics_params,
+                "defocus"=defocus,
+                "optics_defocout"=optics_defocout,
+                "detector_params"=detector_params,
+                "noise"=noise,
+                "log_file"=log_file,
+                "seed"=seed
+            }
+            contents = yaml.dump(data)
+            f.write(contents)
+        out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
 
-    assert out_dict["simulation"] == {"seed": seed, "logfile": log_file}
-    assert out_dict["sample"] == {
-        "diameter": sample_dimensions[0],
-        "thickness_center": sample_dimensions[1],
-        "thickness_edge": sample_dimensions[2],
-    }
-    assert out_dict["particle"] == {
-        "name": particle_name,
-        "voxel_size": voxel_size,
-        "pdb_file": pdb_file,
-        "map_file_re_out": key + "_real.mrc",
-        "map_file_im_out": key + "_imag.mrc",
-    }
-    assert out_dict["particleset"] == {"name": particle_name, "crd_file": crd_file}
-    assert out_dict["beam"] == {
-        "voltage": beam_params[0],
-        "spread": beam_params[1],
-        "dose_per_im": dose,
-        "dose_sd": beam_params[3],
-    }
-    assert out_dict["optics"] == {
-        "magnification": optics_params[0],
-        "cs": optics_params[1],
-        "cc": optics_params[2],
-        "aperture": optics_params[3],
-        "focal_length": optics_params[4],
-        "cond_ap_angle": optics_params[5],
-        "defocus_nominal": optics_params[6],
-        "defocus_syst_error": optics_params[7],
-        "defocus_nonsyst_error": optics_params[8],
-        "defocus_file_out": optics_defocout,
-    }
-    assert out_dict["detector"] == {
-        "det_pix_x": detector_params[0],
-        "det_pix_y": detector_params[1],
-        "pixel_size": detector_params[2],
-        "gain": detector_params[3],
-        "use_quantization": noise,
-        "dqe": detector_params[5],
-        "mtf_a": defocus,
-        "mtf_b": detector_params[7],
-        "mtf_c": detector_params[8],
-        "mtf_alpha": detector_params[9],
-        "mtf_beta": detector_params[10],
-        "image_file_out": mrc_file,
-    }
+        assert out_dict["simulation"]["seed"] == seed
+        assert out_dict["simulation"]["logfile"] == log_file
+
+        assert out_dict["sample"]["diameter"] == sample_dimensions[0]
+        assert out_dict["sample"]["thickness_center"] == sample_dimensions[1]
+        assert out_dict["sample"]["thickness_edge"] == sample_dimensions[2]
+
+        assert out_dict["particle"]["name"] == particle_name
+        assert out_dict["particle"]["voxel_size"] == voxel_size
+        assert out_dict["particle"]["pdb_file"] == pdb_file
+        assert out_dict["particle"]["map_file_re_out"] == key + "_real.mrc"
+        assert out_dict["particle"]["map_file_im_out"] == key + "_imag.mrc"
+
+        assert out_dict["particleset"]["name"] == particle_name
+        assert out_dict["particleset"]["crd_file"] == crd_file
+
+        assert out_dict["beam"]["voltage"] == beam_params[0]
+        assert out_dict["beam"]["spread"] == beam_params[1]
+        assert out_dict["beam"]["dose_per_im"] == dose
+        assert out_dict["beam"]["dose_sd"] == beam_params[3]
+
+        assert out_dict["optics"]["magnification"] == optics_params[0]
+        assert out_dict["optics"]["cs"] == optics_params[1]
+        assert out_dict["optics"]["cc"] == optics_params[2]
+        assert out_dict["optics"]["aperture"] == optics_params[3]
+        assert out_dict["optics"]["focal_length"] == optics_params[4]
+        assert out_dict["optics"]["cond_ap_angle"] == optics_params[5]
+        assert out_dict["optics"]["defocus_nominal"] == optics_params[6]
+        assert out_dict["optics"]["defocus_syst_error"] == optics_params[7]
+        assert out_dict["optics"]["defocus_nonsyst_error"] == optics_params[8]
+        assert out_dict["optics"]["defocus_file_out"] == optics_defocout
+
+        assert out_dict["detector"]["det_pix_x"] == detector_params[0]
+        assert out_dict["detector"]["det_pix_y"] == detector_params[1]
+        assert out_dict["detector"]["pixel_size"] == detector_params[2]
+        assert out_dict["detector"]["gain"] == detector_params[3]
+        assert out_dict["detector"]["use_quantization"] == noise
+        assert out_dict["detector"]["dqe"] == detector_params[5]
+        assert out_dict["detector"]["mtf_a"] == defocus
+        assert out_dict["detector"]["mtf_b"] == detector_params[7]
+        assert out_dict["detector"]["mtf_c"] == detector_params[8]
+        assert out_dict["detector"]["mtf_alpha"] == detector_params[9]
+        assert out_dict["detector"]["mtf_beta"] == detector_params[10]
+        assert out_dict["detector"]["image_file_out"] == mrc_file
+    finally:
+        os.unlink(tmp_yml.name)
 
 
 def test_fill_parameters_dictionary_min():
     """Test data_and_dic2hdf5 helper with a minimal selection of garbage parameters."""
+    tmp_yml = tempfile.NamedTemporaryFile(delete=False, suffix=".yml")
+    tmp_yml.close()
+
     mrc_file = "a.mrc"
     pdb_file = "a.pdb"
     crd_file = "a.crd"
 
-    out_dict = cryoemio.fill_parameters_dictionary(
-        mrc_file=mrc_file,
-        pdb_file=pdb_file,
-        crd_file=crd_file,
-    )
+    try:
+        with open(tmp_yml.name, 'w') as f:
+            data = {
+                "mrc_file"=mrc_file,
+                "pdb_file"=pdb_file,
+                "crd_file"=crd_file
+            }
+            contents = yaml.dump(data)
+            f.write(contents)
+        out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
 
-    assert out_dict["particle"]["pdb_file"] == pdb_file
-    assert out_dict["detector"]["image_file_out"] == mrc_file
-    assert out_dict["particleset"]["crd_file"] == crd_file
+        assert out_dict["particle"]["pdb_file"] == pdb_file
+        assert out_dict["detector"]["image_file_out"] == mrc_file
+        assert out_dict["particleset"]["crd_file"] == crd_file
+    finally:
+        os.unlink(tmp_yml.name)
 
 
 def test_mrc2data():
