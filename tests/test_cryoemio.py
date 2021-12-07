@@ -21,9 +21,9 @@ def test_data_and_dic2hdf5():
         cryoemio.data_and_dic2hdf5(data, tmp.name)
         with h5py.File(tmp.name, "r") as f:
             out_dict = f["data"]
-            assert out_dict["a"][0] == 1
-            assert out_dict["b"][0] == 2
-            assert out_dict["c"][0] == 3
+            assert out_dict["a"].astype('int16') == 1
+            assert out_dict["b"].astype('int16') == 2
+            assert out_dict["c"].astype('int16') == 3
     finally:
         os.unlink(tmp.name)
 
@@ -210,7 +210,7 @@ def test_mrc2data():
     data = np.zeros((5, 5), dtype=np.int8)
 
     try:
-        with mrcfile.new(tmp_mrc.name) as mrc:
+        with mrcfile.new(tmp_mrc.name, overwrite=True) as mrc:
             mrc.set_data(data)
         out_data = cryoemio.mrc2data(tmp_mrc.name)
         print("out_data:\n{out_data}\n")
@@ -226,7 +226,7 @@ def test_mrc2data_large():
     data = np.zeros((5, 5, 2), dtype=np.int8)
 
     try:
-        with mrcfile.new(tmp_mrc.name) as mrc:
+        with mrcfile.new(tmp_mrc.name, overwrite=True) as mrc:
             mrc.set_data(data)
         out_data = cryoemio.mrc2data(tmp_mrc.name)
         print("out_data:\n{out_data}\n")
@@ -247,7 +247,9 @@ def test_recursively_save_dict_contents_to_group():
             cryoemio.recursively_save_dict_contents_to_group(f, "", data)
         with h5py.File(tmp.name, "r") as f:
             print(f"f[a] = {f['a']}, f[b] = {f['b']}, f[c/d] = {f['c/d']}")
-            assert f["a"][0] == 1.0 and f["b"][0] == "None" and f["c/d"][0] == 1
+            assert f["a"].astype('float') == 1.0
+            assert f["b"].astype('string') == "None"
+            assert f["c/d"].astype('int32') == 1
     finally:
         os.unlink(tmp.name)
 

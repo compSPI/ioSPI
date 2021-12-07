@@ -218,7 +218,7 @@ def fill_parameters_dictionary(yaml_file):
             4
         ]  # quantized electron waves result in noise
     # detector quantum efficiency
-    dic["detector"]["dqe"] = parameters["detector_params"]
+    dic["detector"]["dqe"] = parameters["detector_params"][5]
     # parameter of MTF
     dic["detector"]["mtf_a"] = parameters["detector_params"][6]
     # parameter of MTF
