@@ -104,9 +104,8 @@ class TEMUpload:
         list[str]
             List of tags for dataset.
         """
-        # placeholder
-        tem_wrapper.placeholder
-        return [""]
+        placeholder_values = tem_wrapper.sim_dict
+        return list(placeholder_values.values())
 
     def post_child_node(
         self, parent_guid: str, title: str, tags: Optional[str] = None
