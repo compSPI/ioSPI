@@ -67,7 +67,7 @@ class TEMUpload:
     def get_molecule_guid(self, molecule_label: str) -> str:
         """Get GUID of node housing data for given molecule.
 
-        If not existing node with given the label is found, a
+        If no existing node with given label is found, a
         new one is created.
 
 
@@ -191,9 +191,6 @@ class TEMUpload:
 
         for file_path_string in file_paths:
             file_path = Path(file_path_string)
-
-            with open(file_path, "rb") as f:
-                data = f.read()
 
             files = {file_path.name: open(file_path, "rb")}
             query_parameters = f"?kind=file&name={file_path.name}"
