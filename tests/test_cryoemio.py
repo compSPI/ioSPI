@@ -21,9 +21,9 @@ def test_data_and_dic2hdf5():
         cryoemio.data_and_dic2hdf5(data, tmp.name)
         with h5py.File(tmp.name, "r") as f:
             out_dict = f["data"]
-            assert out_dict["a"].astype('int16') == 1
-            assert out_dict["b"].astype('int16') == 2
-            assert out_dict["c"].astype('int16') == 3
+            assert out_dict["a"].astype("int16") == 1
+            assert out_dict["b"].astype("int16") == 2
+            assert out_dict["c"].astype("int16") == 3
     finally:
         os.unlink(tmp.name)
 
@@ -247,9 +247,9 @@ def test_recursively_save_dict_contents_to_group():
             cryoemio.recursively_save_dict_contents_to_group(f, "", data)
         with h5py.File(tmp.name, "r") as f:
             print(f"f[a] = {f['a']}, f[b] = {f['b']}, f[c/d] = {f['c/d']}")
-            assert f["a"].astype('float') == 1.0
-            assert f["b"].astype('string') == "None"
-            assert f["c/d"].astype('int32') == 1
+            assert f["a"].astype("float") == 1.0
+            assert f["b"].astype("string") == "None"
+            assert f["c/d"].astype("int32") == 1
     finally:
         os.unlink(tmp.name)
 
