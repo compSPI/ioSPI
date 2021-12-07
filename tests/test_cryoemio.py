@@ -21,9 +21,9 @@ def test_data_and_dic2hdf5():
         cryoemio.data_and_dic2hdf5(data, tmp.name)
         with h5py.File(tmp.name, "r") as f:
             out_dict = f["data"]
-            assert out_dict["a"].astype("int16") == 1
-            assert out_dict["b"].astype("int16") == 2
-            assert out_dict["c"].astype("int16") == 3
+            assert out_dict.astype("int16")["a"] == 1
+            assert out_dict.astype("int16")["b"] == 2
+            assert out_dict.astype("int16")["c"] == 3
     finally:
         os.unlink(tmp.name)
 
@@ -191,7 +191,7 @@ def test_fill_parameters_dictionary_min():
         assert out_dict["detector"]["det_pix_y"] == detector_params[1]
         assert out_dict["detector"]["pixel_size"] == detector_params[2]
         assert out_dict["detector"]["gain"] == detector_params[3]
-        assert out_dict["detector"]["use_quantization"] == detector_params[2]
+        assert out_dict["detector"]["use_quantization"] == detector_params[4]
         assert out_dict["detector"]["dqe"] == detector_params[5]
         assert out_dict["detector"]["mtf_a"] == detector_params[6]
         assert out_dict["detector"]["mtf_b"] == detector_params[7]
@@ -214,7 +214,7 @@ def test_mrc2data():
             mrc.set_data(data)
         out_data = cryoemio.mrc2data(tmp_mrc.name)
         print("out_data:\n{out_data}\n")
-        assert out_data == data
+        assert (out_data == data).all()
     finally:
         os.unlink(tmp_mrc.name)
 
@@ -230,7 +230,7 @@ def test_mrc2data_large():
             mrc.set_data(data)
         out_data = cryoemio.mrc2data(tmp_mrc.name)
         print("out_data:\n{out_data}\n")
-        assert out_data == data
+        assert (out_data == data).all()
     finally:
         os.unlink(tmp_mrc.name)
 
@@ -247,9 +247,9 @@ def test_recursively_save_dict_contents_to_group():
             cryoemio.recursively_save_dict_contents_to_group(f, "", data)
         with h5py.File(tmp.name, "r") as f:
             print(f"f[a] = {f['a']}, f[b] = {f['b']}, f[c/d] = {f['c/d']}")
-            assert f["a"].astype("float") == 1.0
-            assert f["b"].astype("string") == "None"
-            assert f["c/d"].astype("int32") == 1
+            assert f.astype("float")["a"] == 1.0
+            assert f["b"].readstr() == "None"
+            assert f.astype("int16")["c/d"] == 1
     finally:
         os.unlink(tmp.name)
 

@@ -187,10 +187,12 @@ def fill_parameters_dictionary(yaml_file):
     ]  # aperture angle in mrad of the beam furnished by the condenser lens
     if "defocus" in parameters:
         dic["optics"]["defocus_nominal"] = parameters["defocus"]
+        dic["detector"]["mtf_a"] = parameters["defocus"][6]
     else:
         dic["optics"]["defocus_nominal"] = parameters["optics_params"][
             6
         ]  # nominal defocus value in um
+        dic["detector"]["mtf_a"] = parameters["detector_params"][6]
     dic["optics"]["defocus_syst_error"] = parameters["optics_params"][7]
     dic["optics"]["defocus_nonsyst_error"] = parameters["optics_params"][8]
     if "optics_defocout" in parameters:
@@ -220,8 +222,6 @@ def fill_parameters_dictionary(yaml_file):
     # detector quantum efficiency
     dic["detector"]["dqe"] = parameters["detector_params"][5]
     # parameter of MTF
-    dic["detector"]["mtf_a"] = parameters["detector_params"][6]
-    # parameter of MTF
     dic["detector"]["mtf_b"] = parameters["detector_params"][7]
     # parameter of MTF
     dic["detector"]["mtf_c"] = parameters["detector_params"][8]
@@ -250,7 +250,7 @@ def write_inp_file(dict_params, inp_file="input.txt"):
             "=== simulation ===\n"
             "generate_micrographs = yes\n"
             "rand_seed = {0[seed]}\n"
-            "log_file = {0[logfile]}\n".format(dict_params["simulation"])
+            "log_file = {0[log_file]}\n".format(dict_params["simulation"])
         )
         inp.write(
             "=== sample ===\n"
