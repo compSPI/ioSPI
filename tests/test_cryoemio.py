@@ -20,6 +20,7 @@ def test_data_and_dic2hdf5():
     try:
         cryoemio.data_and_dic2hdf5(data, tmp.name)
         with h5py.File(tmp.name, "r") as f:
+            print(f"List of f keys: {list(f.keys())}")
             print(f"f[a] = {f['a']}, f[b] = {f['b']}, f[c] = {f['c']}")
             assert f["a"] == 1 and f["b"] == 2 and f["c"] == 3
     finally:
@@ -75,7 +76,7 @@ def test_fill_parameters_dictionary_max():
 
         print(f"out_dict:\n{out_dict}\n")
         assert out_dict["simulation"]["seed"] == seed
-        assert out_dict["simulation"]["logfile"] == log_file
+        assert out_dict["simulation"]["log_file"] == log_file
 
         assert out_dict["sample"]["diameter"] == sample_dimensions[0]
         assert out_dict["sample"]["thickness_center"] == sample_dimensions[1]

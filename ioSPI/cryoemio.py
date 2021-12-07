@@ -137,7 +137,7 @@ def fill_parameters_dictionary(yaml_file):
     else:
         random.seed()
         dic["simulation"]["seed"] = random.randint(0, int(1e10))
-    dic["simulation"]["logfile"] = parameters["log_file"]
+    dic["simulation"]["log_file"] = parameters["log_file"]
     dic["sample"] = {}
     dic["sample"]["diameter"] = parameters["sample_dimensions"][0]  # diameter in nm
     dic["sample"]["thickness_center"] = parameters["sample_dimensions"][
