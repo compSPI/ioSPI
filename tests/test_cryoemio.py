@@ -20,6 +20,7 @@ def test_data_and_dic2hdf5():
     try:
         cryoemio.data_and_dic2hdf5(data, tmp.name)
         with h5py.File(tmp.name, "r") as f:
+            print(f"f[a] = {f['a']}, f[b] = {f['b']}, f[c] = {f['c']}")
             assert f["a"] == 1 and f["b"] == 2 and f["c"] == 3
     finally:
         os.unlink(tmp.name)
@@ -72,6 +73,7 @@ def test_fill_parameters_dictionary_max():
             f.write(contents)
         out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
 
+        print(f"out_dict:\n{out_dict}\n")
         assert out_dict["simulation"]["seed"] == seed
         assert out_dict["simulation"]["logfile"] == log_file
 
@@ -136,6 +138,7 @@ def test_fill_parameters_dictionary_min():
             f.write(contents)
         out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
 
+        print(f"out_dict:\n{out_dict}\n")
         assert out_dict["particle"]["pdb_file"] == pdb_file
         assert out_dict["detector"]["image_file_out"] == mrc_file
         assert out_dict["particleset"]["crd_file"] == crd_file
@@ -152,7 +155,9 @@ def test_mrc2data():
     try:
         with mrcfile.open(tmp_mrc.name) as mrc:
             mrc.set_data(data)
-        assert cryoemio.mrc2data(tmp_mrc.name) == data
+        out_data = cryoemio.mrc2data(tmp_mrc.name)
+        print("out_data:\n{out_data}\n")
+        assert out_data == data
     finally:
         os.unlink(tmp_mrc.name)
 
@@ -167,7 +172,9 @@ def test_mrc2data_large():
     try:
         with mrcfile.open(tmp_mrc.name) as mrc:
             mrc.set_data(data)
-        assert cryoemio.mrc2data(tmp_mrc.name) == data
+        out_data = cryoemio.mrc2data(tmp_mrc.name)
+        print("out_data:\n{out_data}\n")
+        assert out_data == data
     finally:
         os.unlink(tmp_mrc.name)
 
@@ -183,6 +190,7 @@ def test_recursively_save_dict_contents_to_group():
         with h5py.File(tmp.name, "w") as f:
             cryoemio.recursively_save_dict_contents_to_group(f, "", data)
         with h5py.File(tmp.name, "r") as f:
+            print(f"f[a] = {f['a']}, f[b] = {f['b']}, f[c/d] = {f['c/d']}")
             assert f["a"] == 1.0 and f["b"] == "None" and f["c/d"] == 1
     finally:
         os.unlink(tmp.name)
