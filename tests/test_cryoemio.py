@@ -213,7 +213,6 @@ def test_mrc2data():
         with mrcfile.new(tmp_mrc.name, overwrite=True) as mrc:
             mrc.set_data(data)
         out_data = cryoemio.mrc2data(tmp_mrc.name)
-        print("out_data:\n{out_data}\n")
         assert (out_data == data).all()
     finally:
         os.unlink(tmp_mrc.name)
@@ -229,7 +228,6 @@ def test_mrc2data_large():
         with mrcfile.new(tmp_mrc.name, overwrite=True) as mrc:
             mrc.set_data(data)
         out_data = cryoemio.mrc2data(tmp_mrc.name)
-        print("out_data:\n{out_data}\n")
         assert (out_data == data).all()
     finally:
         os.unlink(tmp_mrc.name)

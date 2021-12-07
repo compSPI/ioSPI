@@ -185,9 +185,10 @@ def fill_parameters_dictionary(yaml_file):
     dic["optics"]["cond_ap_angle"] = parameters["optics_params"][
         5
     ]  # aperture angle in mrad of the beam furnished by the condenser lens
+    dic["detector"] = {}
     if "defocus" in parameters:
         dic["optics"]["defocus_nominal"] = parameters["defocus"]
-        dic["detector"]["mtf_a"] = parameters["defocus"][6]
+        dic["detector"]["mtf_a"] = parameters["defocus"]
     else:
         dic["optics"]["defocus_nominal"] = parameters["optics_params"][
             6
@@ -201,7 +202,6 @@ def fill_parameters_dictionary(yaml_file):
         ]  # file to which defocus values are written
     else:
         dic["optics"]["defocus_file_out"] = None
-    dic["detector"] = {}
     dic["detector"]["det_pix_x"] = parameters["detector_params"][
         0
     ]  # number of pixels on detector along x axis
