@@ -29,7 +29,7 @@ def test_data_and_dic2hdf5():
 
 
 def test_fill_parameters_dictionary_max():
-    """Test fill_parameters_dictionary with a maximal selection of garbage parameters."""
+    """Test fill_parameters_dictionary with maximal garbage parameters."""
     tmp_yml = tempfile.NamedTemporaryFile(delete=False, suffix=".yml")
     tmp_yml.close()
 
@@ -125,7 +125,7 @@ def test_fill_parameters_dictionary_max():
 
 
 def test_fill_parameters_dictionary_min():
-    """Test fill_parameters_dictionary with a minimal selection of garbage parameters."""
+    """Test fill_parameters_dictionary with minimal garbage parameters."""
     tmp_yml = tempfile.NamedTemporaryFile(delete=False, suffix=".yml")
     tmp_yml.close()
 
