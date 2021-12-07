@@ -3,26 +3,25 @@ from pathlib import Path
 
 
 class TEMUpload:
-    def __init__(self, token, data_component_guid="24htr"):
+    def __init__(self, token, data_node_guid="24htr"):
         self.headers = {
-            "Authorization": f"Bearer {token}",
-            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": f"Bearer {token}"
         }
         self.base_url = "https://api.osf.io/v2/"
 
         requests.get(self.base_url, headers=self.headers).raise_for_status()
 
-        self.dataset_node_guid = data_component_guid
+        self.data_node_guid = data_node_guid
 
     def upload_dataset_from_tem(self, tem_sim):
 
         dataset_label = (
-            tem_sim.path_dict["pdb_keyword"] + t.path_dict["micrograph_keyword"]
+            tem_sim.path_dict["pdb_keyword"] + tem_sim.path_dict["micrograph_keyword"]
         )
         molecule_label = tem_sim.path_dict["pdb_keyword"]
         molecule_guid = self.get_molecule_guid(molecule_label)
         dataset_guid = self.post_child_node(
-            molecule_guid, dataset_label, tags=self.get_dataset_tags(tem_sim)
+            molecule_guid, dataset_label, tags=self.generate_tags_from_tem(tem_sim)
         )
 
         upload_file_paths = [tem_sim.output_path_dict["h5_file"]]
@@ -30,35 +29,34 @@ class TEMUpload:
 
     def get_molecule_guid(self, molecule_label):
         existing_molecules = self.get_existing_molecules()
-        if molecule_label not in existing_molecules.keys():
-            return self.post_child_node(self.data_component_guid, molecule_label)
+        if molecule_label not in existing_molecules:
+            return self.post_child_node(self.data_node_guid, molecule_label)
         else:
             return existing_molecules[molecule_label]
 
     def generate_tags_from_tem(self, tem_wrapper):
-        pass
+        return None
 
     def post_child_node(self, parent_guid, title, tags=None):
 
-        request_url = f"{self.base_url}nodes/{parent_guid}/children"
+        request_url = f"{self.base_url}nodes/{parent_guid}/children/"
 
         request_body = {
             "type": "nodes",
-            "attributes": {"title": title, "category": "data", "public": True},
+            "attributes": {"title": title, "category": "data", "public": True}
         }
 
         if tags is not None:
             request_body["attributes"]["tags"] = tags
 
         response = requests.post(
-            request_url, headers=self.headers, data={"data": request_body}
+            request_url, headers=self.headers, json={"data": request_body}
         )
         response.raise_for_status()
-
-        return response.json()["data"][0]["id"]
+        return response.json()["data"]["id"]
 
     def get_existing_molecules(self):
-        request_url = f"{self.base_url}nodes/{self.data_component_guid}/children"
+        request_url = f"{self.base_url}nodes/{self.data_node_guid}/children/"
         response = requests.get(request_url, headers=self.headers)
         response.raise_for_status()
         dataset_node_children = response.json()["data"]
