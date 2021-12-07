@@ -129,7 +129,7 @@ def fill_parameters_dictionary(yaml_file):
     parameters = None
     with open(yaml_file, "r") as f:
         parameters = yaml.safe_load(f)
-
+    print(f"yaml-loaded params:\n{parameters}\n")
     # fill the dictionary
     dic = {"simulation": {}}
     if "seed" in parameters:
@@ -150,7 +150,7 @@ def fill_parameters_dictionary(yaml_file):
     dic["particle"]["voxel_size"] = parameters["voxel_size"]
     dic["particle"]["pdb_file"] = parameters["pdb_file"]
     if "particle_mrcout" in parameters:
-        key = parameters["mrc_file"].split(".mrc")[0]
+        key = parameters["particle_mrcout"].split(".mrc")[0]
         dic["particle"]["map_file_re_out"] = key + "_real.mrc"
         dic["particle"]["map_file_im_out"] = key + "_imag.mrc"
     else:

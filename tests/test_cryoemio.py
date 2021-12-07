@@ -20,15 +20,16 @@ def test_data_and_dic2hdf5():
     try:
         cryoemio.data_and_dic2hdf5(data, tmp.name)
         with h5py.File(tmp.name, "r") as f:
-            print(f"List of f keys: {list(f.keys())}")
-            print(f"f[a] = {f['a']}, f[b] = {f['b']}, f[c] = {f['c']}")
-            assert f["a"] == 1 and f["b"] == 2 and f["c"] == 3
+            out_dict = f["data"]
+            assert out_dict["a"][0] == 1
+            assert out_dict["b"][0] == 2
+            assert out_dict["c"][0] == 3
     finally:
         os.unlink(tmp.name)
 
 
 def test_fill_parameters_dictionary_max():
-    """Test data_and_dic2hdf5 helper with a maximal selection of garbage parameters."""
+    """Test fill_parameters_dictionary with a maximal selection of garbage parameters."""
     tmp_yml = tempfile.NamedTemporaryFile(delete=False, suffix=".yml")
     tmp_yml.close()
 
@@ -124,7 +125,7 @@ def test_fill_parameters_dictionary_max():
 
 
 def test_fill_parameters_dictionary_min():
-    """Test data_and_dic2hdf5 helper with a minimal selection of garbage parameters."""
+    """Test fill_parameters_dictionary with a minimal selection of garbage parameters."""
     tmp_yml = tempfile.NamedTemporaryFile(delete=False, suffix=".yml")
     tmp_yml.close()
 
@@ -148,10 +149,10 @@ def test_fill_parameters_dictionary_min():
 
 
 def test_mrc2data():
-    """Test mrc2data helper function with a basic mrc file."""
+    """Test mrc2data helper function with a 2D mrc file."""
     tmp_mrc = tempfile.NamedTemporaryFile(delete=False, suffix=".mrc")
     tmp_mrc.close()
-    data = np.arange(12, dtype=np.int8).reshape(3, 4)
+    data = np.zeros((5, 5), dtype=np.int8)
 
     try:
         with mrcfile.open(tmp_mrc.name) as mrc:
@@ -167,8 +168,7 @@ def test_mrc2data_large():
     """Test mrc2data helper function with a 3D mrc file."""
     tmp_mrc = tempfile.NamedTemporaryFile(delete=False, suffix=".mrc")
     tmp_mrc.close()
-    data = np.arange(12, dtype=np.int8).reshape(3, 4)
-    data = np.tile(data[:, :, np.newaxis], 3, axis=2)
+    data = np.zeros((5, 5, 2), dtype=np.int8)
 
     try:
         with mrcfile.open(tmp_mrc.name) as mrc:
@@ -199,17 +199,22 @@ def test_recursively_save_dict_contents_to_group():
 
 def test_write_inp_file():
     """Test write_inp_file helper with output from fill_parameters_dictionary."""
-    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".imp")
-    tmp.close()
+    tmp_inp = tempfile.NamedTemporaryFile(delete=False, suffix=".imp")
+    tmp_inp.close()
+    tmp_yml = tempfile.NamedTemporaryFile(delete=False, suffix=".yml")
+    tmp_yml.close()
+
+    mrc_file = "a.mrc"
+    pdb_file = "a.pdb"
+    crd_file = "a.crd"
 
     try:
-        data = cryoemio.fill_parameters_dictionary(
-            mrc_file="a.mrc",
-            pdb_file="a.pdb",
-            crd_file="a.crd",
-            particle_mrcout="b.mrc",
-            optics_defocout="optics.txt",
-        )
-        cryoemio.write_inp_file(data, tmp.name)
+        with open(tmp_yml.name, "w") as f:
+            data = {"mrc_file": mrc_file, "pdb_file": pdb_file, "crd_file": crd_file}
+            contents = yaml.dump(data)
+            f.write(contents)
+        out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
+        cryoemio.write_inp_file(out_dict, tmp_inp.name)
     finally:
-        os.unlink(tmp.name)
+        os.unlink(tmp_inp.name)
+        os.unlink(tmp_yml.name)
