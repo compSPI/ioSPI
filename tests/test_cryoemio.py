@@ -21,9 +21,10 @@ def test_data_and_dic2hdf5():
         cryoemio.data_and_dic2hdf5(data, tmp.name)
         with h5py.File(tmp.name, "r") as f:
             out_dict = f["data"]
-            assert out_dict.astype("int16")["a"] == 1
-            assert out_dict.astype("int16")["b"] == 2
-            assert out_dict.astype("int16")["c"] == 3
+            print(out_dict["a"].size)
+            assert out_dict["a"].astype("int16")[0] == 1
+            assert out_dict["b"].astype("int16")[0] == 2
+            assert out_dict["c"].astype("int16")[0] == 3
     finally:
         os.unlink(tmp.name)
 
@@ -75,7 +76,6 @@ def test_fill_parameters_dictionary_max():
             f.write(contents)
         out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
 
-        print(f"out_dict:\n{out_dict}\n")
         assert out_dict["simulation"]["seed"] == seed
         assert out_dict["simulation"]["log_file"] == log_file
 
@@ -158,7 +158,6 @@ def test_fill_parameters_dictionary_min():
             f.write(contents)
         out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
 
-        print(f"out_dict:\n{out_dict}\n")
         assert out_dict["simulation"]["log_file"] == log_file
 
         assert out_dict["sample"]["diameter"] == sample_dimensions[0]
@@ -244,10 +243,9 @@ def test_recursively_save_dict_contents_to_group():
         with h5py.File(tmp.name, "w") as f:
             cryoemio.recursively_save_dict_contents_to_group(f, "", data)
         with h5py.File(tmp.name, "r") as f:
-            print(f"f[a] = {f['a']}, f[b] = {f['b']}, f[c/d] = {f['c/d']}")
-            assert f.astype("float")["a"] == 1.0
+            assert f["a"].astype("float")[0] == 1.0
             assert f["b"].readstr() == "None"
-            assert f.astype("int16")["c/d"] == 1
+            assert f["c/d"].astype("int16")[0] == 1
     finally:
         os.unlink(tmp.name)
 

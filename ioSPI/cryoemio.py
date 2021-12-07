@@ -130,7 +130,7 @@ def fill_parameters_dictionary(yaml_file):
     parameters = None
     with open(yaml_file, "r") as f:
         parameters = yaml.safe_load(f)
-    print(f"yaml-loaded params:\n{parameters}\n")
+
     # fill the dictionary
     dic = {"simulation": {}}
     if "seed" in parameters:
