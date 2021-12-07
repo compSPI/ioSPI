@@ -49,24 +49,24 @@ def test_fill_parameters_dictionary_max():
     key = particle_mrcout.split(".mrc")[0]
 
     try:
-        with open(tmp_yml.name, 'w') as f:
+        with open(tmp_yml.name, "w") as f:
             data = {
-                "mrc_file"=mrc_file,
-                "pdb_file"=pdb_file,
-                "voxel_size"=voxel_size,
-                "particle_name"=particle_name,
-                "particle_mrcout"=particle_mrcout,
-                "crd_file"=crd_file,
-                "sample_dimensions"=sample_dimensions,
-                "beam_params"=beam_params,
-                "dose"=dose,
-                "optics_params"=optics_params,
-                "defocus"=defocus,
-                "optics_defocout"=optics_defocout,
-                "detector_params"=detector_params,
-                "noise"=noise,
-                "log_file"=log_file,
-                "seed"=seed
+                "mrc_file": mrc_file,
+                "pdb_file": pdb_file,
+                "voxel_size": voxel_size,
+                "particle_name": particle_name,
+                "particle_mrcout": particle_mrcout,
+                "crd_file": crd_file,
+                "sample_dimensions": sample_dimensions,
+                "beam_params": beam_params,
+                "dose": dose,
+                "optics_params": optics_params,
+                "defocus": defocus,
+                "optics_defocout": optics_defocout,
+                "detector_params": detector_params,
+                "noise": noise,
+                "log_file": log_file,
+                "seed": seed,
             }
             contents = yaml.dump(data)
             f.write(contents)
@@ -130,12 +130,8 @@ def test_fill_parameters_dictionary_min():
     crd_file = "a.crd"
 
     try:
-        with open(tmp_yml.name, 'w') as f:
-            data = {
-                "mrc_file"=mrc_file,
-                "pdb_file"=pdb_file,
-                "crd_file"=crd_file
-            }
+        with open(tmp_yml.name, "w") as f:
+            data = {"mrc_file": mrc_file, "pdb_file": pdb_file, "crd_file": crd_file}
             contents = yaml.dump(data)
             f.write(contents)
         out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)

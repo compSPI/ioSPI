@@ -4,8 +4,8 @@ import random
 
 import h5py
 import mrcfile
-import yaml
 import numpy as np
+import yaml
 
 
 def mrc2data(mrc_file):
@@ -65,12 +65,12 @@ def fill_parameters_dictionary(yaml_file):
     """Return parameter dictionary with settings for simulation.
 
     Parameters
-    -----------
+    ----------
     yaml_file : str
         Path to the .yml file with the parameters
 
     YAML file entries:
-    -----------
+    ------------------
     - mrc_file (output) [MANDATORY]: Micrograph file
     *** PARTICLE ***
     - pdb_file (input) [MANDATORY]: PDB file of sample
@@ -126,7 +126,6 @@ def fill_parameters_dictionary(yaml_file):
     - log_file [MANDATORY]: Log file for the run
     - seed : seed for the run. If not present, random.
     """
-
     parameters = None
     with open(yaml_file, "r") as f:
         parameters = yaml.safe_load(f)
@@ -194,9 +193,9 @@ def fill_parameters_dictionary(yaml_file):
     dic["optics"]["defocus_syst_error"] = parameters["optics_params"][7]
     dic["optics"]["defocus_nonsyst_error"] = parameters["optics_params"][8]
     if "optics_defocout" in parameters:
-        dic["optics"][
-            "defocus_file_out"
-        ] = parameters["optics_defocout"]  # file to which defocus values are written
+        dic["optics"]["defocus_file_out"] = parameters[
+            "optics_defocout"
+        ]  # file to which defocus values are written
     else:
         dic["optics"]["defocus_file_out"] = None
     dic["detector"] = {}
