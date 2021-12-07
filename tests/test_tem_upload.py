@@ -43,9 +43,19 @@ def setup_teardown():
 
 @pytest.fixture
 def mock_tem():
-    """Return mock tem wrapper like object."""
+    """Return mock TEMSimulator instance."""
 
     class SampleTEM:
+        """Mock TEMSimulator with attributes required for testing.
+
+        Attributes
+        ----------
+        path_dict : dict of type str:str
+            Dict containing dataset key words.
+        output_path_dict : dict of type str:str
+            File paths for upload data.
+        """
+
         def __init__(self):
             self.path_dict = {"pdb_keyword": "", "micrograph_keyword": ""}
             self.output_path_dict = {"h5_file": ""}

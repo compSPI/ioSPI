@@ -88,10 +88,10 @@ class TEMUpload:
         existing_molecules = self.get_existing_molecules()
         if molecule_label not in existing_molecules:
             return self.post_child_node(self.data_node_guid, molecule_label)
-        else:
-            return existing_molecules[molecule_label]
+        return existing_molecules[molecule_label]
 
-    def generate_tags_from_tem(self, tem_wrapper: Type[tem.TEMSimulator]) -> list[str]:
+    @staticmethod
+    def generate_tags_from_tem(tem_wrapper: Type[tem.TEMSimulator]) -> list[str]:
         """Generate a list of tags from simulator parameters.
 
         Parameters
@@ -104,6 +104,8 @@ class TEMUpload:
         list[str]
             List of tags for dataset.
         """
+        # placeholder
+        tem_wrapper.placeholder
         return [""]
 
     def post_child_node(
