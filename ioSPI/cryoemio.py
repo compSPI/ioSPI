@@ -144,6 +144,9 @@ def fill_parameters_dictionary(
         else:
             random.seed()
             dic["simulation"]["seed"] = random.randint(0, int(1e10))
+    else:
+        random.seed()
+        dic["simulation"]["seed"] = random.randint(0, int(1e10))
     dic["simulation"]["log_file"] = log_file
     dic["sample"] = {}
     dic["sample"]["diameter"] = parameters["specimen_grid_params"][
