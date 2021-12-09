@@ -109,12 +109,13 @@ def test_fill_parameters_dictionary_max():
                     "detector_Q_efficiency": detector_q_efficiency,
                     "MTF_params": mtf_params,
                 },
-                "miscellaneous": {"log_file": log_file, "seed": seed},
+                "miscellaneous": {"seed": seed},
             }
             contents = yaml.dump(data)
             f.write(contents)
         out_dict = cryoemio.fill_parameters_dictionary(
-            tmp_yml.name, mrc_file, pdb_file, crd_file, dose=dose, noise=noise_override
+            tmp_yml.name, mrc_file, pdb_file, crd_file, log_file,
+            dose=dose, noise=noise_override
         )
 
         assert out_dict["simulation"]["seed"] == seed
@@ -235,13 +236,12 @@ def test_fill_parameters_dictionary_min():
                     "noise": noise,
                     "detector_Q_efficiency": detector_q_efficiency,
                     "MTF_params": mtf_params,
-                },
-                "miscellaneous": {"log_file": log_file},
+                }
             }
             contents = yaml.dump(data)
             f.write(contents)
         out_dict = cryoemio.fill_parameters_dictionary(
-            tmp_yml.name, mrc_file, pdb_file, crd_file
+            tmp_yml.name, mrc_file, pdb_file, crd_file, log_file
         )
 
         assert out_dict["simulation"]["log_file"] == log_file
@@ -408,13 +408,12 @@ def test_write_inp_file():
                     "noise": noise,
                     "detector_Q_efficiency": detector_q_efficiency,
                     "MTF_params": mtf_params,
-                },
-                "miscellaneous": {"log_file": log_file},
+                }
             }
             contents = yaml.dump(data)
             f.write(contents)
         out_dict = cryoemio.fill_parameters_dictionary(
-            tmp_yml.name, mrc_file, pdb_file, crd_file
+            tmp_yml.name, mrc_file, pdb_file, crd_file, log_file
         )
         cryoemio.write_inp_file(out_dict, tmp_inp.name)
     finally:
