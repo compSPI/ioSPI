@@ -114,8 +114,13 @@ def test_fill_parameters_dictionary_max():
             contents = yaml.dump(data)
             f.write(contents)
         out_dict = cryoemio.fill_parameters_dictionary(
-            tmp_yml.name, mrc_file, pdb_file, crd_file, log_file,
-            dose=dose, noise=noise_override
+            tmp_yml.name,
+            mrc_file,
+            pdb_file,
+            crd_file,
+            log_file,
+            dose=dose,
+            noise=noise_override,
         )
 
         assert out_dict["simulation"]["seed"] == seed
@@ -236,7 +241,7 @@ def test_fill_parameters_dictionary_min():
                     "noise": noise,
                     "detector_Q_efficiency": detector_q_efficiency,
                     "MTF_params": mtf_params,
-                }
+                },
             }
             contents = yaml.dump(data)
             f.write(contents)
@@ -408,7 +413,7 @@ def test_write_inp_file():
                     "noise": noise,
                     "detector_Q_efficiency": detector_q_efficiency,
                     "MTF_params": mtf_params,
-                }
+                },
             }
             contents = yaml.dump(data)
             f.write(contents)
