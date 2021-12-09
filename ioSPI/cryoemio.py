@@ -197,7 +197,7 @@ def fill_parameters_dictionary(
     dic["optics"]["focal_length"] = parameters["optics_parameters"][
         "focal_length"
     ]  # focal length in mm of primary lens
-    dic["optics"]["cond_ap_angle"] = parameters["optics_params"][
+    dic["optics"]["cond_ap_angle"] = parameters["optics_parameters"][
         "aperture_angle"
     ]  # aperture angle in mrad of the beam furnished by the condenser lens
     dic["detector"] = {}
