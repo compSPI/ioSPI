@@ -39,14 +39,32 @@ def test_fill_parameters_dictionary_max():
     particle_name = "africa"
     particle_mrcout = "b.mrc"
     crd_file = "a.crd"
-    sample_dimensions = [200, 10, 5]
-    beam_params = [100, 2.1, 50, 1]
+    hole_diameter = 200
+    hole_thickness_center = 10
+    hole_thickness_edge = 5
+    voltage = 100
+    energy_spread = 2.1
+    electron_dose = 50
+    electron_dose_std = 1
     dose = 20
-    optics_params = [21000, 2.1, 2.1, 50, 3.1, 0.5, 1.2, 0, 0]
-    defocus = 1.5
-    optics_defocout = "optics.txt"
-    detector_params = [2120, 1080, 2, 31, "no", 0.1, 0.1, 0.0, 0.7, 0, 0]
-    noise = 0.1
+    magnification = 21000
+    spherical_aberration = 2.1
+    chromatic_aberration = 2.1
+    aperture_diameter = 50
+    focal_length = 3.1
+    aperture_angle = 0.5
+    defocus = 1.2
+    defocus_syst_error = 0
+    defocus_nonsyst_error = 0
+    optics_defocusout = "optics.txt"
+    detector_nx = 2120
+    detector_ny = 1080
+    detector_pixel_size = 2
+    detector_gain = 31
+    noise = "no"
+    detector_q_efficiency = 0.1
+    mtf_params = [0.1, 0.0, 0.7, 0, 0]
+    noise_override = 0.1
     log_file = "itslog.log"
     seed = 210
     key = particle_mrcout.split(".mrc")[0]
@@ -54,33 +72,57 @@ def test_fill_parameters_dictionary_max():
     try:
         with open(tmp_yml.name, "w") as f:
             data = {
-                "mrc_file": mrc_file,
-                "pdb_file": pdb_file,
-                "voxel_size": voxel_size,
-                "particle_name": particle_name,
-                "particle_mrcout": particle_mrcout,
-                "crd_file": crd_file,
-                "sample_dimensions": sample_dimensions,
-                "beam_params": beam_params,
-                "dose": dose,
-                "optics_params": optics_params,
-                "defocus": defocus,
-                "optics_defocout": optics_defocout,
-                "detector_params": detector_params,
-                "noise": noise,
-                "log_file": log_file,
-                "seed": seed,
+                "molecular_model": {
+                    "voxel_size": voxel_size,
+                    "particle_name": particle_name,
+                    "particle_mrcout": particle_mrcout,
+                },
+                "specimen_grid_params": {
+                    "hole_diameter": hole_diameter,
+                    "hole_thickness_center": hole_thickness_center,
+                    "hole_thickness_edge": hole_thickness_edge,
+                },
+                "beam_parameters": {
+                    "voltage": voltage,
+                    "energy_spread": energy_spread,
+                    "electron_dose": electron_dose,
+                    "electron_dose_std": electron_dose_std,
+                },
+                "optics_parameters": {
+                    "magnification": magnification,
+                    "spherical_aberration": spherical_aberration,
+                    "chromatic_aberration": chromatic_aberration,
+                    "aperture_diameter": aperture_diameter,
+                    "focal_length": focal_length,
+                    "aperture_angle": aperture_angle,
+                    "defocus": defocus,
+                    "defocus_syst_error": defocus_syst_error,
+                    "defocus_nonsyst_error": defocus_nonsyst_error,
+                    "optics_defocusout": optics_defocusout,
+                },
+                "detector_parameters": {
+                    "detector_Nx": detector_nx,
+                    "detector_Ny": detector_ny,
+                    "detector_pixel_size": detector_pixel_size,
+                    "detector_gain": detector_gain,
+                    "noise": noise,
+                    "detector_Q_efficiency": detector_q_efficiency,
+                    "MTF_params": mtf_params,
+                },
+                "miscellaneous": {"log_file": log_file, "seed": seed},
             }
             contents = yaml.dump(data)
             f.write(contents)
-        out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
+        out_dict = cryoemio.fill_parameters_dictionary(
+            tmp_yml.name, mrc_file, pdb_file, crd_file, dose=dose, noise=noise_override
+        )
 
         assert out_dict["simulation"]["seed"] == seed
         assert out_dict["simulation"]["log_file"] == log_file
 
-        assert out_dict["sample"]["diameter"] == sample_dimensions[0]
-        assert out_dict["sample"]["thickness_center"] == sample_dimensions[1]
-        assert out_dict["sample"]["thickness_edge"] == sample_dimensions[2]
+        assert out_dict["sample"]["diameter"] == hole_diameter
+        assert out_dict["sample"]["thickness_center"] == hole_thickness_center
+        assert out_dict["sample"]["thickness_edge"] == hole_thickness_edge
 
         assert out_dict["particle"]["name"] == particle_name
         assert out_dict["particle"]["voxel_size"] == voxel_size
@@ -91,33 +133,33 @@ def test_fill_parameters_dictionary_max():
         assert out_dict["particleset"]["name"] == particle_name
         assert out_dict["particleset"]["crd_file"] == crd_file
 
-        assert out_dict["beam"]["voltage"] == beam_params[0]
-        assert out_dict["beam"]["spread"] == beam_params[1]
+        assert out_dict["beam"]["voltage"] == voltage
+        assert out_dict["beam"]["spread"] == energy_spread
         assert out_dict["beam"]["dose_per_im"] == dose
-        assert out_dict["beam"]["dose_sd"] == beam_params[3]
+        assert out_dict["beam"]["dose_sd"] == electron_dose_std
 
-        assert out_dict["optics"]["magnification"] == optics_params[0]
-        assert out_dict["optics"]["cs"] == optics_params[1]
-        assert out_dict["optics"]["cc"] == optics_params[2]
-        assert out_dict["optics"]["aperture"] == optics_params[3]
-        assert out_dict["optics"]["focal_length"] == optics_params[4]
-        assert out_dict["optics"]["cond_ap_angle"] == optics_params[5]
+        assert out_dict["optics"]["magnification"] == magnification
+        assert out_dict["optics"]["cs"] == spherical_aberration
+        assert out_dict["optics"]["cc"] == chromatic_aberration
+        assert out_dict["optics"]["aperture"] == aperture_diameter
+        assert out_dict["optics"]["focal_length"] == focal_length
+        assert out_dict["optics"]["cond_ap_angle"] == aperture_angle
         assert out_dict["optics"]["defocus_nominal"] == defocus
-        assert out_dict["optics"]["defocus_syst_error"] == optics_params[7]
-        assert out_dict["optics"]["defocus_nonsyst_error"] == optics_params[8]
-        assert out_dict["optics"]["defocus_file_out"] == optics_defocout
+        assert out_dict["optics"]["defocus_syst_error"] == defocus_syst_error
+        assert out_dict["optics"]["defocus_nonsyst_error"] == defocus_nonsyst_error
+        assert out_dict["optics"]["defocus_file_out"] == optics_defocusout
 
-        assert out_dict["detector"]["det_pix_x"] == detector_params[0]
-        assert out_dict["detector"]["det_pix_y"] == detector_params[1]
-        assert out_dict["detector"]["pixel_size"] == detector_params[2]
-        assert out_dict["detector"]["gain"] == detector_params[3]
-        assert out_dict["detector"]["use_quantization"] == noise
-        assert out_dict["detector"]["dqe"] == detector_params[5]
+        assert out_dict["detector"]["det_pix_x"] == detector_nx
+        assert out_dict["detector"]["det_pix_y"] == detector_ny
+        assert out_dict["detector"]["pixel_size"] == detector_pixel_size
+        assert out_dict["detector"]["gain"] == detector_gain
+        assert out_dict["detector"]["use_quantization"] == noise_override
+        assert out_dict["detector"]["dqe"] == detector_q_efficiency
         assert out_dict["detector"]["mtf_a"] == defocus
-        assert out_dict["detector"]["mtf_b"] == detector_params[7]
-        assert out_dict["detector"]["mtf_c"] == detector_params[8]
-        assert out_dict["detector"]["mtf_alpha"] == detector_params[9]
-        assert out_dict["detector"]["mtf_beta"] == detector_params[10]
+        assert out_dict["detector"]["mtf_b"] == mtf_params[1]
+        assert out_dict["detector"]["mtf_c"] == mtf_params[2]
+        assert out_dict["detector"]["mtf_alpha"] == mtf_params[3]
+        assert out_dict["detector"]["mtf_beta"] == mtf_params[4]
         assert out_dict["detector"]["image_file_out"] == mrc_file
     finally:
         os.unlink(tmp_yml.name)
@@ -133,35 +175,80 @@ def test_fill_parameters_dictionary_min():
     voxel_size = 0.2
     particle_name = "africa"
     crd_file = "a.crd"
-    sample_dimensions = [200, 10, 5]
-    beam_params = [100, 2.1, 50, 1]
-    optics_params = [21000, 2.1, 2.1, 50, 3.1, 0.5, 1.2, 0, 0]
-    detector_params = [2120, 1080, 2, 31, "no", 0.1, 0.1, 0.0, 0.7, 0, 0]
+    hole_diameter = 200
+    hole_thickness_center = 10
+    hole_thickness_edge = 5
+    voltage = 100
+    energy_spread = 2.1
+    electron_dose = 50
+    electron_dose_std = 1
+    magnification = 21000
+    spherical_aberration = 2.1
+    chromatic_aberration = 2.1
+    aperture_diameter = 50
+    focal_length = 3.1
+    aperture_angle = 0.5
+    defocus_syst_error = 0
+    defocus_nonsyst_error = 0
+    detector_nx = 2120
+    detector_ny = 1080
+    detector_pixel_size = 2
+    detector_gain = 31
+    noise = "no"
+    detector_q_efficiency = 0.1
+    mtf_params = [0.1, 0.0, 0.7, 0, 0]
     log_file = "itslog.log"
 
     try:
         with open(tmp_yml.name, "w") as f:
             data = {
-                "mrc_file": mrc_file,
-                "pdb_file": pdb_file,
-                "voxel_size": voxel_size,
-                "particle_name": particle_name,
-                "crd_file": crd_file,
-                "sample_dimensions": sample_dimensions,
-                "beam_params": beam_params,
-                "optics_params": optics_params,
-                "detector_params": detector_params,
-                "log_file": log_file,
+                "molecular_model": {
+                    "voxel_size": voxel_size,
+                    "particle_name": particle_name,
+                },
+                "specimen_grid_params": {
+                    "hole_diameter": hole_diameter,
+                    "hole_thickness_center": hole_thickness_center,
+                    "hole_thickness_edge": hole_thickness_edge,
+                },
+                "beam_parameters": {
+                    "voltage": voltage,
+                    "energy_spread": energy_spread,
+                    "electron_dose": electron_dose,
+                    "electron_dose_std": electron_dose_std,
+                },
+                "optics_parameters": {
+                    "magnification": magnification,
+                    "spherical_aberration": spherical_aberration,
+                    "chromatic_aberration": chromatic_aberration,
+                    "aperture_diameter": aperture_diameter,
+                    "focal_length": focal_length,
+                    "aperture_angle": aperture_angle,
+                    "defocus_syst_error": defocus_syst_error,
+                    "defocus_nonsyst_error": defocus_nonsyst_error,
+                },
+                "detector_parameters": {
+                    "detector_Nx": detector_nx,
+                    "detector_Ny": detector_ny,
+                    "detector_pixel_size": detector_pixel_size,
+                    "detector_gain": detector_gain,
+                    "noise": noise,
+                    "detector_Q_efficiency": detector_q_efficiency,
+                    "MTF_params": mtf_params,
+                },
+                "miscellaneous": {"log_file": log_file},
             }
             contents = yaml.dump(data)
             f.write(contents)
-        out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
+        out_dict = cryoemio.fill_parameters_dictionary(
+            tmp_yml.name, mrc_file, pdb_file, crd_file
+        )
 
         assert out_dict["simulation"]["log_file"] == log_file
 
-        assert out_dict["sample"]["diameter"] == sample_dimensions[0]
-        assert out_dict["sample"]["thickness_center"] == sample_dimensions[1]
-        assert out_dict["sample"]["thickness_edge"] == sample_dimensions[2]
+        assert out_dict["sample"]["diameter"] == hole_diameter
+        assert out_dict["sample"]["thickness_center"] == hole_thickness_center
+        assert out_dict["sample"]["thickness_edge"] == hole_thickness_edge
 
         assert out_dict["particle"]["name"] == particle_name
         assert out_dict["particle"]["voxel_size"] == voxel_size
@@ -170,32 +257,32 @@ def test_fill_parameters_dictionary_min():
         assert out_dict["particleset"]["name"] == particle_name
         assert out_dict["particleset"]["crd_file"] == crd_file
 
-        assert out_dict["beam"]["voltage"] == beam_params[0]
-        assert out_dict["beam"]["spread"] == beam_params[1]
-        assert out_dict["beam"]["dose_per_im"] == beam_params[2]
-        assert out_dict["beam"]["dose_sd"] == beam_params[3]
+        assert out_dict["beam"]["voltage"] == voltage
+        assert out_dict["beam"]["spread"] == energy_spread
+        assert out_dict["beam"]["dose_per_im"] == electron_dose
+        assert out_dict["beam"]["dose_sd"] == electron_dose_std
 
-        assert out_dict["optics"]["magnification"] == optics_params[0]
-        assert out_dict["optics"]["cs"] == optics_params[1]
-        assert out_dict["optics"]["cc"] == optics_params[2]
-        assert out_dict["optics"]["aperture"] == optics_params[3]
-        assert out_dict["optics"]["focal_length"] == optics_params[4]
-        assert out_dict["optics"]["cond_ap_angle"] == optics_params[5]
-        assert out_dict["optics"]["defocus_nominal"] == optics_params[6]
-        assert out_dict["optics"]["defocus_syst_error"] == optics_params[7]
-        assert out_dict["optics"]["defocus_nonsyst_error"] == optics_params[8]
+        assert out_dict["optics"]["magnification"] == magnification
+        assert out_dict["optics"]["cs"] == spherical_aberration
+        assert out_dict["optics"]["cc"] == chromatic_aberration
+        assert out_dict["optics"]["aperture"] == aperture_diameter
+        assert out_dict["optics"]["focal_length"] == focal_length
+        assert out_dict["optics"]["cond_ap_angle"] == aperture_angle
+        assert out_dict["optics"]["defocus_nominal"] == mtf_params[0]
+        assert out_dict["optics"]["defocus_syst_error"] == defocus_syst_error
+        assert out_dict["optics"]["defocus_nonsyst_error"] == defocus_nonsyst_error
 
-        assert out_dict["detector"]["det_pix_x"] == detector_params[0]
-        assert out_dict["detector"]["det_pix_y"] == detector_params[1]
-        assert out_dict["detector"]["pixel_size"] == detector_params[2]
-        assert out_dict["detector"]["gain"] == detector_params[3]
-        assert out_dict["detector"]["use_quantization"] == detector_params[4]
-        assert out_dict["detector"]["dqe"] == detector_params[5]
-        assert out_dict["detector"]["mtf_a"] == detector_params[6]
-        assert out_dict["detector"]["mtf_b"] == detector_params[7]
-        assert out_dict["detector"]["mtf_c"] == detector_params[8]
-        assert out_dict["detector"]["mtf_alpha"] == detector_params[9]
-        assert out_dict["detector"]["mtf_beta"] == detector_params[10]
+        assert out_dict["detector"]["det_pix_x"] == detector_nx
+        assert out_dict["detector"]["det_pix_y"] == detector_ny
+        assert out_dict["detector"]["pixel_size"] == detector_pixel_size
+        assert out_dict["detector"]["gain"] == detector_gain
+        assert out_dict["detector"]["use_quantization"] == noise
+        assert out_dict["detector"]["dqe"] == detector_q_efficiency
+        assert out_dict["detector"]["mtf_a"] == mtf_params[0]
+        assert out_dict["detector"]["mtf_b"] == mtf_params[1]
+        assert out_dict["detector"]["mtf_c"] == mtf_params[2]
+        assert out_dict["detector"]["mtf_alpha"] == mtf_params[3]
+        assert out_dict["detector"]["mtf_beta"] == mtf_params[4]
         assert out_dict["detector"]["image_file_out"] == mrc_file
     finally:
         os.unlink(tmp_yml.name)
@@ -261,29 +348,74 @@ def test_write_inp_file():
     voxel_size = 0.2
     particle_name = "africa"
     crd_file = "a.crd"
-    sample_dimensions = [200, 10, 5]
-    beam_params = [100, 2.1, 50, 1]
-    optics_params = [21000, 2.1, 2.1, 50, 3.1, 0.5, 1.2, 0, 0]
-    detector_params = [2120, 1080, 2, 31, "no", 0.1, 0.1, 0.0, 0.7, 0, 0]
+    hole_diameter = 200
+    hole_thickness_center = 10
+    hole_thickness_edge = 5
+    voltage = 100
+    energy_spread = 2.1
+    electron_dose = 50
+    electron_dose_std = 1
+    magnification = 21000
+    spherical_aberration = 2.1
+    chromatic_aberration = 2.1
+    aperture_diameter = 50
+    focal_length = 3.1
+    aperture_angle = 0.5
+    defocus_syst_error = 0
+    defocus_nonsyst_error = 0
+    detector_nx = 2120
+    detector_ny = 1080
+    detector_pixel_size = 2
+    detector_gain = 31
+    noise = "no"
+    detector_q_efficiency = 0.1
+    mtf_params = [0.1, 0.0, 0.7, 0, 0]
     log_file = "itslog.log"
 
     try:
         with open(tmp_yml.name, "w") as f:
             data = {
-                "mrc_file": mrc_file,
-                "pdb_file": pdb_file,
-                "voxel_size": voxel_size,
-                "particle_name": particle_name,
-                "crd_file": crd_file,
-                "sample_dimensions": sample_dimensions,
-                "beam_params": beam_params,
-                "optics_params": optics_params,
-                "detector_params": detector_params,
-                "log_file": log_file,
+                "molecular_model": {
+                    "voxel_size": voxel_size,
+                    "particle_name": particle_name,
+                },
+                "specimen_grid_params": {
+                    "hole_diameter": hole_diameter,
+                    "hole_thickness_center": hole_thickness_center,
+                    "hole_thickness_edge": hole_thickness_edge,
+                },
+                "beam_parameters": {
+                    "voltage": voltage,
+                    "energy_spread": energy_spread,
+                    "electron_dose": electron_dose,
+                    "electron_dose_std": electron_dose_std,
+                },
+                "optics_parameters": {
+                    "magnification": magnification,
+                    "spherical_aberration": spherical_aberration,
+                    "chromatic_aberration": chromatic_aberration,
+                    "aperture_diameter": aperture_diameter,
+                    "focal_length": focal_length,
+                    "aperture_angle": aperture_angle,
+                    "defocus_syst_error": defocus_syst_error,
+                    "defocus_nonsyst_error": defocus_nonsyst_error,
+                },
+                "detector_parameters": {
+                    "detector_Nx": detector_nx,
+                    "detector_Ny": detector_ny,
+                    "detector_pixel_size": detector_pixel_size,
+                    "detector_gain": detector_gain,
+                    "noise": noise,
+                    "detector_Q_efficiency": detector_q_efficiency,
+                    "MTF_params": mtf_params,
+                },
+                "miscellaneous": {"log_file": log_file},
             }
             contents = yaml.dump(data)
             f.write(contents)
-        out_dict = cryoemio.fill_parameters_dictionary(tmp_yml.name)
+        out_dict = cryoemio.fill_parameters_dictionary(
+            tmp_yml.name, mrc_file, pdb_file, crd_file
+        )
         cryoemio.write_inp_file(out_dict, tmp_inp.name)
     finally:
         os.unlink(tmp_inp.name)
