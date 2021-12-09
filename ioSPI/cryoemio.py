@@ -62,7 +62,7 @@ def recursively_save_dict_contents_to_group(h5file, path, dic):
 
 
 def fill_parameters_dictionary(
-    yaml_file, mrc_file, pdb_file, crd_file, dose=None, noise=None
+    yaml_file, mrc_file, pdb_file, crd_file, log_file, dose=None, noise=None
 ):
     """Return parameter dictionary with settings for simulation.
 
@@ -76,6 +76,8 @@ def fill_parameters_dictionary(
         PDB file of sample
     crd_file : str
         Coordinates of the sample copies
+    log_file : str
+        Log file for the run
     dose : int
         If present, overrides beam_parameters[electron_dose]
     noise : str
@@ -128,7 +130,6 @@ def fill_parameters_dictionary(
     - MTF_params                   : list of 5 MTF parameters
 
     *** miscellaneous ***
-    - log_file                     : Log file for the run
     - seed [OPTIONAL]              : seed for the run. If not present, random.
     """
     parameters = None
@@ -137,12 +138,13 @@ def fill_parameters_dictionary(
 
     # fill the dictionary
     dic = {"simulation": {}}
-    if "seed" in parameters["miscellaneous"]:
-        dic["simulation"]["seed"] = parameters["miscellaneous"]["seed"]
-    else:
-        random.seed()
-        dic["simulation"]["seed"] = random.randint(0, int(1e10))
-    dic["simulation"]["log_file"] = parameters["miscellaneous"]["log_file"]
+    if "miscellaneous" in parameters:
+        if "seed" in parameters["miscellaneous"]:
+            dic["simulation"]["seed"] = parameters["miscellaneous"]["seed"]
+        else:
+            random.seed()
+            dic["simulation"]["seed"] = random.randint(0, int(1e10))
+    dic["simulation"]["log_file"] = log_file
     dic["sample"] = {}
     dic["sample"]["diameter"] = parameters["specimen_grid_params"][
         "hole_diameter"
