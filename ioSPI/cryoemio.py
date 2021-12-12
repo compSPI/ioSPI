@@ -43,7 +43,7 @@ def recursively_save_dict_contents_to_group(h5file, path, dic):
 
     Parameters
     ----------
-    h5file : File
+    h5file : h5py.File
         .hdf5 file to write to.
     path : str
         Relative path to save dictionary contents.
@@ -62,13 +62,13 @@ def recursively_save_dict_contents_to_group(h5file, path, dic):
 
 
 def fill_parameters_dictionary(
-    yaml_file, mrc_file, pdb_file, crd_file, log_file, dose=None, noise=None
+    input_params_file, mrc_file, pdb_file, crd_file, log_file, dose=None, noise=None
 ):
     """Return parameter dictionary with settings for simulation.
 
     Parameters
     ----------
-    yaml_file : str
+    input_params_file : str
         Path to the .yml file with the parameters
     mrc_file : str
         Micrograph file
@@ -86,45 +86,45 @@ def fill_parameters_dictionary(
     YAML file entries:
     ------------------
     *** molecular_model ***
-    - voxel size                   : The size of voxels in the particle map in nm.
+    - voxel_size_nm                : The size of voxels in the particle map in nm.
     - particle_name                : Name of the particle. Not very important.
     - particle_mrcout [OPTIONAL]   : if present, volume map of sample is written.
 
     *** specimen_grid_params ***
-    - hole_diameter                : diameter in nm
-    - hole_thickness_center        : thickness at center in nm
-    - hole_thickness_edge          : thickness at edge in nm.
+    - hole_diameter_nm             : diameter in nm
+    - hole_thickness_center_nm     : thickness at center in nm
+    - hole_thickness_edge_nm       : thickness at edge in nm.
 
     *** beam_parameters ***
-    - voltage                      : voltage in kV
-    - energy_spread                : energy spread in V
-    - electron_dose                : dose per image in e/nm**2
-    - electron_dose_std            : standard deviation of dose per image
+    - voltage_kv                   : voltage in kV
+    - energy_spread_v              : energy spread in V
+    - electron_dose_e_per_nm2      : dose per image in e/nm**2
+    - electron_dose_std_e_per_nm2  : standard deviation of dose per image
 
     *** optics_parameters ***
     - magnification                : magnification (81000; 105000; 130000)
-    - spherical_aberration         : spherical aberration in mm
-    - chromatic_aberration         : chromatic aberration in mm
-    - aperture_diameter            : diam in um of aperture in back focal plane (50-100)
-    - focal_length                 : focal length in mm of primary lens
-    - aperture_angle               : aperture angle in mrad of the beam furnished by
+    - spherical_aberration_mm      : spherical aberration in mm
+    - chromatic_aberration_mm      : chromatic aberration in mm
+    - aperture_diameter_um         : diam in um of aperture in back focal plane (50-100)
+    - focal_length_mm              : focal length in mm of primary lens
+    - aperture_angle_mrad          : aperture angle in mrad of the beam furnished by
                                          the condenser lens
-    - defocus [OPTIONAL]           : nominal defocus value in um
-    - defocus_syst_error           : standard deviation of a systematic error
+    - defocus_um [OPTIONAL]        : nominal defocus value in um
+    - defocus_syst_error_um       : standard deviation of a systematic error
                                          added to the nominal defocus, measured
                                          in um. Same error is added to the defocus
                                          of every image.
-    - defocus_nonsyst_error        : standard deviation of a nonsystematic error
+    - defocus_nonsyst_error_um     : standard deviation of a nonsystematic error
                                          added to the nominal defocus and the
                                          systematic error, measured in um. A new
                                          value of error is computed for every image.
     - optics_defocusout [OPTIONAL] : if present, defocus values written to file.
 
     *** detector_parameters ***
-    - detector_Nx                  : number of pixels on detector along x axis
-    - detector_Ny                  : number of pixels on detector along y axis
-    - detector_pixel_size          : physical pixel size in um
-    - detector_gain                : detector gain: avg number of counts per electron
+    - detector_Nx_px               : number of pixels on detector along x axis
+    - detector_Ny_px               : number of pixels on detector along y axis
+    - detector_pixel_size_um       : physical pixel size in um
+    - average_gain_count_per_electron : detector gain: avg number of counts per electron
     - noise                        : quantized electron waves result in noise
     - detector_Q_efficiency        : detector quantum efficiency
     - MTF_params                   : list of 5 MTF parameters
@@ -133,34 +133,28 @@ def fill_parameters_dictionary(
     - seed [OPTIONAL]              : seed for the run. If not present, random.
     """
     parameters = None
-    with open(yaml_file, "r") as f:
+    with open(input_params_file, "r") as f:
         parameters = yaml.safe_load(f)
 
     # fill the dictionary
     dic = {"simulation": {}}
-    if "miscellaneous" in parameters:
-        if "seed" in parameters["miscellaneous"]:
-            dic["simulation"]["seed"] = parameters["miscellaneous"]["seed"]
-        else:
-            random.seed()
-            dic["simulation"]["seed"] = random.randint(0, int(1e10))
-    else:
+    try:
+        dic["simulation"]["seed"] = parameters["miscellaneous"]["seed"]
+    except KeyError:
         random.seed()
         dic["simulation"]["seed"] = random.randint(0, int(1e10))
     dic["simulation"]["log_file"] = log_file
     dic["sample"] = {}
-    dic["sample"]["diameter"] = parameters["specimen_grid_params"][
-        "hole_diameter"
-    ]  # diameter in nm
+    dic["sample"]["diameter"] = parameters["specimen_grid_params"]["hole_diameter_nm"]
     dic["sample"]["thickness_center"] = parameters["specimen_grid_params"][
-        "hole_thickness_center"
-    ]  # thickness at center in nm
+        "hole_thickness_center_nm"
+    ]
     dic["sample"]["thickness_edge"] = parameters["specimen_grid_params"][
-        "hole_thickness_edge"
-    ]  # thickness at edge in nm
+        "hole_thickness_edge_nm"
+    ]
     dic["particle"] = {}
     dic["particle"]["name"] = parameters["molecular_model"]["particle_name"]
-    dic["particle"]["voxel_size"] = parameters["molecular_model"]["voxel_size"]
+    dic["particle"]["voxel_size"] = parameters["molecular_model"]["voxel_size_nm"]
     dic["particle"]["pdb_file"] = pdb_file
     if "particle_mrcout" in parameters["molecular_model"]:
         key = parameters["molecular_model"]["particle_mrcout"].split(".mrc")[0]
@@ -172,94 +166,65 @@ def fill_parameters_dictionary(
     dic["particleset"]["name"] = parameters["molecular_model"]["particle_name"]
     dic["particleset"]["crd_file"] = crd_file
     dic["beam"] = {}
-    dic["beam"]["voltage"] = parameters["beam_parameters"]["voltage"]  # voltage in kV
-    dic["beam"]["spread"] = parameters["beam_parameters"][
-        "energy_spread"
-    ]  # energy spread in V
+    dic["beam"]["voltage"] = parameters["beam_parameters"]["voltage_kv"]
+    dic["beam"]["spread"] = parameters["beam_parameters"]["energy_spread_v"]
     if dose is not None:
         dic["beam"]["dose_per_im"] = dose
     else:
         dic["beam"]["dose_per_im"] = parameters["beam_parameters"][
-            "electron_dose"
-        ]  # dose per image in e/nm**2
+            "electron_dose_e_per_nm2"
+        ]
     dic["beam"]["dose_sd"] = parameters["beam_parameters"][
-        "electron_dose_std"
-    ]  # standard deviation of dose per image
+        "electron_dose_std_e_per_nm2"
+    ]
     dic["optics"] = {}
 
-    dic["optics"]["magnification"] = parameters["optics_parameters"][
-        "magnification"
-    ]  # magnification
-    dic["optics"]["cs"] = parameters["optics_parameters"][
-        "spherical_aberration"
-    ]  # spherical aberration in mm
-    dic["optics"]["cc"] = parameters["optics_parameters"][
-        "chromatic_aberration"
-    ]  # chromatic aberration in mm
-    dic["optics"]["aperture"] = parameters["optics_parameters"][
-        "aperture_diameter"
-    ]  # diameter in um of aperture in back focal plane
-    dic["optics"]["focal_length"] = parameters["optics_parameters"][
-        "focal_length"
-    ]  # focal length in mm of primary lens
+    dic["optics"]["magnification"] = parameters["optics_parameters"]["magnification"]
+    dic["optics"]["cs"] = parameters["optics_parameters"]["spherical_aberration_mm"]
+    dic["optics"]["cc"] = parameters["optics_parameters"]["chromatic_aberration_mm"]
+    dic["optics"]["aperture"] = parameters["optics_parameters"]["aperture_diameter_um"]
+    dic["optics"]["focal_length"] = parameters["optics_parameters"]["focal_length_mm"]
     dic["optics"]["cond_ap_angle"] = parameters["optics_parameters"][
-        "aperture_angle"
-    ]  # aperture angle in mrad of the beam furnished by the condenser lens
+        "aperture_angle_mrad"
+    ]
     dic["detector"] = {}
-    if "defocus" in parameters["optics_parameters"]:
-        dic["optics"]["defocus_nominal"] = parameters["optics_parameters"]["defocus"]
-        dic["detector"]["mtf_a"] = parameters["optics_parameters"]["defocus"]
+    if "defocus_um" in parameters["optics_parameters"]:
+        dic["optics"]["defocus_nominal"] = parameters["optics_parameters"]["defocus_um"]
+        dic["detector"]["mtf_a"] = parameters["optics_parameters"]["defocus_um"]
     else:
         dic["optics"]["defocus_nominal"] = parameters["detector_parameters"][
             "MTF_params"
         ][0]
         dic["detector"]["mtf_a"] = parameters["detector_parameters"]["MTF_params"][0]
     dic["optics"]["defocus_syst_error"] = parameters["optics_parameters"][
-        "defocus_syst_error"
+        "defocus_syst_error_um"
     ]
     dic["optics"]["defocus_nonsyst_error"] = parameters["optics_parameters"][
-        "defocus_nonsyst_error"
+        "defocus_nonsyst_error_um"
     ]
     if "optics_defocusout" in parameters["optics_parameters"]:
         dic["optics"]["defocus_file_out"] = parameters["optics_parameters"][
             "optics_defocusout"
-        ]  # file to which defocus values are written
+        ]
     else:
         dic["optics"]["defocus_file_out"] = None
-    dic["detector"]["det_pix_x"] = parameters["detector_parameters"][
-        "detector_Nx"
-    ]  # number of pixels on detector along x axis
-    dic["detector"]["det_pix_y"] = parameters["detector_parameters"][
-        "detector_Ny"
-    ]  # number of pixels on detector along y axis
+    dic["detector"]["det_pix_x"] = parameters["detector_parameters"]["detector_Nx_px"]
+    dic["detector"]["det_pix_y"] = parameters["detector_parameters"]["detector_Ny_px"]
     dic["detector"]["pixel_size"] = parameters["detector_parameters"][
-        "detector_pixel_size"
-    ]  # physical pixel size in um
+        "detector_pixel_size_um"
+    ]
     dic["detector"]["gain"] = parameters["detector_parameters"][
-        "detector_gain"
-    ]  # detector gain: average number of counts per electron
+        "average_gain_count_per_electron"
+    ]
     if noise is not None:
         dic["detector"]["use_quantization"] = noise
     else:
-        dic["detector"]["use_quantization"] = parameters["detector_parameters"][
-            "noise"
-        ]  # quantized electron waves result in noise
-    dic["detector"]["dqe"] = parameters["detector_parameters"][
-        "detector_Q_efficiency"
-    ]  # detector quantum efficiency
-    dic["detector"]["mtf_b"] = parameters["detector_parameters"]["MTF_params"][
-        1
-    ]  # parameter of MTF
-    dic["detector"]["mtf_c"] = parameters["detector_parameters"]["MTF_params"][
-        2
-    ]  # parameter of MTF
-    dic["detector"]["mtf_alpha"] = parameters["detector_parameters"]["MTF_params"][
-        3
-    ]  # parameter of MTF
-    dic["detector"]["mtf_beta"] = parameters["detector_parameters"]["MTF_params"][
-        4
-    ]  # parameter of MTF
-    # file with resulting micrograph
+        dic["detector"]["use_quantization"] = parameters["detector_parameters"]["noise"]
+    dic["detector"]["dqe"] = parameters["detector_parameters"]["detector_Q_efficiency"]
+    dic["detector"]["mtf_b"] = parameters["detector_parameters"]["MTF_params"][1]
+    dic["detector"]["mtf_c"] = parameters["detector_parameters"]["MTF_params"][2]
+    dic["detector"]["mtf_alpha"] = parameters["detector_parameters"]["MTF_params"][3]
+    dic["detector"]["mtf_beta"] = parameters["detector_parameters"]["MTF_params"][4]
     dic["detector"]["image_file_out"] = mrc_file
 
     return dic
