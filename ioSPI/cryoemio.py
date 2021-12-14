@@ -131,6 +131,8 @@ def fill_parameters_dictionary(
 
     *** miscellaneous ***
     - seed [OPTIONAL]              : seed for the run. If not present, random.
+    - signal_to_noise [OPTIONAL]   : signal-to-noise ratio for gaussian white noise.
+    - signal_to_noise_db [OPTIONAL] : signal-to-noise ratio in decibels.
     """
     parameters = None
     with open(input_params_file, "r") as f:
@@ -143,6 +145,17 @@ def fill_parameters_dictionary(
     except KeyError:
         random.seed()
         dic["simulation"]["seed"] = random.randint(0, int(1e10))
+    dic["other"] = {}
+    try:
+        dic["other"]["signal_to_noise"] = parameters["miscellaneous"]["signal_to_noise"]
+    except KeyError:
+        pass
+    try:
+        dic["other"]["signal_to_noise_db"] = parameters["miscellaneous"][
+            "signal_to_noise_db"
+        ]
+    except KeyError:
+        pass
     dic["simulation"]["log_file"] = log_file
     dic["sample"] = {}
     dic["sample"]["diameter"] = parameters["specimen_grid_params"]["hole_diameter_nm"]

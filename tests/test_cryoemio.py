@@ -64,9 +64,11 @@ def test_fill_parameters_dictionary_max():
     noise = "no"
     detector_q_efficiency = 0.1
     mtf_params = [0.1, 0.0, 0.7, 0, 0]
-    noise_override = 0.1
+    noise_override = "yes"
     log_file = "itslog.log"
     seed = 210
+    snr = 0.6
+    snr_db = 10
     key = particle_mrcout.split(".mrc")[0]
 
     try:
@@ -109,7 +111,11 @@ def test_fill_parameters_dictionary_max():
                     "detector_Q_efficiency": detector_q_efficiency,
                     "MTF_params": mtf_params,
                 },
-                "miscellaneous": {"seed": seed},
+                "miscellaneous": {
+                    "seed": seed,
+                    "signal_to_noise": snr,
+                    "signal_to_noise_db": snr_db,
+                },
             }
             contents = yaml.dump(data)
             f.write(contents)
@@ -167,6 +173,9 @@ def test_fill_parameters_dictionary_max():
         assert out_dict["detector"]["mtf_alpha"] == mtf_params[3]
         assert out_dict["detector"]["mtf_beta"] == mtf_params[4]
         assert out_dict["detector"]["image_file_out"] == mrc_file
+
+        assert out_dict["other"]["signal_to_noise"] == snr
+        assert out_dict["other"]["signal_to_noise_db"] == snr_db
     finally:
         os.unlink(tmp_yml.name)
 
