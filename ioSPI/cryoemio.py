@@ -121,13 +121,13 @@ def fill_parameters_dictionary(
     - optics_defocusout [OPTIONAL] : if present, defocus values written to file.
 
     *** detector_parameters ***
-    - detector_Nx_px               : number of pixels on detector along x axis
-    - detector_Ny_px               : number of pixels on detector along y axis
+    - detector_nx_px               : number of pixels on detector along x axis
+    - detector_ny_px               : number of pixels on detector along y axis
     - detector_pixel_size_um       : physical pixel size in um
     - average_gain_count_per_electron : detector gain: avg number of counts per electron
     - noise                        : quantized electron waves result in noise
-    - detector_Q_efficiency        : detector quantum efficiency
-    - MTF_params                   : list of 5 MTF parameters
+    - detector_q_efficiency        : detector quantum efficiency
+    - mtf_params                   : list of 5 MTF parameters
 
     *** miscellaneous ***
     - seed [OPTIONAL]              : seed for the run. If not present, random.
@@ -206,9 +206,9 @@ def fill_parameters_dictionary(
         dic["detector"]["mtf_a"] = parameters["optics_parameters"]["defocus_um"]
     else:
         dic["optics"]["defocus_nominal"] = parameters["detector_parameters"][
-            "MTF_params"
+            "mtf_params"
         ][0]
-        dic["detector"]["mtf_a"] = parameters["detector_parameters"]["MTF_params"][0]
+        dic["detector"]["mtf_a"] = parameters["detector_parameters"]["mtf_params"][0]
     dic["optics"]["defocus_syst_error"] = parameters["optics_parameters"][
         "defocus_syst_error_um"
     ]
@@ -221,8 +221,8 @@ def fill_parameters_dictionary(
         ]
     else:
         dic["optics"]["defocus_file_out"] = None
-    dic["detector"]["det_pix_x"] = parameters["detector_parameters"]["detector_Nx_px"]
-    dic["detector"]["det_pix_y"] = parameters["detector_parameters"]["detector_Ny_px"]
+    dic["detector"]["det_pix_x"] = parameters["detector_parameters"]["detector_nx_px"]
+    dic["detector"]["det_pix_y"] = parameters["detector_parameters"]["detector_ny_px"]
     dic["detector"]["pixel_size"] = parameters["detector_parameters"][
         "detector_pixel_size_um"
     ]
@@ -233,11 +233,11 @@ def fill_parameters_dictionary(
         dic["detector"]["use_quantization"] = noise
     else:
         dic["detector"]["use_quantization"] = parameters["detector_parameters"]["noise"]
-    dic["detector"]["dqe"] = parameters["detector_parameters"]["detector_Q_efficiency"]
-    dic["detector"]["mtf_b"] = parameters["detector_parameters"]["MTF_params"][1]
-    dic["detector"]["mtf_c"] = parameters["detector_parameters"]["MTF_params"][2]
-    dic["detector"]["mtf_alpha"] = parameters["detector_parameters"]["MTF_params"][3]
-    dic["detector"]["mtf_beta"] = parameters["detector_parameters"]["MTF_params"][4]
+    dic["detector"]["dqe"] = parameters["detector_parameters"]["detector_q_efficiency"]
+    dic["detector"]["mtf_b"] = parameters["detector_parameters"]["mtf_params"][1]
+    dic["detector"]["mtf_c"] = parameters["detector_parameters"]["mtf_params"][2]
+    dic["detector"]["mtf_alpha"] = parameters["detector_parameters"]["mtf_params"][3]
+    dic["detector"]["mtf_beta"] = parameters["detector_parameters"]["mtf_params"][4]
     dic["detector"]["image_file_out"] = mrc_file
 
     return dic

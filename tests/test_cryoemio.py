@@ -103,13 +103,13 @@ def test_fill_parameters_dictionary_max():
                     "optics_defocusout": optics_defocusout,
                 },
                 "detector_parameters": {
-                    "detector_Nx_px": detector_nx,
-                    "detector_Ny_px": detector_ny,
+                    "detector_nx_px": detector_nx,
+                    "detector_ny_px": detector_ny,
                     "detector_pixel_size_um": detector_pixel_size,
                     "average_gain_count_per_electron": detector_gain,
                     "noise": noise,
-                    "detector_Q_efficiency": detector_q_efficiency,
-                    "MTF_params": mtf_params,
+                    "detector_q_efficiency": detector_q_efficiency,
+                    "mtf_params": mtf_params,
                 },
                 "miscellaneous": {
                     "seed": seed,
@@ -243,13 +243,13 @@ def test_fill_parameters_dictionary_min():
                     "defocus_nonsyst_error_um": defocus_nonsyst_error,
                 },
                 "detector_parameters": {
-                    "detector_Nx_px": detector_nx,
-                    "detector_Ny_px": detector_ny,
+                    "detector_nx_px": detector_nx,
+                    "detector_ny_px": detector_ny,
                     "detector_pixel_size_um": detector_pixel_size,
                     "average_gain_count_per_electron": detector_gain,
                     "noise": noise,
-                    "detector_Q_efficiency": detector_q_efficiency,
-                    "MTF_params": mtf_params,
+                    "detector_q_efficiency": detector_q_efficiency,
+                    "mtf_params": mtf_params,
                 },
             }
             contents = yaml.dump(data)
@@ -415,13 +415,13 @@ def test_write_inp_file():
                     "defocus_nonsyst_error_um": defocus_nonsyst_error,
                 },
                 "detector_parameters": {
-                    "detector_Nx_px": detector_nx,
-                    "detector_Ny_px": detector_ny,
+                    "detector_nx_px": detector_nx,
+                    "detector_ny_px": detector_ny,
                     "detector_pixel_size_um": detector_pixel_size,
                     "average_gain_count_per_electron": detector_gain,
                     "noise": noise,
-                    "detector_Q_efficiency": detector_q_efficiency,
-                    "MTF_params": mtf_params,
+                    "detector_q_efficiency": detector_q_efficiency,
+                    "mtf_params": mtf_params,
                 },
             }
             contents = yaml.dump(data)
