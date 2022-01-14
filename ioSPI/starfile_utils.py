@@ -27,8 +27,8 @@ def starfile_opticsparams(config):
     """
     check_star_file(config.input_starfile_path)
     df = starfile.read(config.input_starfile_path)
-    config.sidelen = df["optics"]["rlnImageSize"][0]
-    config.kV = df["optics"]["rlnVoltage"][0]
+    config.side_len = df["optics"]["rlnImageSize"][0]
+    config.kv = df["optics"]["rlnVoltage"][0]
     config.pixel_size = df["optics"]["rlnImagePixelSize"][0]
     config.spherical_aberration = df["optics"]["rlnSphericalAberration"][0]
     config.amplitude_contrast = df["optics"]["rlnAmplitudeContrast"][0]
@@ -71,8 +71,8 @@ def return_names(config):
     return names
 
 
-def starfile_data(dataframe, rot_params, ctf_params, shift_params, iterations, config):
-    """Append the dataframe with the parameters of the simulator.
+def starfile_data(datalist, rot_params, ctf_params, shift_params, iterations, config):
+    """Append the datalist with the parameters of the simulator.
 
     Parameters
     ----------
@@ -90,18 +90,18 @@ def starfile_data(dataframe, rot_params, ctf_params, shift_params, iterations, c
 
     Returns
     -------
-    dataframe: list
+    datalist: list
         list containing the metadata of the projection chunks.
         This list is then used to save the starfile.
     """
-    ImageName = [
+    image_name = [
         str(idx).zfill(3) + "@" + str(iterations).zfill(4) + ".mrcs"
         for idx in range(config.chunks)
     ]
 
     for num in range(config.chunks):
         list_var = [
-            ImageName[num],
+            image_name[num],
             rot_params["relion_AngleRot"][num].item(),
             rot_params["relion_AngleTilt"][num].item(),
             rot_params["relion_AnglePsi"][num].item(),
@@ -125,5 +125,5 @@ def starfile_data(dataframe, rot_params, ctf_params, shift_params, iterations, c
             config.amplitude_contrast,
             config.bfactor,
         ]
-        dataframe.append(list_var)
-    return dataframe
+        datalist.append(list_var)
+    return datalist
