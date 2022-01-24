@@ -51,16 +51,9 @@ jobs:
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           $CONDA/bin/conda env update --file environment.yml --name base
           $CONDA/bin/pip install -e .
-      - name: install dependencies [pip]
-        run:  |
-          pip install --upgrade pip setuptools wheel
-          for req in dev-requirements.txt; do
-            pip install -q -r $req
-          done
-          pip install -e .
       - name: unit testing [pytest]
         run: |
-          pytest --cov-report term --cov-report xml:coverage.xml --cov=ioSPI ${{matrix.test-folder}}
+          $CONDA/bin/pytest --cov-report term --cov-report xml:coverage.xml --cov=ioSPI ${{matrix.test-folder}}
       - name: uploading code coverage [codecov]
         if: ${{matrix.python-version == 3.7}}
         run: |
