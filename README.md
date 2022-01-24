@@ -1,4 +1,5 @@
-[![Build](https://github.com/compSPI/ioSPI/actions/workflows/build.yml/badge.svg)](https://github.com/compSPI/ioSPI/actions/workflows/build.yml)
+[![Test](https://github.com/compSPI/ioSPI/actions/workflows/test.yml/badge.svg)](https://github.com/compSPI/ioSPI/actions/workflows/test.yml)
+[![Lint](https://github.com/compSPI/ioSPI/actions/workflows/lint.yml/badge.svg)](https://github.com/compSPI/ioSPI/actions/workflows/lint.yml)
 [![Codecov](https://codecov.io/gh/compSPI/ioSPI/branch/master/graph/badge.svg?token=OBVOV3ZM1O)](https://codecov.io/gh/compSPI/ioSPI)
 [![DeepSource](https://deepsource.io/gh/compSPI/ioSPI.svg/?label=active+issues&show_trend=true&token=4kJgheTFBCQhy6ItFV2Qp4cA)](https://deepsource.io/gh/compSPI/ioSPI/?ref=repository-badge)
 
