@@ -5,9 +5,9 @@ channels:
 dependencies:
   - codecov
   - coverage
-  - flake8-black
+  - isort
+  - flake8
   - flake8-docstrings
-  - flake8-import-order
   - gemmi
   - mrcfile
   - numba
