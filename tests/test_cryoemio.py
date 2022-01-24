@@ -1,4 +1,4 @@
-"""Unit test for tem wrapper I/O helper functions."""
+"""Unit tests for tem wrapper I/O helper functions."""
 
 import os
 import tempfile
