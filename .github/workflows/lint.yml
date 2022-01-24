@@ -38,23 +38,17 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{matrix.python-version}}
-
-      - name: cache conda
-        uses: actions/cache@v1
-        with:
-          path: $CONDA
-          key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-conda-
-      - name: install dependencies
+      - name: install dependencies [pip]
         run:  |
-          # $CONDA is an environment variable pointing to the root of the miniconda directory
-          $CONDA/bin/conda env update --file environment.yml --name base
-          $CONDA/bin/pip install -e .
+          pip install --upgrade pip setuptools wheel
+          for req in dev-requirements.txt; do
+            pip install -q -r $req
+          done
+          pip install -e .
       - name: linting [black and isort]
         run: |
           black . --check
           isort --profile black --check .
       - name: linting [flake8]
         run: |
-          $CONDA/bin/flake8 ioSPI tests
+          flake8 ioSPI tests
