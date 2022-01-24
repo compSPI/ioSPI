@@ -1,4 +1,4 @@
-name: "Testing"
+name: "Lint"
 
 on:
   push:
@@ -51,10 +51,10 @@ jobs:
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           $CONDA/bin/conda env update --file environment.yml --name base
           $CONDA/bin/pip install -e .
-      - name: unit testing [pytest]
+      - name: linting [black and isort]
         run: |
-          $CONDA/bin/pytest --cov-report term --cov-report xml:coverage.xml --cov=ioSPI ${{matrix.test-folder}}
-      - name: uploading code coverage [codecov]
-        if: ${{matrix.python-version == 3.7}}
+          black . --check
+          isort --profile black --check .
+      - name: linting [flake8]
         run: |
-          bash <(curl -s https://codecov.io/bash) -c
+          $CONDA/bin/flake8 ioSPI tests
