@@ -3,6 +3,8 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - codecov
+  - coverage
   - gemmi
   - mrcfile
   - numba
@@ -10,5 +12,7 @@ dependencies:
   - h5py>=2.10.0
   - pillow>=8.2.0
   - pyfftw
+  - pytest
+  - pytest-cov
   - pytorch
   - pyyaml
