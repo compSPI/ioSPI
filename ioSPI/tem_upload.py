@@ -54,8 +54,8 @@ class TEMUpload:
         """
         dataset_label = (
             tem_sim.path_dict["pdb_keyword"] + tem_sim.path_dict["micrograph_keyword"]
-        )
-        molecule_label = tem_sim.path_dict["pdb_keyword"]
+        )  # TODO: Change these keys as they do not exist in metadata anymore.
+        molecule_label = tem_sim.path_dict["pdb_keyword"]  #4v6x
         molecule_guid = self.get_molecule_guid(molecule_label)
         dataset_guid = self.post_child_node(
             molecule_guid, dataset_label, tags=self.generate_tags_from_tem(tem_sim)
@@ -198,7 +198,7 @@ class TEMUpload:
             response = requests.put(
                 request_url + query_parameters, files=files, headers=self.headers
             )
-
+            # TODO: Investigate empty file write.
             if response.status_code != 201:
                 print(f"Upload {file_path} failed with code {response.status_code}")
                 success = False
