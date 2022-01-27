@@ -1,20 +1,20 @@
 """Tests for tem_upload."""
-from pathlib import Path
+import os
 import random
 import string
+from pathlib import Path
 
 import pytest
 import requests
+import tem
 
 from ioSPI.ioSPI import tem_upload
-import tem
-import os
 
 
-@pytest.fixture(autouse = True, scope = "session")
+@pytest.fixture(autouse=True, scope="session")
 def setup_teardown():
     """Test node creation and clean-up for tests."""
-    token = "lm3rEMshPWAz56EYYtjAll8VCJTNvEZ9eMrq2AAnn7GNhmJoOynMEtoq6WbdOiaeqMCVwS"
+    token = ""
     request_headers = {"Authorization": f"Bearer {token}"}
     base_api_url = "https://api.osf.io/v2/nodes/"
 
@@ -33,7 +33,7 @@ def setup_teardown():
     }
 
     response = requests.post(
-        request_url, headers = request_headers, json = {"data": request_body}
+        request_url, headers=request_headers, json={"data": request_body}
     )
     response.raise_for_status()
 
@@ -45,27 +45,30 @@ def setup_teardown():
 
     yield
 
-    print(f"\nDeleting test node CryoEM Dataset -> internal -> {test_node_label} and its sub-components ")
+    print(
+        f"\nDeleting test node CryoEM Dataset -> internal -> "
+        f"{test_node_label} and its sub-components."
+    )
     cleanup(pytest.test_node_guid, test_node_label)
 
 
 def cleanup(node_guid, test_node_label):
     """Recursively delete nodes and subcomponents."""
-
     base_node_url = f"{pytest.base_api_url}{node_guid}/"
 
-    response = requests.get(f"{base_node_url}children/", headers = pytest.request_headers)
+    response = requests.get(f"{base_node_url}children/", headers=pytest.request_headers)
     response.raise_for_status()
 
     for node_child in response.json()["data"]:
         cleanup(node_child["id"], node_child["attributes"]["title"])
 
-    response = requests.delete(
-        base_node_url, headers = pytest.request_headers
-    )
+    response = requests.delete(base_node_url, headers=pytest.request_headers)
 
     if not response.ok:
-        print(f"Failure: {test_node_label} could not be deleted due to error code {response.status_code}.")
+        print(
+            f"Failure: {test_node_label} could not be"
+            f" deleted due to error code {response.status_code}."
+        )
         print(response.json()["errors"][0]["detail"])
     else:
         print(f"Success: {test_node_label} deleted")
@@ -122,7 +125,7 @@ def test_constructor():
 
 def test_upload_dataset_from_tem(mock_tem_upload, mock_tem, create_upload_file):
     """Test whether data is parsed from TEM wrapper and files are uploaded."""
-    # mock_tem.output_path_dict["h5_file"] = str(create_upload_file)
+    mock_tem.output_path_dict["h5_file"] = str(create_upload_file)
     assert mock_tem_upload.upload_dataset_from_tem(mock_tem)
 
 
@@ -135,7 +138,7 @@ def test_post_child_node(mock_tem_upload):
         pytest.test_node_guid, test_node_label
     )
     response = requests.get(
-        f"{pytest.base_api_url}{returned_guid}", headers = pytest.request_headers
+        f"{pytest.base_api_url}{returned_guid}", headers=pytest.request_headers
     )
     assert test_node_label == response.json()["data"]["attributes"]["title"]
 
@@ -152,7 +155,7 @@ def test_get_existing_molecules(mock_tem_upload):
     }
 
     requests.post(
-        request_url, headers = pytest.request_headers, json = {"data": request_body}
+        request_url, headers=pytest.request_headers, json={"data": request_body}
     ).raise_for_status()
 
     assert test_node_label in mock_tem_upload.get_existing_molecules()
@@ -166,23 +169,24 @@ def test_get_molecule_guid(mock_tem_upload):
 
     returned_guid = mock_tem_upload.get_molecule_guid(test_node_label)
     response = requests.get(
-        f"{pytest.base_api_url}{returned_guid}", headers = pytest.request_headers
+        f"{pytest.base_api_url}{returned_guid}", headers=pytest.request_headers
     )
     assert response.status_code == 200
     assert returned_guid == mock_tem_upload.get_molecule_guid(test_node_label)
 
 
-# def test_generate_tags_from_tem():
-#     """Test whether tags are generated from TEM configuration parameters."""
-#     assert True
+def test_generate_tags_from_tem():
+    """Test whether tags are generated from TEM configuration parameters."""
+    assert True
+
 
 def test_post_files(mock_tem_upload, create_upload_file):
     """Test whether files are uploaded to OSF."""
-
     assert mock_tem_upload.post_files(pytest.test_node_guid, [str(create_upload_file)])
 
     response = requests.get(
-        f"{pytest.base_api_url}{pytest.test_node_guid}/files/osfstorage/", headers = pytest.request_headers
+        f"{pytest.base_api_url}{pytest.test_node_guid}/files/osfstorage/",
+        headers=pytest.request_headers,
     )
 
     response.raise_for_status()
