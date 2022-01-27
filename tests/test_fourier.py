@@ -21,8 +21,11 @@ def import_simspi():
     import math
 
     import simSPI
+    from simSPI import tem
 
-    dir(simSPI, math)
+    dir(math)
+    dir(simSPI)
+    dir(tem)
 
     assert True
 
