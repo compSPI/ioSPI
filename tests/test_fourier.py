@@ -16,6 +16,17 @@ def test_pass():
     assert True
 
 
+def import_simspi():
+    """Import math and simspi."""
+    import math
+
+    import simSPI
+
+    dir(simSPI, math)
+
+    assert True
+
+
 def test_do_fft():
     """Test fft wrapper.
 
