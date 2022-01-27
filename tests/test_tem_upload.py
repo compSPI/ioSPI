@@ -1,5 +1,5 @@
 """Tests for tem_upload."""
-import pathlib
+from pathlib import Path
 import random
 import string
 
@@ -7,12 +7,13 @@ import pytest
 import requests
 
 from ioSPI.ioSPI import tem_upload
-
+import tem
+import os
 
 @pytest.fixture(autouse=True, scope="session")
 def setup_teardown():
     """Test node creation and clean-up for tests."""
-    token = ""
+    token = "lm3rEMshPWAz56EYYtjAll8VCJTNvEZ9eMrq2AAnn7GNhmJoOynMEtoq6WbdOiaeqMCVwS"
     request_headers = {"Authorization": f"Bearer {token}"}
     base_api_url = "https://api.osf.io/v2/nodes/"
 
@@ -42,25 +43,29 @@ def setup_teardown():
 
 
 @pytest.fixture
-def mock_tem():
-    """Return mock TEMSimulator instance."""
+def mock_tem(tmp_path):
+    """Instantiate TEMSimulator for testing."""
+    test_files_path = "./test_files"
+    cwd = os.getcwd()
 
-    class SampleTEM:
-        """Mock TEMSimulator with attributes required for testing.
+    tem_simulator = tem.TEMSimulator(
+        str(Path(cwd, test_files_path, "path_config.yaml")),
+        str(Path(cwd, test_files_path, "sim_config.yaml")),
+    )
 
-        Attributes
-        ----------
-        path_dict : dict of type str:str
-            Dict containing dataset key words.
-        output_path_dict : dict of type str:str
-            File paths for upload data.
-        """
+    # from test_files/path_config
+    out_file_name = "_randomrot"
 
-        def __init__(self):
-            self.path_dict = {"pdb_keyword": "", "micrograph_keyword": ""}
-            self.output_path_dict = {"h5_file": ""}
+    tem_simulator.output_path_dict["mrc_file"] = str(
+        Path(cwd, tmp_path, out_file_name + ".mrc")
+    )
 
-    return SampleTEM()
+    tem_simulator.output_path_dict["pdb_file"] = str(
+        Path(cwd, test_files_path, "4v6x.pdb")
+    )
+
+    return tem_simulator
+
 
 
 @pytest.fixture
@@ -72,21 +77,10 @@ def mock_tem_upload():
 @pytest.fixture
 def create_upload_file(tmp_path):
     """Create temporary text file for upload."""
-    file_path = pathlib.Path(tmp_path, "test_upload.txt")
+    file_path = Path(tmp_path, "test_upload.txt")
     with open(file_path, "w") as f:
         f.write("Hello World")
     return file_path
-
-
-def test_upload_dataset_from_tem(mock_tem_upload, mock_tem, create_upload_file):
-    """Test whether data is parsed from TEM wrapper and files are uploaded."""
-    mock_tem.path_dict["pdb_keyword"] = "test_upload"
-    mock_tem.path_dict["micrograph_keyword"] = "".join(
-        random.choice(string.ascii_letters) for i in range(5)
-    )
-    mock_tem.output_path_dict["h5_file"] = str(create_upload_file)
-    assert mock_tem_upload.upload_dataset_from_tem(mock_tem)
-
 
 def test_constructor():
     """Test constructor populates class attributes."""
@@ -96,57 +90,64 @@ def test_constructor():
     assert test_class.data_node_guid is not None
 
 
-def test_post_child_node(mock_tem_upload):
-    """Test whether nodes are created."""
-    test_node_label = "test_post_child_node" + "".join(
-        random.choice(string.ascii_letters) for i in range(5)
-    )
-    returned_guid = mock_tem_upload.post_child_node(
-        pytest.test_node_guid, test_node_label
-    )
-    response = requests.get(
-        f"{pytest.base_api_url}{returned_guid}", headers=pytest.request_headers
-    )
-    assert test_node_label == response.json()["data"]["attributes"]["title"]
+
+def test_upload_dataset_from_tem(mock_tem_upload, mock_tem, create_upload_file):
+    """Test whether data is parsed from TEM wrapper and files are uploaded."""
+    # mock_tem.output_path_dict["h5_file"] = str(create_upload_file)
+    assert mock_tem_upload.upload_dataset_from_tem(mock_tem)
 
 
-def test_get_existing_molecules(mock_tem_upload):
-    """Test if uploaded test node is retrieved."""
-    request_url = f"{pytest.base_api_url}{pytest.test_node_guid}/children/"
-    test_node_label = "test_get_existing_molecules_" + "".join(
-        random.choice(string.ascii_letters) for i in range(5)
-    )
-    request_body = {
-        "type": "nodes",
-        "attributes": {"title": test_node_label, "category": "data"},
-    }
+# def test_post_child_node(mock_tem_upload):
+#     """Test whether nodes are created."""
+#     test_node_label = "test_post_child_node" + "".join(
+#         random.choice(string.ascii_letters) for i in range(5)
+#     )
+#     returned_guid = mock_tem_upload.post_child_node(
+#         pytest.test_node_guid, test_node_label
+#     )
+#     response = requests.get(
+#         f"{pytest.base_api_url}{returned_ guid}", headers=pytest.request_headers
+#     )
+#     assert test_node_label == response.json()["data"]["attributes"]["title"]
+#
+#
+# def test_get_existing_molecules(mock_tem_upload):
+#     """Test if uploaded test node is retrieved."""
+#     request_url = f"{pytest.base_api_url}{pytest.test_node_guid}/children/"
+#     test_node_label = "test_get_existing_molecules_" + "".join(
+#         random.choice(string.ascii_letters) for i in range(5)
+#     )
+#     request_body = {
+#         "type": "nodes",
+#         "attributes": {"title": test_node_label, "category": "data"},
+#     }
+#
+#     requests.post(
+#         request_url, headers=pytest.request_headers, json={"data": request_body}
+#     ).raise_for_status()
+#
+#     assert test_node_label in mock_tem_upload.get_existing_molecules()
+#
+#
+# def test_get_molecule_guid(mock_tem_upload):
+#     """Test if valid guid is returned for a molecule label."""
+#     test_node_label = "test_get_molecule_guid" + "".join(
+#         random.choice(string.ascii_letters) for i in range(5)
+#     )
+#
+#     returned_guid = mock_tem_upload.get_molecule_guid(test_node_label)
+#     response = requests.get(
+#         f"{pytest.base_api_url}{returned_guid}", headers=pytest.request_headers
+#     )
+#     assert response.status_code == 200
+#     assert returned_guid == mock_tem_upload.get_molecule_guid(test_node_label)
 
-    requests.post(
-        request_url, headers=pytest.request_headers, json={"data": request_body}
-    ).raise_for_status()
 
-    assert test_node_label in mock_tem_upload.get_existing_molecules()
-
-
-def test_get_molecule_guid(mock_tem_upload):
-    """Test if valid guid is returned for a molecule label."""
-    test_node_label = "test_get_molecule_guid" + "".join(
-        random.choice(string.ascii_letters) for i in range(5)
-    )
-
-    returned_guid = mock_tem_upload.get_molecule_guid(test_node_label)
-    response = requests.get(
-        f"{pytest.base_api_url}{returned_guid}", headers=pytest.request_headers
-    )
-    assert response.status_code == 200
-    assert returned_guid == mock_tem_upload.get_molecule_guid(test_node_label)
-
-
-def test_post_files():
-    """Test whether files are uploaded to OSF."""
-    assert True
-
-
-def test_generate_tags_from_tem():
-    """Test whether tags are generated from TEM configuration parameters."""
-    assert True
+# def test_post_files():
+#     """Test whether files are uploaded to OSF."""
+#     assert True
+#
+#
+# def test_generate_tags_from_tem():
+#     """Test whether tags are generated from TEM configuration parameters."""
+#     assert True
