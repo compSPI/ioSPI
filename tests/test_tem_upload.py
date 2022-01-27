@@ -14,7 +14,7 @@ import os
 @pytest.fixture(autouse = True, scope = "session")
 def setup_teardown():
     """Test node creation and clean-up for tests."""
-    token = ""
+    token = "lm3rEMshPWAz56EYYtjAll8VCJTNvEZ9eMrq2AAnn7GNhmJoOynMEtoq6WbdOiaeqMCVwS"
     request_headers = {"Authorization": f"Bearer {token}"}
     base_api_url = "https://api.osf.io/v2/nodes/"
 
@@ -178,5 +178,14 @@ def test_get_molecule_guid(mock_tem_upload):
 
 def test_post_files(mock_tem_upload, create_upload_file):
     """Test whether files are uploaded to OSF."""
-    #TODO:implement
-    assert mock_tem_upload.post_files('eq2kb', [str(create_upload_file)])
+
+    assert mock_tem_upload.post_files(pytest.test_node_guid, [str(create_upload_file)])
+
+    response = requests.get(
+        f"{pytest.base_api_url}{pytest.test_node_guid}/files/osfstorage/", headers = pytest.request_headers
+    )
+
+    response.raise_for_status()
+    parsed_response = response.json()["data"][0]
+
+    assert Path(create_upload_file).name == parsed_response["attributes"]["name"]
