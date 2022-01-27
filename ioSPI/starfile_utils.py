@@ -96,34 +96,34 @@ def starfile_data(datalist, rot_params, ctf_params, shift_params, iterations, co
     """
     image_name = [
         str(idx).zfill(3) + "@" + str(iterations).zfill(4) + ".mrcs"
-        for idx in range(config.chunks)
+        for idx in range(config.batch_size)
     ]
 
-    for num in range(config.chunks):
+    for num in range(config.batch_size):
         list_var = [
             image_name[num],
-            rot_params["relion_AngleRot"][num].item(),
-            rot_params["relion_AngleTilt"][num].item(),
-            rot_params["relion_AnglePsi"][num].item(),
+            rot_params["relion_angle_rot"][num].item(),
+            rot_params["relion_angle_tilt"][num].item(),
+            rot_params["relion_angle_psi"][num].item(),
         ]
         if shift_params:
             list_var += [
-                shift_params["shiftX"][num].item(),
-                shift_params["shiftY"][num].item(),
+                shift_params["shift_x"][num].item(),
+                shift_params["shift_y"][num].item(),
             ]
         if ctf_params:
             list_var += [
-                1e4 * ctf_params["defocusU"][num].item(),
-                1e4 * ctf_params["defocusV"][num].item(),
-                np.radians(ctf_params["defocusAngle"][num].item()),
+                1e4 * ctf_params["defocus_u"][num].item(),
+                1e4 * ctf_params["defocus_v"][num].item(),
+                np.radians(ctf_params["defocus_angle"][num].item()),
             ]
 
         list_var += [
-            config.kV,
+            config.kv,
             config.pixel_size,
             config.cs,
             config.amplitude_contrast,
-            config.bfactor,
+            config.b_factor,
         ]
         datalist.append(list_var)
     return datalist
