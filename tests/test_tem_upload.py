@@ -14,7 +14,7 @@ from ioSPI import tem_upload
 @pytest.fixture(autouse=True, scope="session")
 def setup_teardown():
     """Test node creation and clean-up for tests."""
-    token = "lm3rEMshPWAz56EYYtjAll8VCJTNvEZ9eMrq2AAnn7GNhmJoOynMEtoq6WbdOiaeqMCVwS"
+    token = ""
     request_headers = {"Authorization": f"Bearer {token}"}
     base_api_url = "https://api.osf.io/v2/nodes/"
 
