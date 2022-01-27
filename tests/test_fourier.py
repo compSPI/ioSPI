@@ -11,6 +11,11 @@ arr3d = np.random.normal(size=n_pixels * n_pixels * n_pixels).reshape(
 )
 
 
+def test_pass():
+    """Auto pass."""
+    assert True
+
+
 def test_do_fft():
     """Test fft wrapper.
 
