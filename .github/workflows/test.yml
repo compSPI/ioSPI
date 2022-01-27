@@ -1,4 +1,4 @@
-name: "Linting and Testing"
+name: "Test"
 
 on:
   push:
@@ -46,14 +46,11 @@ jobs:
           key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
           restore-keys: |
             ${{ runner.os }}-conda-
-      - name: install dependencies
+      - name: install dependencies [conda]
         run:  |
           # $CONDA is an environment variable pointing to the root of the miniconda directory
           $CONDA/bin/conda env update --file environment.yml --name base
           $CONDA/bin/pip install -e .
-      - name: linting [flake8]
-        run: |
-          $CONDA/bin/flake8 ioSPI tests
       - name: unit testing [pytest]
         run: |
           $CONDA/bin/pytest --cov-report term --cov-report xml:coverage.xml --cov=ioSPI ${{matrix.test-folder}}
