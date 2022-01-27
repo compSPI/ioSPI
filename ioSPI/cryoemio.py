@@ -185,7 +185,7 @@ def fill_parameters_dictionary(
         dic["beam"]["dose_per_im"] = dose
     else:
         dic["beam"]["dose_per_im"] = parameters["beam_parameters"][
-            "electron_dose_e_per_nm2"
+            "electron_dose_std_e_per_nm2"
         ]
     dic["beam"]["dose_sd"] = parameters["beam_parameters"][
         "electron_dose_std_e_per_nm2"
