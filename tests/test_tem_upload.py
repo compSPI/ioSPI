@@ -6,15 +6,15 @@ from pathlib import Path
 
 import pytest
 import requests
-import tem
+from simSPI import tem
 
-from ioSPI.ioSPI import tem_upload
+from ioSPI import tem_upload
 
 
 @pytest.fixture(autouse=True, scope="session")
 def setup_teardown():
     """Test node creation and clean-up for tests."""
-    token = ""
+    token = "lm3rEMshPWAz56EYYtjAll8VCJTNvEZ9eMrq2AAnn7GNhmJoOynMEtoq6WbdOiaeqMCVwS"
     request_headers = {"Authorization": f"Bearer {token}"}
     base_api_url = "https://api.osf.io/v2/nodes/"
 
@@ -173,11 +173,6 @@ def test_get_molecule_guid(mock_tem_upload):
     )
     assert response.status_code == 200
     assert returned_guid == mock_tem_upload.get_molecule_guid(test_node_label)
-
-
-def test_generate_tags_from_tem():
-    """Test whether tags are generated from TEM configuration parameters."""
-    assert True
 
 
 def test_post_files(mock_tem_upload, create_upload_file):

@@ -3,7 +3,7 @@ import typing
 from pathlib import Path
 
 import requests
-import tem
+from simSPI import tem
 
 
 class TEMUpload:
@@ -55,9 +55,7 @@ class TEMUpload:
         molecule_label = Path(tem_sim.output_path_dict["pdb_file"]).stem
         dataset_label = Path(tem_sim.output_path_dict["mrc_file"]).stem
         molecule_guid = self.get_molecule_guid(molecule_label)
-        dataset_guid = self.post_child_node(
-            molecule_guid, dataset_label, tags=self.generate_tags_from_tem(tem_sim)
-        )
+        dataset_guid = self.post_child_node(molecule_guid, dataset_label)
 
         upload_file_paths = [tem_sim.output_path_dict["h5_file"]]
         return self.post_files(dataset_guid, upload_file_paths)
@@ -87,25 +85,6 @@ class TEMUpload:
         if molecule_label not in existing_molecules:
             return self.post_child_node(self.data_node_guid, molecule_label)
         return existing_molecules[molecule_label]
-
-    @staticmethod
-    def generate_tags_from_tem(tem_wrapper: tem.TEMSimulator) -> typing.List[str]:
-        """Generate a list of tags from simulator parameters.
-
-        Parameters
-        ----------
-        tem_wrapper : TEMSimulator
-            Instance of TEMSimulator with simulator parameters.
-
-        Returns
-        -------
-        list[str]
-            List of tags for dataset.
-        """
-        # TODO : Replace current placeholder code.
-
-        placeholder_values = tem_wrapper.sim_dict["detector_parameters"]
-        return placeholder_values
 
     def post_child_node(
         self, parent_guid: str, title: str, tags: typing.Optional[str] = None
