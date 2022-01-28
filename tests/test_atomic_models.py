@@ -70,7 +70,7 @@ class TestAtomicModels:
         """Test test_write_gemmi_model_cif."""
         cif_filename = "2dhb.cif"
         path_input = os.path.join(DATA, cif_filename)
-        os.system("wget https://files.rcsb.org/download/{cif_filename} -P tests/data")
+        os.system(f"wget https://files.rcsb.org/download/{cif_filename} -P tests/data")
         model = read_gemmi_model(path_input, assemble=False)
         path_output = os.path.join(OUT, f"test_{cif_filename}")
         write_gemmi_model(path_output, model)
