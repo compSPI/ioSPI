@@ -6,7 +6,7 @@ import mrcfile
 import pandas as pd
 import starfile
 
-from .starfile_utils import return_names
+from .starfile import return_names
 
 
 def save_mrc(output_path, projections, iterations):

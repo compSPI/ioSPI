@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import torch
 
-from ioSPI.starfile_utils import (
+from ioSPI.starfile import (
     check_star_file,
     return_names,
     starfile_data,
@@ -25,7 +25,7 @@ def test_check_star_file():
     actual = str(exception_context.value)
     assert expected in actual
 
-    path = "ioSPI/starfile_utils.py"
+    path = "ioSPI/starfile.py"
     expected = "Input star file is not a valid star file!"
 
     with pytest.raises(FileExistsError) as exception_context:
