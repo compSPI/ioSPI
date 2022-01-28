@@ -48,7 +48,19 @@ def save_starfile_cryoem_convention(output_path, datalist, config, save_name):
 
 
 def save_starfile(output_path, datalist, variable_names, save_name):
-    """Save the metadata in a starfile in the output directory."""
+    """Save the metadata in a starfile in the output directory.
+
+    Parameters
+    ----------
+    output_path: str
+        path to save starfile
+    datalist: list
+        list containing data set generation variables
+    variable_names: list of str
+        list containing name of the variables contained in the datalist
+    save_name: str
+        name of the starfile to be saved.
+    """
     df = pd.DataFrame(
         data=datalist,
         index=[idx for idx in range(len(datalist))],
