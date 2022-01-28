@@ -227,9 +227,10 @@ def fill_parameters_dictionary(
     ]
     if "distribution_type" in parameters["ctf_parameters"]:
         dic["optics"]["gen_defocus"] = "no"
-        dic["optics"]["defocus_file_out"] = defocus_file
+        dic["optics"]["defocus_file_in"] = defocus_file
     else:
         dic["optics"]["gen_defocus"] = "yes"
+        dic["optics"]["defocus_file_in"] = None
 
     if "optics_defocusout" in parameters["optics_parameters"]:
         dic["optics"]["defocus_file_out"] = parameters["optics_parameters"][
@@ -313,10 +314,10 @@ def write_inp_file(dict_params, inp_file="input.txt"):
             "=== geometry ===\n"
             "gen_tilt_data = yes\n"
             "tilt_axis = 0\n"
-            "ntilts = 1\n"
+            "ntilts = {0[n_tilts]}\n"
             "theta_start = 0\n"
             "theta_incr = 0\n"
-            "geom_errors = none\n"
+            "geom_errors = none\n".format(dict_params["geometry"])
         )
         inp.write(
             "=== electronbeam ===\n"
@@ -334,7 +335,7 @@ def write_inp_file(dict_params, inp_file="input.txt"):
             "aperture = {0[aperture]}\n"
             "focal_length = {0[focal_length]}\n"
             "cond_ap_angle = {0[cond_ap_angle]}\n"
-            "gen_defocus = yes\n"
+            "gen_defocus = {0[gen_defocus]}\n"
             "defocus_nominal = {0[defocus_nominal]}\n"
             "defocus_syst_error = {0[defocus_syst_error]}\n"
             "defocus_syst_error = {0[defocus_nonsyst_error]}\n".format(
@@ -344,6 +345,12 @@ def write_inp_file(dict_params, inp_file="input.txt"):
         if dict_params["optics"]["defocus_file_out"] is not None:
             inp.write(
                 "defocus_file_out = {0[defocus_file_out]}\n".format(
+                    dict_params["optics"]
+                )
+            )
+        if dict_params["optics"]["defocus_file_in"] is not None:
+            inp.write(
+                "defocus_file_in = {0[defocus_file_in]}\n".format(
                     dict_params["optics"]
                 )
             )
