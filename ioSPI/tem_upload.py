@@ -3,7 +3,7 @@ import typing
 from pathlib import Path
 
 import requests
-from simSPI import tem
+import tem
 
 
 class TEMUpload:
@@ -35,7 +35,7 @@ class TEMUpload:
         self.headers = {"Authorization": f"Bearer {token}"}
         self.base_url = "https://api.osf.io/v2/"
 
-        requests.get(self.base_url, headers=self.headers).raise_for_status()
+        requests.get(self.base_url, headers = self.headers).raise_for_status()
 
         self.data_node_guid = data_node_guid
 
@@ -55,10 +55,57 @@ class TEMUpload:
         molecule_label = Path(tem_sim.output_path_dict["pdb_file"]).stem
         dataset_label = Path(tem_sim.output_path_dict["mrc_file"]).stem
         molecule_guid = self.get_molecule_guid(molecule_label)
-        dataset_guid = self.post_child_node(molecule_guid, dataset_label)
+        dataset_guid = self.post_child_node(molecule_guid, dataset_label, tags = self.generate_tags_from_tem(tem_sim))
 
         upload_file_paths = [tem_sim.output_path_dict["h5_file"]]
         return self.post_files(dataset_guid, upload_file_paths)
+
+    def generate_tags_from_tem(self, tem_sim: typing.Type[tem.TEMSimulator]) -> typing.List[str]:
+        """Generate tags from temSimulator object.
+
+         Parameters
+         ----------
+         tem_sim : TEMSimulator
+         Instance of temSimulator containing simulation parameters.
+
+         Returns
+         -------
+         list[str]
+             List of tags.
+         """
+        param_dict = tem_sim.parameter_dict
+
+        tags = {
+            "rotation_distribution": "uniform_on_sphere",
+            "simulator": "tem_simulator",
+            "noise_type": "gaussian"
+        }
+        # noise
+        try:
+            tags["signal_to_noise_ratio"] = param_dict["other"]["signal_to_noise"]
+        except KeyError:
+            pass
+        try:
+            tags["signal_to_noise_ratio"] = 10 ** (param_dict["other"]["signal_to_noise_db"] / 10)
+        except KeyError:
+            pass
+
+        # n_particles
+        try:
+            tags["n_images"] = param_dict["geometry"]["n_tilts"]
+        except KeyError:
+            pass
+
+        # pixel size
+        tags["pixel_size_um"] = param_dict["detector"]["pixel_size"]
+
+        # ctf
+        try:
+            tags["ctf_type"] = param_dict["ctf"]["distribution_type"]
+        except KeyError:
+            pass
+
+        return [f"{key}:{tags[key]}" for key in tags]
 
     def get_molecule_guid(self, molecule_label: str) -> str:
         """Get GUID of node housing data for given molecule.
@@ -87,7 +134,7 @@ class TEMUpload:
         return existing_molecules[molecule_label]
 
     def post_child_node(
-        self, parent_guid: str, title: str, tags: typing.Optional[str] = None
+            self, parent_guid: str, title: str, tags: typing.Optional[str] = None
     ) -> str:
         """Create a new child node in OSF.io.
 
@@ -121,7 +168,7 @@ class TEMUpload:
             request_body["attributes"]["tags"] = tags
 
         response = requests.post(
-            request_url, headers=self.headers, json={"data": request_body}
+            request_url, headers = self.headers, json = {"data": request_body}
         )
         response.raise_for_status()
         return response.json()["data"]["id"]
@@ -140,7 +187,7 @@ class TEMUpload:
             Raised if GET request to OSF.io fails.
         """
         request_url = f"{self.base_url}nodes/{self.data_node_guid}/children/"
-        response = requests.get(request_url, headers=self.headers)
+        response = requests.get(request_url, headers = self.headers)
         response.raise_for_status()
         dataset_node_children = response.json()["data"]
 
@@ -174,16 +221,17 @@ class TEMUpload:
 
             query_parameters = f"?kind=file&name={file_path.name}"
             response = requests.put(
-                create_request_url + query_parameters, headers=self.headers
+                create_request_url + query_parameters, headers = self.headers
             )
             response.raise_for_status()
 
             file_content = {file_path.name: open(file_path, "rb")}
             data_upload__url = response.json()["data"]["links"]["upload"]
 
+            print(f"\nUploading {file_path} ")
             with open(file_path, "rb") as file_content:
                 response = requests.put(
-                    data_upload__url, data=file_content, headers=self.headers
+                    data_upload__url, data = file_content, headers = self.headers
                 )
                 response.raise_for_status()
 

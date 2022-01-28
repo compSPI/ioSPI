@@ -6,12 +6,12 @@ from pathlib import Path
 
 import pytest
 import requests
-from simSPI import tem
+import tem
 
 from ioSPI.ioSPI import tem_upload
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(autouse = True, scope = "session")
 def setup_teardown():
     """Test node creation and clean-up for tests."""
     token = os.environ["TEST_TOKEN"]
@@ -33,7 +33,7 @@ def setup_teardown():
     }
 
     response = requests.post(
-        request_url, headers=request_headers, json={"data": request_body}
+        request_url, headers = request_headers, json = {"data": request_body}
     )
     response.raise_for_status()
 
@@ -56,13 +56,13 @@ def cleanup(node_guid, test_node_label):
     """Recursively delete nodes and subcomponents."""
     base_node_url = f"{pytest.base_api_url}{node_guid}/"
 
-    response = requests.get(f"{base_node_url}children/", headers=pytest.request_headers)
+    response = requests.get(f"{base_node_url}children/", headers = pytest.request_headers)
     response.raise_for_status()
 
     for node_child in response.json()["data"]:
         cleanup(node_child["id"], node_child["attributes"]["title"])
 
-    response = requests.delete(base_node_url, headers=pytest.request_headers)
+    response = requests.delete(base_node_url, headers = pytest.request_headers)
 
     if not response.ok:
         print(
@@ -138,7 +138,7 @@ def test_post_child_node(mock_tem_upload):
         pytest.test_node_guid, test_node_label
     )
     response = requests.get(
-        f"{pytest.base_api_url}{returned_guid}", headers=pytest.request_headers
+        f"{pytest.base_api_url}{returned_guid}", headers = pytest.request_headers
     )
     assert test_node_label == response.json()["data"]["attributes"]["title"]
 
@@ -155,7 +155,7 @@ def test_get_existing_molecules(mock_tem_upload):
     }
 
     requests.post(
-        request_url, headers=pytest.request_headers, json={"data": request_body}
+        request_url, headers = pytest.request_headers, json = {"data": request_body}
     ).raise_for_status()
 
     assert test_node_label in mock_tem_upload.get_existing_molecules()
@@ -169,7 +169,7 @@ def test_get_molecule_guid(mock_tem_upload):
 
     returned_guid = mock_tem_upload.get_molecule_guid(test_node_label)
     response = requests.get(
-        f"{pytest.base_api_url}{returned_guid}", headers=pytest.request_headers
+        f"{pytest.base_api_url}{returned_guid}", headers = pytest.request_headers
     )
     assert response.status_code == 200
     assert returned_guid == mock_tem_upload.get_molecule_guid(test_node_label)
@@ -181,10 +181,16 @@ def test_post_files(mock_tem_upload, create_upload_file):
 
     response = requests.get(
         f"{pytest.base_api_url}{pytest.test_node_guid}/files/osfstorage/",
-        headers=pytest.request_headers,
+        headers = pytest.request_headers,
     )
 
     response.raise_for_status()
     parsed_response = response.json()["data"][0]
 
     assert Path(create_upload_file).name == parsed_response["attributes"]["name"]
+
+
+def test_generate_tags_from_tem(mock_tem,mock_tem_upload):
+    print("\n")
+    print(mock_tem_upload.generate_tags_from_tem(mock_tem))
+    assert True
