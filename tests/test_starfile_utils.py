@@ -38,6 +38,8 @@ def test_starfile_opticsparams():
     """Check if the updated config attributes have the right instances."""
 
     class config:
+        """Class to instantiate the config object."""
+
         input_starfile_path = "tests/data/test.star"
 
     config = starfile_opticsparams(config)
@@ -54,6 +56,8 @@ def test_return_names():
     """Check if the names retuned have the right instance."""
 
     class config:
+        """Class to instantiate the config object."""
+
         shift = True
         ctf = True
 
@@ -66,6 +70,8 @@ def test_starfile_data():
     """Check if the datalist returned is equal to the input params."""
 
     class config:
+        """Class to instantiate the config object."""
+
         batch_size = 12
         input_starfile_path = "tests/data/test.star"
         b_factor = 23
