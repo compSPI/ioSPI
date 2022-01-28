@@ -20,8 +20,7 @@ def test_save_mrc():
 def test_save_starfile_cryoem_convention():
     """Test if the saved star file exists."""
     output_path = "tests/data/"
-    datalist = []
-    datalist.append([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
+    datalist = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]]
 
     class config:
         ctf = True
@@ -38,8 +37,7 @@ def test_save_starfile_cryoem_convention():
 def test_save_starfile():
     """Test if the saved star file exists."""
     output_path = "tests/data/"
-    datalist = []
-    datalist.append([1, 2, 3])
+    datalist = [[1, 2, 3]]
     variable_names = ["a", "b", "c"]
     save_name = "temp"
 
