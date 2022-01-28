@@ -55,7 +55,7 @@ class TestDataset:
     @staticmethod
     def test_open_dataset():
         """Test test_open_dataset."""
-        path = "./tests/data_test_ml_cryo.npy"
+        path = "./tests/data/test_ml_cryo.npy"
         dataset1 = ml_cryo.open_dataset(path, size=64, is_3d=False)
         dataset2 = ml_cryo.open_dataset(path, size=32, is_3d=False)
         assert type(dataset1) is torch.Tensor
