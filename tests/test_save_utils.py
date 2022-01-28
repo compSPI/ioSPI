@@ -23,6 +23,8 @@ def test_save_starfile_cryoem_convention():
     datalist = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]]
 
     class config:
+        """Class to instantiate the config object."""
+
         ctf = True
         shift = True
 
