@@ -17,3 +17,6 @@ dependencies:
   - pytest-cov
   - pytorch
   - pyyaml
+  - pip:
+    - git+https://github.com/compSPI/ioSPI.git
+    - git+https://github.com/compSPI/simSPI.git
