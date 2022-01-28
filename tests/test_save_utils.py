@@ -3,12 +3,7 @@ import os
 
 import torch
 
-from ioSPI.save_utils import (
-    save_configfile,
-    save_mrc,
-    save_starfile,
-    save_starfile_cryoem_convention,
-)
+from ioSPI.save_utils import save_mrc, save_starfile, save_starfile_cryoem_convention
 
 
 def test_save_mrc():
@@ -25,7 +20,8 @@ def test_save_mrc():
 def test_save_starfile_cryoem_convention():
     """Test if the saved star file exists."""
     output_path = "tests/data/"
-    datalist = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    datalist = []
+    datalist.append([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14])
 
     class config:
         ctf = True
@@ -42,31 +38,12 @@ def test_save_starfile_cryoem_convention():
 def test_save_starfile():
     """Test if the saved star file exists."""
     output_path = "tests/data/"
-    datalist = [1, 2, 3]
+    datalist = []
+    datalist.append([1, 2, 3])
     variable_names = ["a", "b", "c"]
     save_name = "temp"
 
     save_starfile(output_path, datalist, variable_names, save_name)
     expected_file = os.path.join(output_path, save_name + ".star")
-    assert os.path.isfile(expected_file)
-    os.remove(expected_file)
-
-
-def test_save_configfile():
-    """Test if the saved config file exists."""
-
-    class config:
-        class config:
-            batch_size = 1
-            kv = 300
-
-    output_path = "tests/data/"
-    save_configfile(output_path, config)
-
-    expected_file = os.path.join(output_path, "config.txt")
-    assert os.path.isfile(expected_file)
-    os.remove(expected_file)
-
-    expected_file = os.path.join(output_path, "config.cfg")
     assert os.path.isfile(expected_file)
     os.remove(expected_file)
