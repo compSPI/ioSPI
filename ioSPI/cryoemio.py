@@ -16,7 +16,7 @@ def mrc2data(mrc_file):
     mrc_file : str
         File name for .mrc file to turn into micrograph
     """
-    with mrcfile.open(mrc_file, "r", permissive=True) as mrc:
+    with mrcfile.open(mrc_file, "r", permissive = True) as mrc:
         micrograph = mrc.data
     if len(micrograph.shape) == 2:
         micrograph = micrograph[np.newaxis, ...]
@@ -62,7 +62,7 @@ def recursively_save_dict_contents_to_group(h5file, path, dic):
 
 
 def fill_parameters_dictionary(
-    input_params_file, mrc_file, pdb_file, crd_file, log_file, dose=None, noise=None
+        input_params_file, mrc_file, pdb_file, crd_file, log_file, defocus_file=None, dose=None, noise=None
 ):
     """Return parameter dictionary with settings for simulation.
 
@@ -78,6 +78,8 @@ def fill_parameters_dictionary(
         Coordinates of the sample copies
     log_file : str
         Log file for the run
+    defocus_file : str
+        Defocus File to store defocus distribution
     dose : int
         If present, overrides beam_parameters[electron_dose]
     noise : str
@@ -128,6 +130,13 @@ def fill_parameters_dictionary(
     - noise                        : quantized electron waves result in noise
     - detector_q_efficiency        : detector quantum efficiency
     - mtf_params                   : list of 5 MTF parameters
+
+    *** geometry ***
+    - n_samples : number of images of the sample
+
+    *** ctf ***
+    - distribution_type [OPTIONAL] : type of distribution
+    - distribution_parameters [OPTIONAL] : distribution parameters
 
     *** miscellaneous ***
     - seed [OPTIONAL]              : seed for the run. If not present, random.
@@ -201,6 +210,7 @@ def fill_parameters_dictionary(
         "aperture_angle_mrad"
     ]
     dic["detector"] = {}
+
     if "defocus_um" in parameters["optics_parameters"]:
         dic["optics"]["defocus_nominal"] = parameters["optics_parameters"]["defocus_um"]
         dic["detector"]["mtf_a"] = parameters["optics_parameters"]["defocus_um"]
@@ -215,12 +225,19 @@ def fill_parameters_dictionary(
     dic["optics"]["defocus_nonsyst_error"] = parameters["optics_parameters"][
         "defocus_nonsyst_error_um"
     ]
+    if "distribution_type" in parameters["ctf_parameters"]:
+        dic["optics"]["gen_defocus"] = "no"
+        dic["optics"]["defocus_file_out"] = defocus_file
+    else:
+        dic["optics"]["gen_defocus"] = "yes"
+
     if "optics_defocusout" in parameters["optics_parameters"]:
         dic["optics"]["defocus_file_out"] = parameters["optics_parameters"][
             "optics_defocusout"
         ]
     else:
         dic["optics"]["defocus_file_out"] = None
+
     dic["detector"]["det_pix_x"] = parameters["detector_parameters"]["detector_nx_px"]
     dic["detector"]["det_pix_y"] = parameters["detector_parameters"]["detector_ny_px"]
     dic["detector"]["pixel_size"] = parameters["detector_parameters"][
@@ -239,6 +256,13 @@ def fill_parameters_dictionary(
     dic["detector"]["mtf_alpha"] = parameters["detector_parameters"]["mtf_params"][3]
     dic["detector"]["mtf_beta"] = parameters["detector_parameters"]["mtf_params"][4]
     dic["detector"]["image_file_out"] = mrc_file
+
+    dic["geometry"] = {}
+    dic["geometry"]["n_tilts"] = parameters["geometry_parameters"]["n_samples"]
+
+    dic["ctf"] = {}
+    dic["ctf"]["distribution_type"] = parameters["ctf_parameters"]["distribution_type"]
+    dic["ctf"]["distribution_parameters"] = parameters["ctf_parameters"]["distribution_parameters"]
 
     return dic
 
