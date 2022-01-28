@@ -3,7 +3,7 @@ import typing
 from pathlib import Path
 
 import requests
-import tem
+from simSPI.simSPI import tem
 
 
 class TEMUpload:
@@ -57,7 +57,7 @@ class TEMUpload:
         molecule_guid = self.get_molecule_guid(molecule_label)
         dataset_guid = self.post_child_node(molecule_guid, dataset_label, tags = self.generate_tags_from_tem(tem_sim))
 
-        upload_file_paths = [tem_sim.output_path_dict["h5_file"]]
+        upload_file_paths = [tem_sim.output_path_dict["h5_file"], tem_sim.output_path_dict["star_file"]]
         return self.post_files(dataset_guid, upload_file_paths)
 
     def generate_tags_from_tem(self, tem_sim: typing.Type[tem.TEMSimulator]) -> typing.List[str]:
