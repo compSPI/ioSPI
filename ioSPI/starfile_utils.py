@@ -33,7 +33,7 @@ def starfile_opticsparams(config):
     config.spherical_aberration = df["optics"]["rlnSphericalAberration"][0]
     config.amplitude_contrast = df["optics"]["rlnAmplitudeContrast"][0]
     if hasattr(df["optics"], "rlnCtfBfactor"):
-        config.Bfactor = df["optics"]["rlnCtfBfactor"][0]
+        config.b_factor = df["optics"]["rlnCtfBfactor"][0]
 
     return config
 
