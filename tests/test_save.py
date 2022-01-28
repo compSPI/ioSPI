@@ -3,7 +3,7 @@ import os
 
 import torch
 
-from ioSPI.save_utils import save_mrc, save_starfile, save_starfile_cryoem_convention
+from ioSPI.save import save_mrc, save_starfile, save_starfile_cryoem_convention
 
 
 def test_save_mrc():
