@@ -3,7 +3,7 @@
 import numpy as np
 import torch
 
-from ioSPI.iotools import cryodataset as cryo_dataset
+from ioSPI import cryodataset as cryo_dataset
 
 
 class TestDataset:
@@ -57,7 +57,7 @@ class TestDataset:
     @staticmethod
     def test_open_dataset():
         """Test test_open_dataset."""
-        path = "./tests/test_iotools/data_test_cryo_dataset.npy"
+        path = "./tests/data_test_cryo_dataset.npy"
         dataset1 = cryo_dataset.open_dataset(path, size=64, is_3d=False)
         dataset2 = cryo_dataset.open_dataset(path, size=32, is_3d=False)
         assert type(dataset1) is torch.Tensor
@@ -67,7 +67,7 @@ class TestDataset:
     @staticmethod
     def test_load_parameters():
         """Test test_load_parameters."""
-        path = "./tests/test_iotools/vae_parameters.json"
+        path = "./tests/vae_parameters.json"
         parameters = cryo_dataset.load_parameters(path)
         assert len(parameters) == 5
         assert "skip_z" in parameters[2].keys()
