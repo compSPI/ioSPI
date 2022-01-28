@@ -30,7 +30,7 @@ def starfile_opticsparams(config):
     config.side_len = df["optics"]["rlnImageSize"][0]
     config.kv = df["optics"]["rlnVoltage"][0]
     config.pixel_size = df["optics"]["rlnImagePixelSize"][0]
-    config.spherical_aberration = df["optics"]["rlnSphericalAberration"][0]
+    config.cs = df["optics"]["rlnSphericalAberration"][0]
     config.amplitude_contrast = df["optics"]["rlnAmplitudeContrast"][0]
     if hasattr(df["optics"], "rlnCtfBfactor"):
         config.b_factor = df["optics"]["rlnCtfBfactor"][0]
