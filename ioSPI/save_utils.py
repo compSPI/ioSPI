@@ -61,7 +61,7 @@ def save_starfile(output_path, datalist, variable_names, save_name):
     save_name: str
         name of the starfile to be saved.
     """
-    indices = [idx for idx in range(len(datalist))]
+    indices = list(range(len(datalist)))
     df = pd.DataFrame(
         data=datalist,
         index=indices,
