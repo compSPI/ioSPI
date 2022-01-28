@@ -16,7 +16,7 @@ def mrc2data(mrc_file):
     mrc_file : str
         File name for .mrc file to turn into micrograph
     """
-    with mrcfile.open(mrc_file, "r", permissive=True) as mrc:
+    with mrcfile.open(mrc_file, "r", permissive = True) as mrc:
         micrograph = mrc.data
     if len(micrograph.shape) == 2:
         micrograph = micrograph[np.newaxis, ...]
@@ -62,7 +62,7 @@ def recursively_save_dict_contents_to_group(h5file, path, dic):
 
 
 def fill_parameters_dictionary(
-    input_params_file, mrc_file, pdb_file, crd_file, log_file, dose=None, noise=None
+        input_params_file, mrc_file, pdb_file, crd_file, log_file, defocus_file=None, dose=None, noise=None
 ):
     """Return parameter dictionary with settings for simulation.
 
@@ -78,6 +78,8 @@ def fill_parameters_dictionary(
         Coordinates of the sample copies
     log_file : str
         Log file for the run
+    defocus_file : str
+        Defocus File to store defocus distribution
     dose : int
         If present, overrides beam_parameters[electron_dose]
     noise : str
@@ -128,6 +130,13 @@ def fill_parameters_dictionary(
     - noise                        : quantized electron waves result in noise
     - detector_q_efficiency        : detector quantum efficiency
     - mtf_params                   : list of 5 MTF parameters
+
+    *** geometry ***
+    - n_samples : number of images of the sample
+
+    *** ctf ***
+    - distribution_type [OPTIONAL] : type of distribution
+    - distribution_parameters [OPTIONAL] : distribution parameters
 
     *** miscellaneous ***
     - seed [OPTIONAL]              : seed for the run. If not present, random.
@@ -201,6 +210,7 @@ def fill_parameters_dictionary(
         "aperture_angle_mrad"
     ]
     dic["detector"] = {}
+
     if "defocus_um" in parameters["optics_parameters"]:
         dic["optics"]["defocus_nominal"] = parameters["optics_parameters"]["defocus_um"]
         dic["detector"]["mtf_a"] = parameters["optics_parameters"]["defocus_um"]
@@ -215,12 +225,20 @@ def fill_parameters_dictionary(
     dic["optics"]["defocus_nonsyst_error"] = parameters["optics_parameters"][
         "defocus_nonsyst_error_um"
     ]
+    if "distribution_type" in parameters["ctf_parameters"]:
+        dic["optics"]["gen_defocus"] = "no"
+        dic["optics"]["defocus_file_in"] = defocus_file
+    else:
+        dic["optics"]["gen_defocus"] = "yes"
+        dic["optics"]["defocus_file_in"] = None
+
     if "optics_defocusout" in parameters["optics_parameters"]:
         dic["optics"]["defocus_file_out"] = parameters["optics_parameters"][
             "optics_defocusout"
         ]
     else:
         dic["optics"]["defocus_file_out"] = None
+
     dic["detector"]["det_pix_x"] = parameters["detector_parameters"]["detector_nx_px"]
     dic["detector"]["det_pix_y"] = parameters["detector_parameters"]["detector_ny_px"]
     dic["detector"]["pixel_size"] = parameters["detector_parameters"][
@@ -239,6 +257,13 @@ def fill_parameters_dictionary(
     dic["detector"]["mtf_alpha"] = parameters["detector_parameters"]["mtf_params"][3]
     dic["detector"]["mtf_beta"] = parameters["detector_parameters"]["mtf_params"][4]
     dic["detector"]["image_file_out"] = mrc_file
+
+    dic["geometry"] = {}
+    dic["geometry"]["n_tilts"] = parameters["geometry_parameters"]["n_samples"]
+
+    dic["ctf"] = {}
+    dic["ctf"]["distribution_type"] = parameters["ctf_parameters"]["distribution_type"]
+    dic["ctf"]["distribution_parameters"] = parameters["ctf_parameters"]["distribution_parameters"]
 
     return dic
 
@@ -289,10 +314,10 @@ def write_inp_file(dict_params, inp_file="input.txt"):
             "=== geometry ===\n"
             "gen_tilt_data = yes\n"
             "tilt_axis = 0\n"
-            "ntilts = 1\n"
+            "ntilts = {0[n_tilts]}\n"
             "theta_start = 0\n"
             "theta_incr = 0\n"
-            "geom_errors = none\n"
+            "geom_errors = none\n".format(dict_params["geometry"])
         )
         inp.write(
             "=== electronbeam ===\n"
@@ -310,7 +335,7 @@ def write_inp_file(dict_params, inp_file="input.txt"):
             "aperture = {0[aperture]}\n"
             "focal_length = {0[focal_length]}\n"
             "cond_ap_angle = {0[cond_ap_angle]}\n"
-            "gen_defocus = yes\n"
+            "gen_defocus = {0[gen_defocus]}\n"
             "defocus_nominal = {0[defocus_nominal]}\n"
             "defocus_syst_error = {0[defocus_syst_error]}\n"
             "defocus_syst_error = {0[defocus_nonsyst_error]}\n".format(
@@ -320,6 +345,12 @@ def write_inp_file(dict_params, inp_file="input.txt"):
         if dict_params["optics"]["defocus_file_out"] is not None:
             inp.write(
                 "defocus_file_out = {0[defocus_file_out]}\n".format(
+                    dict_params["optics"]
+                )
+            )
+        if dict_params["optics"]["defocus_file_in"] is not None:
+            inp.write(
+                "defocus_file_in = {0[defocus_file_in]}\n".format(
                     dict_params["optics"]
                 )
             )
@@ -338,3 +369,50 @@ def write_inp_file(dict_params, inp_file="input.txt"):
             "mtf_beta = {0[mtf_beta]}\n"
             "image_file_out = {0[image_file_out]}\n".format(dict_params["detector"])
         )
+
+
+def write_defocus_file(defocus_sample,defocus_file):
+    """Writes defocus distribution in tabular format.
+
+    Parameters
+    ----------
+    defocus_dist : list
+        list containing defocus distibution samples in um.
+    defocus_file : str
+        file path to defocus_file_in
+
+    """
+    with open(defocus_file, "w") as inp:
+        inp.write("# File created by TEM-simulator, version 1.3.\n")
+        inp.write(f"{len(defocus_sample)} 1\n")
+        for sample in defocus_sample:
+            inp.write(f"{sample}\n")
+
+def write_crd_file(
+    n_particles,
+    xrange=np.arange(-100, 110, 10),
+    yrange=np.arange(-100, 110, 10),
+    crd_file="crd.txt",
+):
+    """Write particle data to .txt file containing particle stack data.
+
+    Particle center coordinates as well as its Euler angles is written to file.
+
+    Parameters
+    ----------
+    n_particles : int
+        Number of particles.
+    xrange : ndarray
+        Range of particle center x-coordinates to write.
+    yrange : ndarray
+        Range of particle center y-coordinates to write.
+    crd_file : str
+        Relative path to output .txt file.
+    """
+    log = logging.getLogger()
+
+    if os.path.exists(crd_file):
+        log.info(crd_file + " already exists.")
+    else:
+        rotlist = get_rotlist(n_particles)
+        n = 0
