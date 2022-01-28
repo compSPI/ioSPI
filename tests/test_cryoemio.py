@@ -8,7 +8,7 @@ import mrcfile
 import numpy as np
 import yaml
 
-from ioSPI import cryoemio
+from ioSPI.ioSPI import cryoemio
 
 
 def test_data_and_dic2hdf5():

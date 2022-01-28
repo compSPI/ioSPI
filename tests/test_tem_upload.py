@@ -8,7 +8,7 @@ import pytest
 import requests
 from simSPI import tem
 
-from ioSPI import tem_upload
+from ioSPI.ioSPI import tem_upload
 
 
 @pytest.fixture(autouse=True, scope="session")
