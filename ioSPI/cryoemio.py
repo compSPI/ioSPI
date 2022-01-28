@@ -369,3 +369,19 @@ def write_inp_file(dict_params, inp_file="input.txt"):
             "mtf_beta = {0[mtf_beta]}\n"
             "image_file_out = {0[image_file_out]}\n".format(dict_params["detector"])
         )
+
+
+def write_defocus_file(defocus_sample,defocus_file):
+    """Writes defocus distribution in tabular format.
+
+    Parameters
+    ----------
+    defocus_dist : list
+        list containing defocus distibution samples in um.
+    defocus_file : str
+        file path to defocus_file_in
+
+    """
+    with open(defocus_file, "w") as inp:
+        for sample in defocus_sample:
+            inp.write(f"{sample}\n")
