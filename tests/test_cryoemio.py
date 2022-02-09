@@ -366,7 +366,7 @@ def test_recursively_save_dict_contents_to_group():
             cryoemio.recursively_save_dict_contents_to_group(f, "", data)
         with h5py.File(tmp.name, "r") as f:
             assert f["a"][()] == 1.0
-            assert f["b"].asstr()[()] == "None"
+            assert f["b"][()] == "None"
             assert f["c/d"][()] == 1
     finally:
         os.unlink(tmp.name)
@@ -406,6 +406,9 @@ def test_write_inp_file():
     noise = "no"
     detector_q_efficiency = 0.1
     mtf_params = [0.1, 0.0, 0.7, 0, 0]
+    distribution_type = "uniform"
+    distribution_parameters = [0, 1]
+    n_samples = 4
     log_file = "itslog.log"
 
     try:
@@ -444,6 +447,13 @@ def test_write_inp_file():
                     "noise": noise,
                     "detector_q_efficiency": detector_q_efficiency,
                     "mtf_params": mtf_params,
+                },
+                "ctf_parameters": {
+                    "distribution_type": distribution_type,
+                    "distribution_parameters": distribution_parameters,
+                },
+                "geometry_parameters": {
+                    "n_samples": n_samples,
                 },
             }
             contents = yaml.dump(data)
