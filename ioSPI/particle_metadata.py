@@ -1,7 +1,7 @@
 """Format and write particle metadata."""
 import os
 
-import metadata
+import starfile
 import pandas as pd
 
 
@@ -59,7 +59,7 @@ def update_optics_config_from_starfile(config):
     config: class
     """
     check_star_file(config.input_starfile_path)
-    df = metadata.read(config.input_starfile_path)
+    df = starfile.read(config.input_starfile_path)
     config.side_len = df["optics"]["rlnImageSize"][0]
     config.kv = df["optics"]["rlnVoltage"][0]
     config.pixel_size = df["optics"]["rlnImagePixelSize"][0]
@@ -91,7 +91,7 @@ def write_starfile(output_path, data_list, variable_names, save_name):
         index=indices,
         columns=(variable_names),
     )
-    metadata.write(df, os.path.join(output_path, save_name + ".star"), overwrite=True)
+    starfile.write(df, os.path.join(output_path, save_name + ".star"), overwrite=True)
 
 
 def write_starfile_cryoem_convention(output_path, data_list, config, save_name):
