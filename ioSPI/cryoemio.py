@@ -16,7 +16,7 @@ def mrc2data(mrc_file):
     mrc_file : str
         File name for .mrc file to turn into micrograph
     """
-    with mrcfile.open(mrc_file, "r", permissive = True) as mrc:
+    with mrcfile.open(mrc_file, "r", permissive=True) as mrc:
         micrograph = mrc.data
     if len(micrograph.shape) == 2:
         micrograph = micrograph[np.newaxis, ...]
@@ -62,7 +62,14 @@ def recursively_save_dict_contents_to_group(h5file, path, dic):
 
 
 def fill_parameters_dictionary(
-        input_params_file, mrc_file, pdb_file, crd_file, log_file, defocus_file=None, dose=None, noise=None
+    input_params_file,
+    mrc_file,
+    pdb_file,
+    crd_file,
+    log_file,
+    defocus_file=None,
+    dose=None,
+    noise=None,
 ):
     """Return parameter dictionary with settings for simulation.
 
@@ -263,7 +270,9 @@ def fill_parameters_dictionary(
 
     dic["ctf"] = {}
     dic["ctf"]["distribution_type"] = parameters["ctf_parameters"]["distribution_type"]
-    dic["ctf"]["distribution_parameters"] = parameters["ctf_parameters"]["distribution_parameters"]
+    dic["ctf"]["distribution_parameters"] = parameters["ctf_parameters"][
+        "distribution_parameters"
+    ]
 
     return dic
 
@@ -350,9 +359,7 @@ def write_inp_file(dict_params, inp_file="input.txt"):
             )
         if dict_params["optics"]["defocus_file_in"] is not None:
             inp.write(
-                "defocus_file_in = {0[defocus_file_in]}\n".format(
-                    dict_params["optics"]
-                )
+                "defocus_file_in = {0[defocus_file_in]}\n".format(dict_params["optics"])
             )
         inp.write(
             "=== detector ===\n"
@@ -371,8 +378,8 @@ def write_inp_file(dict_params, inp_file="input.txt"):
         )
 
 
-def write_defocus_file(defocus_sample,defocus_file):
-    """Writes defocus distribution in tabular format.
+def write_defocus_file(defocus_sample, defocus_file):
+    """Write defocus distribution in tabular format.
 
     Parameters
     ----------
@@ -387,32 +394,3 @@ def write_defocus_file(defocus_sample,defocus_file):
         inp.write(f"{len(defocus_sample)} 1\n")
         for sample in defocus_sample:
             inp.write(f"{sample}\n")
-
-def write_crd_file(
-    n_particles,
-    xrange=np.arange(-100, 110, 10),
-    yrange=np.arange(-100, 110, 10),
-    crd_file="crd.txt",
-):
-    """Write particle data to .txt file containing particle stack data.
-
-    Particle center coordinates as well as its Euler angles is written to file.
-
-    Parameters
-    ----------
-    n_particles : int
-        Number of particles.
-    xrange : ndarray
-        Range of particle center x-coordinates to write.
-    yrange : ndarray
-        Range of particle center y-coordinates to write.
-    crd_file : str
-        Relative path to output .txt file.
-    """
-    log = logging.getLogger()
-
-    if os.path.exists(crd_file):
-        log.info(crd_file + " already exists.")
-    else:
-        rotlist = get_rotlist(n_particles)
-        n = 0
