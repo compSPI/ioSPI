@@ -6,6 +6,7 @@ import tempfile
 import h5py
 import mrcfile
 import numpy as np
+import torch
 
 from ioSPI import micrographs
 

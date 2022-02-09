@@ -10,7 +10,7 @@ from ioSPI.metadata import (
     get_starfile_metadata_names,
     update_optics_config_from_starfile,
     write_starfile,
-    write_starfile_cryoem_convention
+    write_starfile_cryoem_convention,
 )
 
 
