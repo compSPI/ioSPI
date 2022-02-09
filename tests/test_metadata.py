@@ -77,7 +77,7 @@ def test_write_starfile():
     os.remove(expected_file)
 
 
-def test_save_starfile_cryoem_convention():
+def test_write_starfile_cryoem_convention():
     """Test if the saved star file exists."""
     output_path = "tests/data/"
     data_list = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]]
