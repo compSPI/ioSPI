@@ -11,7 +11,6 @@ import yaml
 
 from ioSPI import cryo
 
-
 def test_data_and_dic2hdf5():
     """Test data_and_dic2hdf5 helper with a simple hdf5 file."""
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".hdf5")
