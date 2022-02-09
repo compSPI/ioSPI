@@ -11,33 +11,22 @@ import torch
 from ioSPI import micrographs
 
 
-def test_write_data_dict_to_hdf5():
-    """Test write_data_dict_to_hdf5 helper with a simple hdf5 file."""
+def test_populate_hdf5_with_dict():
+    """Test populate_hdf5_with_dict helper with a simple hdf5 file."""
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".hdf5")
     tmp.close()
 
-    data = {"a": 1, "b": 2, "c": 3}
+    data = {"a": 1.0, "b": None, "c": {"d": 1}}
 
     try:
-        micrographs.write_data_dict_to_hdf5(data, tmp.name)
+        with h5py.File(tmp.name, "w") as f:
+            micrographs.populate_hdf5_with_dict(f, "", data)
         with h5py.File(tmp.name, "r") as f:
-            out_dict = f["data"]
-            assert out_dict["a"][()] == 1
-            assert out_dict["b"][()] == 2
-            assert out_dict["c"][()] == 3
+            assert f["a"][()] == 1.0
+            assert f["b"].asstr()[()] == "None"
+            assert f["c/d"][()] == 1
     finally:
         os.unlink(tmp.name)
-
-
-def test_write_mrc():
-    """Test if the saved mrcs file exists."""
-    projections = torch.randn(4, 1, 5, 5)
-    output_path = "tests/data/"
-    iterations = 0
-    micrographs.write_mrc(output_path, projections, iterations)
-    expected_file = os.path.join(output_path, str(iterations).zfill(4) + ".mrcs")
-    assert os.path.isfile(expected_file)
-    os.remove(expected_file)
 
 
 def test_read_micrograph_from_mrc():
@@ -70,19 +59,30 @@ def test_read_micrograph_from_mrc_large():
         os.unlink(tmp_mrc.name)
 
 
-def test_populate_hdf5_with_dict():
-    """Test populate_hdf5_with_dict helper with a simple hdf5 file."""
+def test_write_data_dict_to_hdf5():
+    """Test write_data_dict_to_hdf5 helper with a simple hdf5 file."""
     tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".hdf5")
     tmp.close()
 
-    data = {"a": 1.0, "b": None, "c": {"d": 1}}
+    data = {"a": 1, "b": 2, "c": 3}
 
     try:
-        with h5py.File(tmp.name, "w") as f:
-            micrographs.populate_hdf5_with_dict(f, "", data)
+        micrographs.write_data_dict_to_hdf5(data, tmp.name)
         with h5py.File(tmp.name, "r") as f:
-            assert f["a"][()] == 1.0
-            assert f["b"].asstr()[()] == "None"
-            assert f["c/d"][()] == 1
+            out_dict = f["data"]
+            assert out_dict["a"][()] == 1
+            assert out_dict["b"][()] == 2
+            assert out_dict["c"][()] == 3
     finally:
         os.unlink(tmp.name)
+
+
+def test_write_mrc():
+    """Test if the saved mrcs file exists."""
+    projections = torch.randn(4, 1, 5, 5)
+    output_path = "tests/data/"
+    iterations = 0
+    micrographs.write_mrc(output_path, projections, iterations)
+    expected_file = os.path.join(output_path, str(iterations).zfill(4) + ".mrcs")
+    assert os.path.isfile(expected_file)
+    os.remove(expected_file)

@@ -32,6 +32,20 @@ def test_check_star_file():
     assert expected in actual
 
 
+def test_get_starfile_metadata_names():
+    """Check if the names returned have the right instance."""
+
+    class Config:
+        """Class to instantiate the config object."""
+
+        shift = True
+        ctf = True
+
+    names = get_starfile_metadata_names(Config)
+    for name in names:
+        assert isinstance(name, str) and name[:5] == "__rln"
+
+
 def test_update_optics_config_from_starfile():
     """Check if the updated config attributes have the right instances."""
 
@@ -48,20 +62,6 @@ def test_update_optics_config_from_starfile():
     assert isinstance(config.amplitude_contrast, float_type)
     assert isinstance(config.pixel_size, float_type)
     assert isinstance(config.cs, float_type)
-
-
-def test_get_starfile_metadata_names():
-    """Check if the names returned have the right instance."""
-
-    class Config:
-        """Class to instantiate the config object."""
-
-        shift = True
-        ctf = True
-
-    names = get_starfile_metadata_names(Config)
-    for name in names:
-        assert isinstance(name, str) and name[:5] == "__rln"
 
 
 def test_write_starfile():
