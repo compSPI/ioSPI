@@ -372,6 +372,19 @@ def test_recursively_save_dict_contents_to_group():
         os.unlink(tmp.name)
 
 
+def test_write_defocus_file():
+    """Test write_defocus_file helper is able to produce simple tabular format."""
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".txt")
+    tmp.close()
+
+    defocus_sample = [0, 1, 0]
+
+    try:
+        cryoemio.write_defocus_file(defocus_sample, tmp.name)
+    finally:
+        os.unlink(tmp.name)
+
+
 def test_write_inp_file():
     """Test write_inp_file helper with output from fill_parameters_dictionary."""
     tmp_inp = tempfile.NamedTemporaryFile(delete=False, suffix=".imp")
