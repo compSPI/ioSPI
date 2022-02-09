@@ -1,11 +1,11 @@
-"""Contain test functions for metadata.py."""
+"""Contain test functions for particle_metadata.py."""
 
 import os
 
 import numpy as np
 import pytest
 
-from ioSPI.metadata import (
+from ioSPI.particle_metadata import (
     check_star_file,
     get_starfile_metadata_names,
     update_optics_config_from_starfile,
@@ -23,7 +23,7 @@ def test_check_star_file():
     actual = str(exception_context.value)
     assert expected in actual
 
-    path = "ioSPI/metadata.py"
+    path = "ioSPI/particle_metadata.py"
     expected = "Input star file is not a valid star file!"
 
     with pytest.raises(FileExistsError) as exception_context:
