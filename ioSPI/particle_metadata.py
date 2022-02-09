@@ -1,8 +1,8 @@
 """Format and write particle metadata."""
 import os
 
-import starfile
 import pandas as pd
+import starfile
 
 
 def check_star_file(path):
