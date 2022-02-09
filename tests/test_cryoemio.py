@@ -71,6 +71,9 @@ def test_fill_parameters_dictionary_max():
     snr = 0.6
     snr_db = 10
     key = particle_mrcout.split(".mrc")[0]
+    distribution_type = "uniform"
+    distribution_parameters = [0, 1]
+    n_samples = 4
 
     try:
         with open(tmp_yml.name, "w") as f:
@@ -112,6 +115,13 @@ def test_fill_parameters_dictionary_max():
                     "detector_q_efficiency": detector_q_efficiency,
                     "mtf_params": mtf_params,
                 },
+                "ctf_parameters": {
+                    "distribution_type": distribution_type,
+                    "distribution_parameters": distribution_parameters,
+                },
+                "geometry_parameters": {
+                    "n_samples": n_samples,
+                },
                 "miscellaneous": {
                     "seed": seed,
                     "signal_to_noise": snr,
@@ -126,6 +136,7 @@ def test_fill_parameters_dictionary_max():
             pdb_file,
             crd_file,
             log_file,
+            # defocus_file=defocus_file, ##
             dose=dose,
             noise=noise_override,
         )
@@ -213,6 +224,9 @@ def test_fill_parameters_dictionary_min():
     noise = "no"
     detector_q_efficiency = 0.1
     mtf_params = [0.1, 0.0, 0.7, 0, 0]
+    distribution_type = "uniform"
+    distribution_parameters = [0, 1]
+    n_samples = 4
     log_file = "itslog.log"
 
     try:
@@ -251,6 +265,13 @@ def test_fill_parameters_dictionary_min():
                     "noise": noise,
                     "detector_q_efficiency": detector_q_efficiency,
                     "mtf_params": mtf_params,
+                },
+                "ctf_parameters": {
+                    "distribution_type": distribution_type,
+                    "distribution_parameters": distribution_parameters,
+                },
+                "geometry_parameters": {
+                    "n_samples": n_samples,
                 },
             }
             contents = yaml.dump(data)
