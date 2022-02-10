@@ -5,7 +5,7 @@ import os
 import gemmi
 
 
-def read_gemmi_model(path, i_model=0, clean=True, assemble=True):
+def read_atomic_model_from_file(path, i_model=0, clean=True, assemble=True):
     """Read PDB or mmCIF file.
 
     Use Gemmi library to read PDB or mmCIF files and return a Gemmi model.
@@ -45,9 +45,9 @@ def read_gemmi_model(path, i_model=0, clean=True, assemble=True):
         is_pdb = path.lower().endswith(".pdb")
         is_cif = path.lower().endswith(".cif")
         if is_pdb:
-            model = read_gemmi_model_from_pdb(path, i_model, clean, assemble)
+            model = read_atomic_model_from_pdb(path, i_model, clean, assemble)
         elif is_cif:
-            model = read_gemmi_model_from_cif(path, i_model, clean, assemble)
+            model = read_atomic_model_from_cif(path, i_model, clean, assemble)
         else:
             model = None
             raise ValueError("File format not recognized.")
@@ -57,7 +57,7 @@ def read_gemmi_model(path, i_model=0, clean=True, assemble=True):
     return model
 
 
-def read_gemmi_model_from_pdb(path, i_model=0, clean=True, assemble=True):
+def read_atomic_model_from_pdb(path, i_model=0, clean=True, assemble=True):
     """Read Gemmi Model from PDB file.
 
     Parameters
@@ -90,7 +90,7 @@ def read_gemmi_model_from_pdb(path, i_model=0, clean=True, assemble=True):
     return model
 
 
-def read_gemmi_model_from_cif(path, i_model=0, clean=True, assemble=True):
+def read_atomic_model_from_cif(path, i_model=0, clean=True, assemble=True):
     """Read Gemmi Model from CIF file.
 
     Parameters
@@ -148,7 +148,7 @@ def clean_gemmi_structure(structure=None):
     return structure
 
 
-def write_gemmi_model(path, model=gemmi.Model("model")):
+def write_atomic_model_to_pdb(path, model=gemmi.Model("model")):
     """Write Gemmi model to PDB or mmCIF file.
 
     Use Gemmi library to write an atomic model to file.
