@@ -365,7 +365,7 @@ def test_recursively_save_dict_contents_to_group():
             cryoemio.recursively_save_dict_contents_to_group(f, "", data)
         with h5py.File(tmp.name, "r") as f:
             assert f["a"][()] == 1.0
-            assert f["b"][()] == "None"
+            assert f["b"].asstr()[()] == "None"
             assert f["c/d"][()] == 1
     finally:
         os.unlink(tmp.name)
