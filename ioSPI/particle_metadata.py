@@ -1,6 +1,7 @@
 """Format and write particle metadata."""
 import os
 
+import numpy as np
 import pandas as pd
 import starfile
 
@@ -116,17 +117,19 @@ def update_optics_config_from_starfile(config):
     return config
 
 
-def write_metadata_to_starfile(path, metadata):
+def write_metadata_to_starfile(path, metadata, filename="metadata.star"):
     """Save the metadata in a starfile in the output directory.
 
     Parameters
     ----------
     path: str
-        path to save starfile
+        path to save starfile.
     metadata: pandas.DataFrame
         metadata to be outputted.
+    filename: str
+        name of the output file.
     """
-    if path.endswith(".star"):
-        starfile.write(metadata, path, overwrite=True)
+    if filename.endswith(".star"):
+        starfile.write(metadata, os.path.join(path, filename), overwrite=True)
     else:
-        starfile.write(metadata, os.path.join(path, ".star"), overwrite=True)
+        starfile.write(metadata, os.path.join(path, filename + ".star"), overwrite=True)
