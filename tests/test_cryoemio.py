@@ -136,7 +136,6 @@ def test_fill_parameters_dictionary_max():
             pdb_file,
             crd_file,
             log_file,
-            # defocus_file=defocus_file, ##
             dose=dose,
             noise=noise_override,
         )
