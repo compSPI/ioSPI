@@ -1,7 +1,6 @@
 """Format and write particle metadata."""
 import os
 
-import numpy as np
 import pandas as pd
 import starfile
 
