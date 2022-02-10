@@ -60,7 +60,7 @@ def write_data_dict_to_hdf5(data_dict, h5_file):
         populate_hdf5_with_dict(file, "/", dic)
 
 
-def write_mrc(output_path, projections, iterations):
+def write_micrograph_to_mrc(output_path, projections, iterations):
     """Save the projection batch as an mrcs file in the output directory.
 
     Parameters

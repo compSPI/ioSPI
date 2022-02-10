@@ -71,7 +71,7 @@ def update_optics_config_from_starfile(config):
     return config
 
 
-def write_starfile(output_path, data_list, variable_names, save_name):
+def write_metadata_to_starfile(output_path, data_list, variable_names, save_name):
     """Save the metadata in a starfile in the output directory.
 
     Parameters
@@ -94,7 +94,9 @@ def write_starfile(output_path, data_list, variable_names, save_name):
     starfile.write(df, os.path.join(output_path, save_name + ".star"), overwrite=True)
 
 
-def write_starfile_cryoem_convention(output_path, data_list, config, save_name):
+def write_metadata_to_starfile_cryoem_convention(
+    output_path, data_list, config, save_name
+):
     """Save micrograph metadata in a starfile with CryoEM formatting.
 
     Parameters
@@ -113,4 +115,4 @@ def write_starfile_cryoem_convention(output_path, data_list, config, save_name):
         name of the starfile to be saved.
     """
     cryoem_variable_names = get_starfile_metadata_names(config)
-    write_starfile(output_path, data_list, cryoem_variable_names, save_name)
+    write_metadata_to_starfile(output_path, data_list, cryoem_variable_names, save_name)
