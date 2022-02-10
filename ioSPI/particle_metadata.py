@@ -32,7 +32,7 @@ def format_metadata_for_writing(data_list, variable_names):
     return pd.DataFrame(
         data=data_list,
         index=indices,
-        columns=(variable_names,),
+        columns=(variable_names),
     )
 
 
