@@ -126,7 +126,11 @@ def fft3d(
 
 
 def fft2d(
-    arr2d, mode, numpy_fft=pyfftw.interfaces.numpy_fft, only_real=False, batch=False,
+    arr2d,
+    mode,
+    numpy_fft=pyfftw.interfaces.numpy_fft,
+    only_real=False,
+    batch=False,
 ):
     """Compute 2D FFT.
 

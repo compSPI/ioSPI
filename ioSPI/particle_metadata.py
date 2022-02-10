@@ -13,6 +13,51 @@ def check_star_file(path):
         raise FileExistsError("Input star file is not a valid star file!")
 
 
+def format_metadata_for_writing(data_list, variable_names):
+    """Perform formatting actions to prepare metadata for output to starfile.
+
+    Parameters
+    ----------
+    data_list: list
+        list containing data set generation variables
+    variable_names: list of str
+        list containing name of the variables contained in the datalist
+
+    Returns
+    -------
+    metadata : pandas.DataFrame
+        Metadata ready to be outputted in a starfile.
+    """
+    indices = list(range(len(data_list)))
+    return pd.DataFrame(
+        data=data_list,
+        index=indices,
+        columns=(variable_names,),
+    )
+
+
+def format_metadata_for_writing_cryoem_convention(data_list, config):
+    """Perform formatting actions to prepare metadata for output to starfile.
+
+    Parameters
+    ----------
+    data_list: list
+         list containing data set generation variables
+    config: class
+        class containing bool values
+        ctf: bool
+            indicates if the CTF effect is to be used in the forward model
+        shift: bool
+            indicates if the shift operator is to be used in the forward model.
+
+    Returns
+    -------
+    metadata : pandas.DataFrame
+        Metadata ready to be outputted in a starfile.
+    """
+    return format_metadata_for_writing(data_list, get_starfile_metadata_names(config))
+
+
 def get_starfile_metadata_names(config):
     """Return relion-convention names of metadata for starfile.
 
@@ -71,44 +116,17 @@ def update_optics_config_from_starfile(config):
     return config
 
 
-def write_metadata_to_starfile(output_path, data_list, variable_names, save_name):
+def write_metadata_to_starfile(path, metadata):
     """Save the metadata in a starfile in the output directory.
 
     Parameters
     ----------
-    output_path: str
+    path: str
         path to save starfile
-    data_list: list
-        list containing data set generation variables
-    variable_names: list of str
-        list containing name of the variables contained in the datalist
-    save_name: str
-        name of the starfile to be saved.
+    metadata: pandas.DataFrame
+        metadata to be outputted.
     """
-    indices = list(range(len(data_list)))
-    df = pd.DataFrame(data=data_list, index=indices, columns=(variable_names),)
-    starfile.write(df, os.path.join(output_path, save_name + ".star"), overwrite=True)
-
-
-def write_metadata_to_starfile_cryoem_convention(
-    output_path, data_list, config, save_name
-):
-    """Save micrograph metadata in a starfile with CryoEM formatting.
-
-    Parameters
-    ----------
-    output_path: str
-        path to save starfile
-    data_list: list
-         list containing data set generation variables
-    config: class
-        class containing bool values
-        ctf: bool
-            indicates if the CTF effect is to be used in the forward model
-        shift: bool
-            indicates if the shift operator is to be used in the forward model.
-    save_name: str
-        name of the starfile to be saved.
-    """
-    cryoem_variable_names = get_starfile_metadata_names(config)
-    write_metadata_to_starfile(output_path, data_list, cryoem_variable_names, save_name)
+    if path.endswith(".star"):
+        starfile.write(metadata, path, overwrite=True)
+    else:
+        starfile.write(metadata, os.path.join(path, ".star"), overwrite=True)

@@ -5,7 +5,7 @@ import os
 import gemmi
 import pytest
 
-from ioSPI.atomic_models import read_atomic_model_from_file, write_atomic_model_to_pdb
+from ioSPI.atomic_models import read_atomic_model, write_atomic_model
 
 DATA = "tests/data"
 OUT = ""
@@ -19,7 +19,7 @@ class TestAtomicModels:
         path = "non-existing-file.pdb"
         expected = "File could not be found."
         with pytest.raises(OSError) as exception_context:
-            _ = read_atomic_model_from_file(path)
+            _ = read_atomic_model(path)
         actual = str(exception_context.value)
         assert expected in actual
 
@@ -29,7 +29,7 @@ class TestAtomicModels:
         expected = "File format not recognized."
         open(path, "w").close()
         with pytest.raises(ValueError) as exception_context:
-            _ = read_atomic_model_from_file(path)
+            _ = read_atomic_model(path)
         os.remove(path)
         actual = str(exception_context.value)
         assert expected in actual
@@ -44,7 +44,7 @@ class TestAtomicModels:
         pdb_filename = "2dhb.pdb"
         path = os.path.join(DATA, pdb_filename)
         os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
-        model = read_atomic_model_from_file(path)
+        model = read_atomic_model(path)
         assert model.__class__ is gemmi.Model
 
     def test_read_atomic_model_from_cif(self):
@@ -52,7 +52,7 @@ class TestAtomicModels:
         cif_filename = "2dhb.cif"
         path = os.path.join(DATA, cif_filename)
         os.system(f"wget https://files.rcsb.org/download/{cif_filename} -P {DATA}")
-        model = read_atomic_model_from_file(path)
+        model = read_atomic_model(path)
         assert model.__class__ is gemmi.Model
 
     def test_write_atomic_model_to_pdb(self):
@@ -60,10 +60,10 @@ class TestAtomicModels:
         pdb_filename = "2dhb.pdb"
         path_input = os.path.join(DATA, pdb_filename)
         os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
-        model = read_atomic_model_from_file(path_input, assemble=False)
+        model = read_atomic_model(path_input, assemble=False)
         path_output = os.path.join(OUT, f"test_{pdb_filename}")
-        write_atomic_model_to_pdb(path_output, model)
-        model = read_atomic_model_from_file(path_output, assemble=False)
+        write_atomic_model(path_output, model)
+        model = read_atomic_model(path_output, assemble=False)
         assert model.__class__ is gemmi.Model
 
     def test_write_atomic_model_to_cif(self):
@@ -71,8 +71,8 @@ class TestAtomicModels:
         cif_filename = "2dhb.cif"
         path_input = os.path.join(DATA, cif_filename)
         os.system(f"wget https://files.rcsb.org/download/{cif_filename} -P tests/data")
-        model = read_atomic_model_from_file(path_input, assemble=False)
+        model = read_atomic_model(path_input, assemble=False)
         path_output = os.path.join(OUT, f"test_{cif_filename}")
-        write_atomic_model_to_pdb(path_output, model)
-        model = read_atomic_model_from_file(path_output, assemble=False)
+        write_atomic_model(path_output, model)
+        model = read_atomic_model(path_output, assemble=False)
         assert model.__class__ is gemmi.Model
