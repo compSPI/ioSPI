@@ -144,7 +144,7 @@ def fill_parameters_dictionary(
     *** ctf ***
     - distribution_type [OPTIONAL] : type of distribution
     - distribution_parameters [OPTIONAL] : distribution parameters
-    
+
     *** miscellaneous ***
     - seed [OPTIONAL]              : seed for the run. If not present, random.
     - signal_to_noise [OPTIONAL]   : signal-to-noise ratio for gaussian white noise.
@@ -232,7 +232,6 @@ def fill_parameters_dictionary(
     dic["optics"]["defocus_nonsyst_error"] = parameters["optics_parameters"][
         "defocus_nonsyst_error_um"
     ]
-
     if "distribution_type" in parameters["ctf_parameters"]:
         dic["optics"]["gen_defocus"] = "no"
         dic["optics"]["defocus_file_in"] = defocus_file
@@ -246,7 +245,7 @@ def fill_parameters_dictionary(
         ]
     else:
         dic["optics"]["defocus_file_out"] = None
-        
+
     dic["detector"]["det_pix_x"] = parameters["detector_parameters"]["detector_nx_px"]
     dic["detector"]["det_pix_y"] = parameters["detector_parameters"]["detector_ny_px"]
     dic["detector"]["pixel_size"] = parameters["detector_parameters"][
@@ -274,6 +273,7 @@ def fill_parameters_dictionary(
     dic["ctf"]["distribution_parameters"] = parameters["ctf_parameters"][
         "distribution_parameters"
     ]
+
     return dic
 
 
@@ -357,12 +357,10 @@ def write_inp_file(dict_params, inp_file="input.txt"):
                     dict_params["optics"]
                 )
             )
-
         if dict_params["optics"]["defocus_file_in"] is not None:
             inp.write(
                 "defocus_file_in = {0[defocus_file_in]}\n".format(dict_params["optics"])
             )
-
         inp.write(
             "=== detector ===\n"
             "det_pix_x = {0[det_pix_x]}\n"
@@ -378,7 +376,6 @@ def write_inp_file(dict_params, inp_file="input.txt"):
             "mtf_beta = {0[mtf_beta]}\n"
             "image_file_out = {0[image_file_out]}\n".format(dict_params["detector"])
         )
-
 
 
 def write_defocus_file(defocus_sample, defocus_file):
@@ -397,4 +394,3 @@ def write_defocus_file(defocus_sample, defocus_file):
         inp.write(f"{len(defocus_sample)} 1\n")
         for sample in defocus_sample:
             inp.write(f"{sample}\n")
-

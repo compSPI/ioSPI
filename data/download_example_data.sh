@@ -2,7 +2,7 @@
 
 URLlist=""
 # RCSB PDB X-ray crystallography example: 4PIR
-URLlist="${URLlist} https://files.rcsb.org/download/4PIR.pdb.gz"
+URLlist="${URLlist} https://files.rcsb.org/download/4PIR.pdb.gz" 
 URLlist="${URLlist} https://files.rcsb.org/download/4PIR.cif.gz"
 URLlist="${URLlist} https://edmaps.rcsb.org/coefficients/4pir.mtz"
 # RCSB PDB cryoEM example: 6Y1Z

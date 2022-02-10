@@ -5,10 +5,7 @@ import os
 import gemmi
 import pytest
 
-from ioSPI.atomic_models import read_gemmi_model, write_gemmi_model
-
-DATA = "tests/data"
-OUT = ""
+from ioSPI.iotools.atomic_models import read_gemmi_model, write_gemmi_model
 
 
 class TestAtomicModels:
@@ -41,38 +38,34 @@ class TestAtomicModels:
 
     def test_read_gemmi_model_pdb(self):
         """Test read_gemmi_model for pdb."""
-        pdb_filename = "2dhb.pdb"
-        path = os.path.join(DATA, pdb_filename)
-        os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
+        path = "2dhb.pdb"
+        os.system("wget https://files.rcsb.org/download/" + path)
         model = read_gemmi_model(path)
         assert model.__class__ is gemmi.Model
 
     def test_read_gemmi_model_cif(self):
         """Test read_gemmi_model for cif."""
-        cif_filename = "2dhb.cif"
-        path = os.path.join(DATA, cif_filename)
-        os.system(f"wget https://files.rcsb.org/download/{cif_filename} -P {DATA}")
+        path = "2dhb.cif"
+        os.system("wget https://files.rcsb.org/download/" + path)
         model = read_gemmi_model(path)
         assert model.__class__ is gemmi.Model
 
     def test_write_gemmi_model_pdb(self):
         """Test test_write_gemmi_model_pdb."""
-        pdb_filename = "2dhb.pdb"
-        path_input = os.path.join(DATA, pdb_filename)
-        os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
+        path_input = "2dhb.pdb"
+        os.system("wget https://files.rcsb.org/download/" + path_input)
         model = read_gemmi_model(path_input, assemble=False)
-        path_output = os.path.join(OUT, f"test_{pdb_filename}")
+        path_output = "test_" + path_input
         write_gemmi_model(path_output, model)
         model = read_gemmi_model(path_output, assemble=False)
         assert model.__class__ is gemmi.Model
 
     def test_write_gemmi_model_cif(self):
         """Test test_write_gemmi_model_cif."""
-        cif_filename = "2dhb.cif"
-        path_input = os.path.join(DATA, cif_filename)
-        os.system(f"wget https://files.rcsb.org/download/{cif_filename} -P tests/data")
+        path_input = "2dhb.cif"
+        os.system("wget https://files.rcsb.org/download/" + path_input)
         model = read_gemmi_model(path_input, assemble=False)
-        path_output = os.path.join(OUT, f"test_{cif_filename}")
+        path_output = "test_" + path_input
         write_gemmi_model(path_output, model)
         model = read_gemmi_model(path_output, assemble=False)
         assert model.__class__ is gemmi.Model
