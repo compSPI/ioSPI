@@ -86,11 +86,7 @@ def write_metadata_to_starfile(output_path, data_list, variable_names, save_name
         name of the starfile to be saved.
     """
     indices = list(range(len(data_list)))
-    df = pd.DataFrame(
-        data=data_list,
-        index=indices,
-        columns=(variable_names),
-    )
+    df = pd.DataFrame(data=data_list, index=indices, columns=(variable_names),)
     starfile.write(df, os.path.join(output_path, save_name + ".star"), overwrite=True)
 
 
