@@ -8,7 +8,8 @@ import mrcfile
 import numpy as np
 import yaml
 
-from ioSPI import cryoemio
+from ioSPI import cryo
+
 
 
 def test_data_and_dic2hdf5():
@@ -19,7 +20,8 @@ def test_data_and_dic2hdf5():
     data = {"a": 1, "b": 2, "c": 3}
 
     try:
-        cryoemio.data_and_dic2hdf5(data, tmp.name)
+
+        cryo.data_and_dic2hdf5(data, tmp.name)
         with h5py.File(tmp.name, "r") as f:
             out_dict = f["data"]
             assert out_dict["a"][()] == 1
@@ -74,7 +76,6 @@ def test_fill_parameters_dictionary_max():
     distribution_type = "uniform"
     distribution_parameters = [0, 1]
     n_samples = 4
-
     try:
         with open(tmp_yml.name, "w") as f:
             data = {
@@ -122,6 +123,7 @@ def test_fill_parameters_dictionary_max():
                 "geometry_parameters": {
                     "n_samples": n_samples,
                 },
+
                 "miscellaneous": {
                     "seed": seed,
                     "signal_to_noise": snr,
@@ -130,7 +132,8 @@ def test_fill_parameters_dictionary_max():
             }
             contents = yaml.dump(data)
             f.write(contents)
-        out_dict = cryoemio.fill_parameters_dictionary(
+
+        out_dict = cryo.fill_parameters_dictionary(
             tmp_yml.name,
             mrc_file,
             pdb_file,
@@ -275,7 +278,7 @@ def test_fill_parameters_dictionary_min():
             }
             contents = yaml.dump(data)
             f.write(contents)
-        out_dict = cryoemio.fill_parameters_dictionary(
+        out_dict = cryo.fill_parameters_dictionary(
             tmp_yml.name, mrc_file, pdb_file, crd_file, log_file
         )
 
@@ -332,7 +335,7 @@ def test_mrc2data():
     try:
         with mrcfile.new(tmp_mrc.name, overwrite=True) as mrc:
             mrc.set_data(data)
-        out_data = cryoemio.mrc2data(tmp_mrc.name)
+        out_data = cryo.mrc2data(tmp_mrc.name)
         assert (out_data == data).all()
     finally:
         os.unlink(tmp_mrc.name)
@@ -347,7 +350,7 @@ def test_mrc2data_large():
     try:
         with mrcfile.new(tmp_mrc.name, overwrite=True) as mrc:
             mrc.set_data(data)
-        out_data = cryoemio.mrc2data(tmp_mrc.name)
+        out_data = cryo.mrc2data(tmp_mrc.name)
         assert (out_data == data).all()
     finally:
         os.unlink(tmp_mrc.name)
@@ -362,13 +365,15 @@ def test_recursively_save_dict_contents_to_group():
 
     try:
         with h5py.File(tmp.name, "w") as f:
-            cryoemio.recursively_save_dict_contents_to_group(f, "", data)
+            cryo.recursively_save_dict_contents_to_group(f, "", data)
         with h5py.File(tmp.name, "r") as f:
             assert f["a"][()] == 1.0
-            assert f["b"][()] == "None"
+            assert f["b"].asstr()[()] == "None"
+
             assert f["c/d"][()] == 1
     finally:
         os.unlink(tmp.name)
+
 
 
 def test_write_defocus_file():
@@ -379,7 +384,7 @@ def test_write_defocus_file():
     defocus_sample = [0, 1, 0]
 
     try:
-        cryoemio.write_defocus_file(defocus_sample, tmp.name)
+        cryo.write_defocus_file(defocus_sample, tmp.name)
     finally:
         os.unlink(tmp.name)
 
@@ -470,10 +475,11 @@ def test_write_inp_file():
             }
             contents = yaml.dump(data)
             f.write(contents)
-        out_dict = cryoemio.fill_parameters_dictionary(
+        out_dict = 
+        .fill_parameters_dictionary(
             tmp_yml.name, mrc_file, pdb_file, crd_file, log_file
         )
-        cryoemio.write_inp_file(out_dict, tmp_inp.name)
+        cryo.write_inp_file(out_dict, tmp_inp.name)
     finally:
         os.unlink(tmp_inp.name)
         os.unlink(tmp_yml.name)
