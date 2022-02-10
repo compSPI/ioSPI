@@ -77,12 +77,12 @@ def test_write_data_dict_to_hdf5():
         os.unlink(tmp.name)
 
 
-def test_write_mrc():
+def test_write_micrograph_to_mrc():
     """Test if the saved mrcs file exists."""
     projections = torch.randn(4, 1, 5, 5)
     output_path = "tests/data/"
     iterations = 0
-    micrographs.write_mrc(output_path, projections, iterations)
+    micrographs.write_micrograph_to_mrc(output_path, projections, iterations)
     expected_file = os.path.join(output_path, str(iterations).zfill(4) + ".mrcs")
     assert os.path.isfile(expected_file)
     os.remove(expected_file)

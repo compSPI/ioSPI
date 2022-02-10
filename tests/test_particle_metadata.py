@@ -9,8 +9,8 @@ from ioSPI.particle_metadata import (
     check_star_file,
     get_starfile_metadata_names,
     update_optics_config_from_starfile,
-    write_starfile,
-    write_starfile_cryoem_convention,
+    write_metadata_to_starfile,
+    write_metadata_to_starfile_cryoem_convention,
 )
 
 
@@ -64,20 +64,20 @@ def test_update_optics_config_from_starfile():
     assert isinstance(config.cs, float_type)
 
 
-def test_write_starfile():
+def test_write_metadata_to_starfile():
     """Test if the saved star file exists."""
     output_path = "tests/data/"
     datalist = [[1, 2, 3]]
     variable_names = ["a", "b", "c"]
     save_name = "temp"
 
-    write_starfile(output_path, datalist, variable_names, save_name)
+    write_metadata_to_starfile(output_path, datalist, variable_names, save_name)
     expected_file = os.path.join(output_path, save_name + ".star")
     assert os.path.isfile(expected_file)
     os.remove(expected_file)
 
 
-def test_write_starfile_cryoem_convention():
+def test_write_metadata_to_starfile_cryoem_convention():
     """Test if the saved star file exists."""
     output_path = "tests/data/"
     data_list = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]]
@@ -90,7 +90,9 @@ def test_write_starfile_cryoem_convention():
 
     save_name = "temp"
 
-    write_starfile_cryoem_convention(output_path, data_list, Config, save_name)
+    write_metadata_to_starfile_cryoem_convention(
+        output_path, data_list, Config, save_name
+    )
     expected_file = os.path.join(output_path, save_name + ".star")
     assert os.path.isfile(expected_file)
     os.remove(expected_file)
