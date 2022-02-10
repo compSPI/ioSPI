@@ -20,7 +20,7 @@ def test_populate_hdf5_with_dict():
 
     try:
         with h5py.File(tmp.name, "w") as f:
-            micrographs.populate_hdf5_with_dict(f, "", data)
+            micrographs._populate_hdf5_with_dict(f, "", data)
         with h5py.File(tmp.name, "r") as f:
             assert f["a"][()] == 1.0
             assert f["b"].asstr()[()] == "None"
@@ -67,7 +67,7 @@ def test_write_data_dict_to_hdf5():
     data = {"a": 1, "b": 2, "c": 3}
 
     try:
-        micrographs.write_data_dict_to_hdf5(data, tmp.name)
+        micrographs.write_data_dict_to_hdf5(tmp.name, data)
         with h5py.File(tmp.name, "r") as f:
             out_dict = f["data"]
             assert out_dict["a"][()] == 1

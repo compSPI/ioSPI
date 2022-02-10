@@ -7,10 +7,11 @@ import pytest
 
 from ioSPI.particle_metadata import (
     check_star_file,
+    format_metadata_for_writing,
+    format_metadata_for_writing_cryoem_convention,
     get_starfile_metadata_names,
     update_optics_config_from_starfile,
     write_metadata_to_starfile,
-    write_metadata_to_starfile_cryoem_convention,
 )
 
 
@@ -66,20 +67,32 @@ def test_update_optics_config_from_starfile():
 
 def test_write_metadata_to_starfile():
     """Test if the saved star file exists."""
-    output_path = "tests/data/"
+    output_path = "tests/data/temp"
     datalist = [[1, 2, 3]]
     variable_names = ["a", "b", "c"]
-    save_name = "temp"
 
-    write_metadata_to_starfile(output_path, datalist, variable_names, save_name)
-    expected_file = os.path.join(output_path, save_name + ".star")
+    metadata = format_metadata_for_writing(datalist, variable_names)
+    write_metadata_to_starfile(output_path, metadata)
+    expected_file = os.path.join(output_path, ".star")
     assert os.path.isfile(expected_file)
     os.remove(expected_file)
 
 
+def test_write_metadata_to_starfile_star_extension():
+    """Test if the saved star file exists."""
+    output_path = "tests/data/temp.star"
+    datalist = [[1, 2, 3]]
+    variable_names = ["a", "b", "c"]
+
+    metadata = format_metadata_for_writing(datalist, variable_names)
+    write_metadata_to_starfile(output_path, metadata)
+    assert os.path.isfile(output_path)
+    os.remove(output_path)
+
+
 def test_write_metadata_to_starfile_cryoem_convention():
     """Test if the saved star file exists."""
-    output_path = "tests/data/"
+    output_path = "tests/data/temp"
     data_list = [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]]
 
     class Config:
@@ -88,11 +101,8 @@ def test_write_metadata_to_starfile_cryoem_convention():
         ctf = True
         shift = True
 
-    save_name = "temp"
-
-    write_metadata_to_starfile_cryoem_convention(
-        output_path, data_list, Config, save_name
-    )
-    expected_file = os.path.join(output_path, save_name + ".star")
+    metadata = format_metadata_for_writing_cryoem_convention(data_list, Config)
+    write_metadata_to_starfile(output_path, metadata)
+    expected_file = os.path.join(output_path, ".star")
     assert os.path.isfile(expected_file)
     os.remove(expected_file)
