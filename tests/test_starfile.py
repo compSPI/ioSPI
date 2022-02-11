@@ -3,7 +3,7 @@ import numpy as np
 import pytest
 import torch
 
-from ioSPI.starfile import (
+from ..ioSPI.starfile import (
     check_star_file,
     return_names,
     starfile_data,

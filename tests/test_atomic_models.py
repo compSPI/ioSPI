@@ -5,7 +5,7 @@ import os
 import gemmi
 import pytest
 
-from ioSPI.atomic_models import read_gemmi_model, write_gemmi_model
+from ..ioSPI.atomic_models import read_gemmi_model, write_gemmi_model
 
 DATA = "tests/data"
 OUT = ""
