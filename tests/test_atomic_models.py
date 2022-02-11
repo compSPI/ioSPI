@@ -7,6 +7,9 @@ import pytest
 
 from ioSPI.atomic_models import read_gemmi_model, write_gemmi_model
 
+DATA = "tests/data"
+OUT = ""
+
 
 class TestAtomicModels:
     """Test for reading and writing atomic models."""
