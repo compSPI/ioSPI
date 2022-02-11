@@ -53,7 +53,7 @@ def test_make_checkerboard_2d():
     checkerboard_2d = fourier.make_checkerboard_2d_prejit(
         arr2d.reshape(1, n_pixels, n_pixels).shape
     )
-    assert np.allclose(checkerboard_2d**2, np.ones((1, n_pixels, n_pixels)))
+    assert np.allclose(checkerboard_2d ** 2, np.ones((1, n_pixels, n_pixels)))
     assert np.isclose(0, checkerboard_2d.mean())
     idx_rand_1, idx_rand_2 = np.random.randint(low=0, high=n_pixels, size=2)
     expected_value = 1
@@ -65,7 +65,7 @@ def test_make_checkerboard_2d():
 def test_make_checkerboard_3d():
     """Test 3D checkerboard."""
     checkerboard_3d = fourier.make_checkerboard_3d_prejit(arr3d.shape)
-    assert np.allclose(checkerboard_3d**2, np.ones((n_pixels, n_pixels, n_pixels)))
+    assert np.allclose(checkerboard_3d ** 2, np.ones((n_pixels, n_pixels, n_pixels)))
     assert np.isclose(0, checkerboard_3d.mean())
     idx_rand_1, idx_rand_2, idx_rand_3 = np.random.randint(low=0, high=n_pixels, size=3)
     expected_value = 1
