@@ -53,7 +53,7 @@ def read_gemmi_model(path, i_model=0, clean=True, assemble=True):
             raise ValueError("File format not recognized.")
     else:
         model = None
-        raise OSError("The file could not be found.")
+        raise OSError("File could not be found.")
     return model
 
 
