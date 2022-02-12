@@ -10,6 +10,7 @@ dependencies:
   - numba
   - numpy
   - h5py>=2.10.0
+  - pandas
   - pillow>=8.2.0
   - pip
   - pytest
@@ -18,3 +19,4 @@ dependencies:
   - pyyaml
   - pip :
       - git+https://github.com/compSPI/simSPI.git
+      - starfile
