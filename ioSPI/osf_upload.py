@@ -3,7 +3,6 @@ import typing
 from pathlib import Path
 
 import requests
-from simSPI import tem
 
 
 class TEMUpload:
@@ -38,28 +37,6 @@ class TEMUpload:
         requests.get(self.base_url, headers=self.headers).raise_for_status()
 
         self.data_node_guid = data_node_guid
-
-    def upload_dataset_from_files(self, data_file: str, metadata_file: str) -> bool:
-        """Upload particle stack data and metadata as labelled datasets to OSF.io.
-
-        Parameters
-        ----------
-        data_file : str
-            File path to .h5 file containing datasets.
-        metadata_file : str
-            File path to .star file containing relevant meta data.
-        Returns
-        -------
-        bool
-            True if all uploads successful, False otherwise.
-        """
-        # molecule_label = Path(tem_sim.output_path_dict["pdb_file"]).stem
-        # dataset_label = Path(tem_sim.output_path_dict["mrc_file"]).stem
-        # molecule_guid = self.get_molecule_guid(molecule_label)
-        # dataset_guid = self.post_child_node(molecule_guid, dataset_label)
-        #
-        # upload_file_paths = [tem_sim.output_path_dict["h5_file"]]
-        return self.post_files(dataset_guid, upload_file_paths)
 
     def get_molecule_guid(self, molecule_label: str) -> str:
         """Get GUID of node housing data for given molecule.

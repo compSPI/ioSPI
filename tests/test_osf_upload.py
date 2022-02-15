@@ -1,14 +1,12 @@
 """Tests for tem_upload."""
-import os
 import random
 import string
 from pathlib import Path
 
 import pytest
 import requests
-from simSPI import tem
 
-from ioSPI.ioSPI import tem_upload
+from ioSPI import osf_upload
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -75,34 +73,9 @@ def cleanup(node_guid, test_node_label):
 
 
 @pytest.fixture
-def mock_tem(tmp_path):
-    """Instantiate TEMSimulator for testing."""
-    test_files_path = "./test_files"
-    cwd = os.getcwd()
-
-    tem_simulator = tem.TEMSimulator(
-        str(Path(cwd, test_files_path, "path_config.yaml")),
-        str(Path(cwd, test_files_path, "sim_config.yaml")),
-    )
-
-    # from test_files/path_config
-    out_file_name = "_randomrot"
-
-    tem_simulator.output_path_dict["mrc_file"] = str(
-        Path(cwd, tmp_path, out_file_name + ".mrc")
-    )
-
-    tem_simulator.output_path_dict["pdb_file"] = str(
-        Path(cwd, test_files_path, "4v6x.pdb")
-    )
-
-    return tem_simulator
-
-
-@pytest.fixture
 def mock_tem_upload():
     """Return TEMUpload for testing."""
-    return tem_upload.TEMUpload(pytest.auth_token, pytest.test_node_guid)
+    return osf_upload.TEMUpload(pytest.auth_token, pytest.test_node_guid)
 
 
 @pytest.fixture
@@ -116,17 +89,11 @@ def create_upload_file(tmp_path):
 
 def test_constructor():
     """Test constructor populates class attributes."""
-    test_class = tem_upload.TEMUpload(pytest.auth_token)
+    test_class = osf_upload.TEMUpload(pytest.auth_token)
 
     assert test_class.headers is not None
     assert test_class.base_url is not None
     assert test_class.data_node_guid is not None
-
-
-def test_upload_dataset_from_tem(mock_tem_upload, mock_tem, create_upload_file):
-    """Test whether data is parsed from TEM wrapper and files are uploaded."""
-    mock_tem.output_path_dict["h5_file"] = str(create_upload_file)
-    assert mock_tem_upload.upload_dataset_from_tem(mock_tem)
 
 
 def test_post_child_node(mock_tem_upload):
