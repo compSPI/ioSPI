@@ -1,8 +1,9 @@
 """Tests for tem_upload."""
+import os
 import random
 import string
 from pathlib import Path
-import os
+
 import pytest
 import requests
 
