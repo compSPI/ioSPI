@@ -2,6 +2,7 @@
 [![Lint](https://github.com/compSPI/ioSPI/actions/workflows/lint.yml/badge.svg)](https://github.com/compSPI/ioSPI/actions/workflows/lint.yml)
 [![Codecov](https://codecov.io/gh/compSPI/ioSPI/branch/master/graph/badge.svg?token=OBVOV3ZM1O)](https://codecov.io/gh/compSPI/ioSPI)
 [![DeepSource](https://deepsource.io/gh/compSPI/ioSPI.svg/?label=active+issues&show_trend=true&token=4kJgheTFBCQhy6ItFV2Qp4cA)](https://deepsource.io/gh/compSPI/ioSPI/?ref=repository-badge)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6099894.svg)](https://doi.org/10.5281/zenodo.6099894)
 
 # About
 
