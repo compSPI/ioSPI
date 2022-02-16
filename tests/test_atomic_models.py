@@ -7,6 +7,7 @@ import pytest
 
 from ..ioSPI.atomic_models import read_atomic_model, write_atomic_model
 
+
 DATA = "tests/data"
 OUT = ""
 
