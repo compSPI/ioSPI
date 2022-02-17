@@ -57,7 +57,7 @@ class TEMUpload:
         See Also
         --------
         Protein Data Bank(PDB) : https://www.rcsb.org/
-        EM DataR esouce(EMDB) : https://www.emdataresource.org/
+        EM Data Resouce(EMDB) : https://www.emdataresource.org/
         """
         existing_molecules = self.get_existing_molecules()
         if molecule_label not in existing_molecules:
