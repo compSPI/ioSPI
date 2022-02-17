@@ -11,7 +11,7 @@ class TEMUpload:
     Parameters
     ----------
     token : str
-        Personal token from OSF.io with access to cryoEM dataset.
+        Personal token from OSF.io with access to dataset (e.g. cryoEM, etc).
     data_node_guid : str, default = "24htr"
         OSF GUID of data node that houses dataset.
 

@@ -21,7 +21,7 @@ def setup_teardown():
         random.choice(string.ascii_letters) for i in range(5)
     )
 
-    print(f"Creating test node CryoEM Dataset -> internal -> {test_node_label} ")
+    print(f"Creating test node Dataset -> internal -> {test_node_label} ")
 
     internal_node_guid = "9jwpu"
     request_url = f"{base_api_url}{internal_node_guid}/children/"
@@ -45,7 +45,7 @@ def setup_teardown():
     yield
 
     print(
-        f"\nDeleting test node CryoEM Dataset -> internal -> "
+        f"\nDeleting test node Dataset -> internal -> "
         f"{test_node_label} and its sub-components."
     )
     cleanup(pytest.test_node_guid, test_node_label)
