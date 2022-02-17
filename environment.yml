@@ -13,7 +13,6 @@ dependencies:
   - pandas
   - pillow>=8.2.0
   - pip
-  - pyfftw
   - pytest
   - pytest-cov
   - pytorch
