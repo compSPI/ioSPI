@@ -110,7 +110,7 @@ class TEMUpload:
         Returns
         -------
         dict of type str : str
-            Returns dictionary of node labels mapped to node GUIDs
+            Returns dictionary of node labels mapped to node GUIDs.
 
         Raises
         ------
