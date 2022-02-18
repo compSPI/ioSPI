@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import requests
 
-from ..ioSPI import osf_upload
+from ..ioSPI import datasets
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -76,7 +76,7 @@ def cleanup(node_guid, test_node_label):
 @pytest.fixture
 def mock_osf_upload():
     """Return OSFUpload for testing."""
-    return osf_upload.OSFUpload(pytest.auth_token, pytest.test_node_guid)
+    return datasets.OSFUpload(pytest.auth_token, pytest.test_node_guid)
 
 
 @pytest.fixture
@@ -90,19 +90,19 @@ def create_upload_file(tmp_path):
 
 def test_constructor():
     """Test constructor populates class attributes."""
-    test_class = osf_upload.OSFUpload(pytest.auth_token)
+    test_class = datasets.OSFUpload(pytest.auth_token)
 
     assert test_class.headers is not None
     assert test_class.base_url is not None
     assert test_class.data_node_guid is not None
 
 
-def test_post_child_node(mock_osf_upload):
+def test_write_child_node(mock_osf_upload):
     """Test whether nodes are created."""
-    test_node_label = "test_post_child_node" + "".join(
+    test_node_label = "test_write_child_node" + "".join(
         random.choice(string.ascii_letters) for i in range(5)
     )
-    returned_guid = mock_osf_upload.post_child_node(
+    returned_guid = mock_osf_upload.write_child_node(
         pytest.test_node_guid, test_node_label
     )
     response = requests.get(
@@ -111,10 +111,10 @@ def test_post_child_node(mock_osf_upload):
     assert test_node_label == response.json()["data"]["attributes"]["title"]
 
 
-def test_get_existing_molecules(mock_osf_upload):
+def test_read_existing_structure_labels(mock_osf_upload):
     """Test if uploaded test node is retrieved."""
     request_url = f"{pytest.base_api_url}{pytest.test_node_guid}/children/"
-    test_node_label = "test_get_existing_molecules_" + "".join(
+    test_node_label = "test_read_existing_structure_labels_" + "".join(
         random.choice(string.ascii_letters) for i in range(5)
     )
     request_body = {
@@ -126,26 +126,36 @@ def test_get_existing_molecules(mock_osf_upload):
         request_url, headers=pytest.request_headers, json={"data": request_body}
     ).raise_for_status()
 
-    assert test_node_label in mock_osf_upload.get_existing_molecules()
+    assert test_node_label in mock_osf_upload.read_existing_structure_labels()
 
 
-def test_get_molecule_guid(mock_osf_upload):
-    """Test if valid guid is returned for a molecule label."""
-    test_node_label = "test_get_molecule_guid" + "".join(
+def test_read_structure_guid(mock_osf_upload):
+    """Test if valid guid is returned for a structure's label."""
+    test_node_label = "test_read_structure_guid" + "".join(
         random.choice(string.ascii_letters) for i in range(5)
     )
 
-    returned_guid = mock_osf_upload.get_molecule_guid(test_node_label)
-    response = requests.get(
-        f"{pytest.base_api_url}{returned_guid}", headers=pytest.request_headers
+    returned_guid = mock_osf_upload.read_structure_guid(test_node_label)
+    assert returned_guid is None
+
+    request_url = f"{pytest.base_api_url}{pytest.test_node_guid}/children/"
+    request_body = {
+        "type": "nodes",
+        "attributes": {"title": test_node_label, "category": "data", "public": True},
+    }
+    response = requests.post(
+        request_url, headers=pytest.request_headers, json={"data": request_body}
     )
-    assert response.status_code == 200
-    assert returned_guid == mock_osf_upload.get_molecule_guid(test_node_label)
+    response.raise_for_status()
+
+    assert response.json()["data"]["id"] == mock_osf_upload.read_structure_guid(
+        test_node_label
+    )
 
 
-def test_post_files(mock_osf_upload, create_upload_file):
+def test_write_files(mock_osf_upload, create_upload_file):
     """Test whether files are uploaded to OSF."""
-    assert mock_osf_upload.post_files(pytest.test_node_guid, [str(create_upload_file)])
+    assert mock_osf_upload.write_files(pytest.test_node_guid, [str(create_upload_file)])
 
     response = requests.get(
         f"{pytest.base_api_url}{pytest.test_node_guid}/files/osfstorage/",
