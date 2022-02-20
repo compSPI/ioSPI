@@ -52,6 +52,8 @@ jobs:
           $CONDA/bin/conda env update --file environment.yml --name base
           $CONDA/bin/pip install -e .
       - name: unit testing [pytest]
+        env:
+          TEST_TOKEN: ${{ secrets.TEST_TOKEN }}
         run: |
           $CONDA/bin/pytest --cov-report term --cov-report xml:coverage.xml --cov=ioSPI ${{matrix.test-folder}}
       - name: uploading code coverage [codecov]
