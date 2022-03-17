@@ -5,7 +5,11 @@ import os
 import gemmi
 import pytest
 
-from ..ioSPI.atomic_models import read_atomic_model, write_atomic_model
+from ..ioSPI.atomic_models import (
+    read_atomic_model,
+    write_atomic_model,
+    write_cartesian_coordinates,
+)
 
 DATA = "tests/data"
 OUT = ""
@@ -74,5 +78,19 @@ class TestAtomicModels:
         model = read_atomic_model(path_input, assemble=False)
         path_output = os.path.join(OUT, f"test_{cif_filename}")
         write_atomic_model(path_output, model)
+        model = read_atomic_model(path_output, assemble=False)
+        assert model.__class__ is gemmi.Model
+
+    def test_write_cartesian_coordinates_to_pdb(self):
+        """Test write_cartesian_coordinates for pdb."""
+        path_output = os.path.join(OUT, "test_cartesian.pdb")
+        write_cartesian_coordinates(path_output)
+        model = read_atomic_model(path_output, assemble=False)
+        assert model.__class__ is gemmi.Model
+
+    def test_write_cartesian_coordinates_to_cif(self):
+        """Test write_cartesian_coordinates for cif."""
+        path_output = os.path.join(OUT, "test_cartesian.cif")
+        write_cartesian_coordinates(path_output)
         model = read_atomic_model(path_output, assemble=False)
         assert model.__class__ is gemmi.Model

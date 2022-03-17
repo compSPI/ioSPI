@@ -3,6 +3,7 @@
 import os
 
 import gemmi
+import numpy as np
 
 
 def read_atomic_model(path, i_model=0, clean=True, assemble=True):
@@ -175,6 +176,52 @@ def write_atomic_model(path, model=gemmi.Model("model")):
     structure = gemmi.Structure()
     structure.add_model(model, pos=-1)
     structure.renumber_models()
+
+    if is_cif:
+        structure.make_mmcif_document().write_file(path)
+    if is_pdb:
+        structure.write_pdb(path)
+
+
+def write_cartesian_coordinates(path, cartesian_coordinates_np=np.random.rand(10, 3)):
+    """Write Numpy array of cartesian coordinates to PDB or mmCIF file.
+
+    Parameters
+    ----------
+    path : string
+        Path to PDB or mmCIF file
+    cartesian_coordinates_np : numpy array
+        Optional, default: np.random.rand(10,3)
+        Second axis must be of dimension 3.
+
+    -------
+
+    """
+    is_pdb = path.lower().endswith(".pdb")
+    is_cif = path.lower().endswith(".cif")
+    if not (is_pdb or is_cif):
+        raise ValueError("File format not recognized.")
+
+    if cartesian_coordinates_np.shape[1] != 3:
+        raise ValueError(
+            "Numpy array of cartesian coordinates should be of shape (Natom, 3)."
+        )
+
+    structure = gemmi.Structure()
+    structure.add_model(gemmi.Model("model"))
+    structure.renumber_models()
+    structure[0].add_chain("A")
+    structure[0]["A"].add_residue(gemmi.Residue())
+
+    for iat in np.arange(cartesian_coordinates_np.shape[0]):
+        atom = gemmi.Atom()
+        atom.pos = gemmi.Position(
+            cartesian_coordinates_np[iat, 0],
+            cartesian_coordinates_np[iat, 1],
+            cartesian_coordinates_np[iat, 2],
+        )
+        atom.name = "CA"
+        structure[0]["A"][0].add_atom(atom)
 
     if is_cif:
         structure.make_mmcif_document().write_file(path)
