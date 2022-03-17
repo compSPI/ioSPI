@@ -20,8 +20,8 @@ Then download:
 
 # Contribute
 
-We strongly recommend installing our pre-commit hook, to ensure that your code
-follows our Python style guidelines. To do so, just run the following command line at the root of this repository:
+We strongly recommend installing our pre-commit hook, to ensure that your code follows our Python style guidelines. 
+To do so, just run the following command line at the root of this repository:
 
     pre-commit install
 
