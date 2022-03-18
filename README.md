@@ -6,7 +6,7 @@
 
 # About
 
-Welcome to the Python package: `ioSPI`: Methods and tools to read and write data in all formats. ioSPI Also provides methods to use other SPI tools developed outside of compSPI.
+Welcome to the Python package: `ioSPI`: methods and tools to read and write data in all formats. ioSPI Also provides methods to use other SPI tools developed outside of compSPI.
 
 # Download
 
