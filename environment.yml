@@ -20,3 +20,4 @@ dependencies:
   - pip :
       - git+https://github.com/compSPI/simSPI.git
       - starfile
+
