@@ -14,8 +14,8 @@ from ..ioSPI import datasets
 def setup_teardown():
     """Test node creation and clean-up for tests."""
     token = os.environ["TEST_TOKEN"]
-    request_headers = {"Authorization": f"Bearer {token}"}
     base_api_url = "https://api.osf.io/v2/nodes/"
+    request_headers = {"Authorization": f"Bearer {token}"}
 
     test_node_label = "test_" + "".join(
         random.choice(string.ascii_letters) for i in range(5)
