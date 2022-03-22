@@ -39,7 +39,7 @@ Note that PRs from forks of ioSPI outside the compSPI organization (e.g. other t
   3. Develop feature.
   4. PR from `compSPI:iospi_new_feature` to `compSPI:master`.
 
-If you already have developed a feature branch on your own fork. You can PR into a fresh branch off master.
+If you already have developed a feature branch on your own fork, then you can PR into a fresh branch off master. Then do another PR from within the compSPI organization to the master branch.
   1. Fork the repo to `your_account`, i.e. `https://github.com/your_account/ioSPI`.
   2. `git clone https://github.com/your_account/ioSPI.git`.
   3. `git branch iospi_new_feature`.
