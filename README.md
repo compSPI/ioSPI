@@ -30,3 +30,21 @@ With this hook, your code will be automatically formatted with our style convent
 Note that the hooks do not reformat docstrings automatically. If hooks failed with an error related to the documentation, you should correct this error yourself, commit the result and check that the pre-commit marks "Passed".
 
 See our [contributing](https://github.com/compspi/compspi/blob/master/docs/contributing.rst) guidelines!
+
+## Note on Pull Requests from Forks
+
+Note that PRs from forks of ioSPI outside the compSPI organization (e.g. other than the main [compSPI/ioSPI](https://github.com/compSPI/ioSPI) repo), will fail on tests, due to an authentication feature that is only available on the main compSPI repo. In order to work around this, please make a feature branch off the main[compSPI/ioSPI](https://github.com/compSPI/ioSPI) repo.
+  1. `git clone https://github.com/compSPI/ioSPI.git`.
+  2. `git branch iospi_new_feature`.
+  3. Develop feature.
+  4. PR from `compSPI:iospi_new_feature` to `compSPI:master`.
+
+If you already have developed a feature branch on your own fork, then you can PR into a fresh branch off master. Then do another PR from within the compSPI organization to the master branch.
+  1. Fork the repo to `your_account`, i.e. `https://github.com/your_account/ioSPI`.
+  2. `git clone https://github.com/your_account/ioSPI.git`.
+  3. `git branch iospi_new_feature`.
+  4. Develop feature.
+  5. Make a fresh branch of `compSPI/ioSPI` off of master, e.g. called `compspiorg_iospi_new_feature`.
+  6. PR from `your_account:iospi_new_feature` to `compSPI:compspiorg_iospi_new_feature`.
+  7. Once merged, PR from `compSPI:compspiorg_iospi_new_feature` to `compSPI:master`.
+  8. These tests should not have authentication issues since they are within branches on the compSPI organization. You can continue comitting to `compSPI:compspiorg_iospi_new_feature`, and not touch `your_account:iospi_new_feature`.
