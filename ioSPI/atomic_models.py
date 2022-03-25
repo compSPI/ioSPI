@@ -211,7 +211,9 @@ def write_cartesian_coordinates(path, cartesian_coordinates_np=np.random.rand(10
     structure.add_model(gemmi.Model("model"))
     structure.renumber_models()
     structure[0].add_chain("A")
-    structure[0]["A"].add_residue(gemmi.Residue())
+    residue = gemmi.Residue()
+    residue.name = "GLY"
+    structure[0]["A"].add_residue(residue)
 
     for iat in np.arange(cartesian_coordinates_np.shape[0]):
         atom = gemmi.Atom()
