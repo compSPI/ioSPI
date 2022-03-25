@@ -87,18 +87,17 @@ class TestAtomicModels:
         path = "test.txt"
         expected = "File format not recognized."
         with pytest.raises(ValueError) as exception_context:
-            _ = write_cartesian_coordinates(path)
+            write_cartesian_coordinates(path)
         actual = str(exception_context.value)
         assert expected in actual
 
     def test_write_cartesian_coordinates_input_shape(self):
         """Test shape of input array."""
-        path = 'test.cif'
-        array = np.empty((1,1))
+        path = "test.cif"
+        array = np.empty((1, 1))
         expected = "Numpy array of cartesian coordinates should be of shape (Natom, 3)."
         with pytest.raises(ValueError) as exception_context:
-            _ = write_cartesian_coordinates(path,
-                                            cartesian_coordinates_np=array)
+            write_cartesian_coordinates(path, cartesian_coordinates_np=array)
         actual = str(exception_context.value)
         assert expected in actual
 
