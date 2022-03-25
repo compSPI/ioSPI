@@ -3,6 +3,7 @@
 import os
 
 import gemmi
+import numpy as np
 import pytest
 
 from ..ioSPI.atomic_models import (
@@ -80,6 +81,26 @@ class TestAtomicModels:
         write_atomic_model(path_output, model)
         model = read_atomic_model(path_output, assemble=False)
         assert model.__class__ is gemmi.Model
+
+    def test_write_cartesian_coordinates_filename_extension_error(self):
+        """Test output format is recognized."""
+        path = "test.txt"
+        expected = "File format not recognized."
+        with pytest.raises(ValueError) as exception_context:
+            _ = write_cartesian_coordinates(path)
+        actual = str(exception_context.value)
+        assert expected in actual
+
+    def test_write_cartesian_coordinates_input_shape(self):
+        """Test shape of input array."""
+        path = 'test.cif'
+        array = np.empty((1,1))
+        expected = "Numpy array of cartesian coordinates should be of shape (Natom, 3)."
+        with pytest.raises(ValueError) as exception_context:
+            _ = write_cartesian_coordinates(path,
+                                            cartesian_coordinates_np=array)
+        actual = str(exception_context.value)
+        assert expected in actual
 
     def test_write_cartesian_coordinates_to_pdb(self):
         """Test write_cartesian_coordinates for pdb."""
