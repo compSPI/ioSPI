@@ -51,6 +51,7 @@ class TestAtomicModels:
         path = os.path.join(DATA, pdb_filename)
         os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
         model = read_atomic_model(path)
+        os.delete(path)
         assert model.__class__ is gemmi.Model
 
     def test_read_atomic_model_from_cif(self):
@@ -59,6 +60,7 @@ class TestAtomicModels:
         path = os.path.join(DATA, cif_filename)
         os.system(f"wget https://files.rcsb.org/download/{cif_filename} -P {DATA}")
         model = read_atomic_model(path)
+        os.delete(path)
         assert model.__class__ is gemmi.Model
 
     def test_extract_gemmi_atoms(self):
@@ -67,6 +69,7 @@ class TestAtomicModels:
         path = os.path.join(DATA, pdb_filename)
         os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
         model = read_atomic_model(path, assemble=False)
+        os.delete(path)
         atoms = extract_gemmi_atoms(model, chains=None, split_chains=True)
         assert len(atoms) == 2  # expecting two chains
         atoms = extract_gemmi_atoms(model, chains=["A"], split_chains=True)
@@ -80,6 +83,7 @@ class TestAtomicModels:
         path = os.path.join(DATA, pdb_filename)
         os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
         model = read_atomic_model(path, assemble=False)
+        os.delete(path)
         atoms = extract_gemmi_atoms(model)
 
         atomic_coordinates = extract_atomic_parameter(atoms, "cartesian_coordinates")
@@ -109,9 +113,11 @@ class TestAtomicModels:
         path_input = os.path.join(DATA, pdb_filename)
         os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
         model = read_atomic_model(path_input, assemble=False)
+        os.delete(path)
         path_output = os.path.join(OUT, f"test_{pdb_filename}")
         write_atomic_model(path_output, model)
         model = read_atomic_model(path_output, assemble=False)
+        os.delete(path_output)
         assert model.__class__ is gemmi.Model
 
     def test_write_atomic_model_to_cif(self):
@@ -120,7 +126,9 @@ class TestAtomicModels:
         path_input = os.path.join(DATA, cif_filename)
         os.system(f"wget https://files.rcsb.org/download/{cif_filename} -P tests/data")
         model = read_atomic_model(path_input, assemble=False)
+        os.delete(path)
         path_output = os.path.join(OUT, f"test_{cif_filename}")
         write_atomic_model(path_output, model)
         model = read_atomic_model(path_output, assemble=False)
+        os.delete(path_output)
         assert model.__class__ is gemmi.Model
