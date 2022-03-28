@@ -83,10 +83,19 @@ class TestAtomicModels:
         atoms = extract_gemmi_atoms(model)
         indices = [i for i in range(len(atoms)) if atoms[i].element.name == "N"]
 
+        atomic_coordinates = extract_atomic_parameter(atoms, "cartesian_coordinates")
+        assert len(atomic_coordinates[0]) == 3  # x, y and z
+
         for ptype in ["electron_form_factor_a", "electron_form_factor_b"]:
             params = extract_atomic_parameter(atoms, ptype)
             ffs_N = np.array(params)[np.array(indices).astype(int)]
             assert np.allclose(ffs_N[0], ffs_N)
+
+        expected = "Atomic parameter type not recognized."
+        with pytest.raises(ValueError) as exception_context:
+            _ = extract_atomic_parameter(atoms, "color")
+        actual = str(exception_context.value)
+        assert expected in actual
 
     def test_write_atomic_model_to_pdb(self):
         """Test test_write_gemmi_model_pdb."""

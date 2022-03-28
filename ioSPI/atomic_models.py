@@ -214,7 +214,6 @@ def extract_atomic_parameter(atoms, parameter_type, split_chains=False):
         atomic_parameter = [at.element.c4322.b for ch in atoms for at in ch]
     else:
         raise ValueError("Atomic parameter type not recognized.")
-        return
 
     # optionally preserve the list of lists (separated by chain) structure
     if split_chains:
