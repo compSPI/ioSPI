@@ -97,8 +97,10 @@ class TestAtomicModels:
         actual = str(exception_context.value)
         assert expected in actual
 
-        atoms = extract_gemmi_atoms(mode, split_chains=True)
-        params = extract_atomic_parameter(atoms, "cartesian_coordinates", split_chains=True)
+        atoms = extract_gemmi_atoms(model, split_chains=True)
+        params = extract_atomic_parameter(
+            atoms, "cartesian_coordinates", split_chains=True
+        )
         assert len(params) == 2  # expect two chains
 
     def test_write_atomic_model_to_pdb(self):
