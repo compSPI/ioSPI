@@ -81,11 +81,11 @@ class TestAtomicModels:
         os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
         model = read_atomic_model(path, assemble=False)
         atoms = extract_gemmi_atoms(model)
-        indices = [i for i in range(len(atoms)) if atoms[i].element.name == "N"]
 
         atomic_coordinates = extract_atomic_parameter(atoms, "cartesian_coordinates")
         assert len(atomic_coordinates[0]) == 3  # x, y and z
 
+        indices = [i for i in range(len(atoms)) if atoms[i].element.name == "N"]
         for ptype in ["electron_form_factor_a", "electron_form_factor_b"]:
             params = extract_atomic_parameter(atoms, ptype)
             ffs_N = np.array(params)[np.array(indices).astype(int)]
@@ -96,6 +96,10 @@ class TestAtomicModels:
             _ = extract_atomic_parameter(atoms, "color")
         actual = str(exception_context.value)
         assert expected in actual
+
+        atoms = extract_gemmi_atoms(mode, split_chains=True)
+        params = extract_atomic_parameter(atoms, "cartesian_coordinates", split_chains=True)
+        assert len(params) == 2  # expect two chains
 
     def test_write_atomic_model_to_pdb(self):
         """Test test_write_gemmi_model_pdb."""
