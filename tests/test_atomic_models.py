@@ -7,6 +7,8 @@ import numpy as np
 import pytest
 
 from ..ioSPI.atomic_models import (
+    extract_atomic_parameter,
+    extract_gemmi_atoms,
     read_atomic_model,
     write_atomic_model,
     write_cartesian_coordinates,
@@ -50,6 +52,7 @@ class TestAtomicModels:
         path = os.path.join(DATA, pdb_filename)
         os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
         model = read_atomic_model(path)
+        os.remove(path)
         assert model.__class__ is gemmi.Model
 
     def test_read_atomic_model_from_cif(self):
@@ -58,7 +61,52 @@ class TestAtomicModels:
         path = os.path.join(DATA, cif_filename)
         os.system(f"wget https://files.rcsb.org/download/{cif_filename} -P {DATA}")
         model = read_atomic_model(path)
+        os.remove(path)
         assert model.__class__ is gemmi.Model
+
+    def test_extract_gemmi_atoms(self):
+        """Check that extraction retrieves correct no. of chains."""
+        pdb_filename = "2dhb.pdb"
+        path = os.path.join(DATA, pdb_filename)
+        os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
+        model = read_atomic_model(path, assemble=False)
+        os.remove(path)
+        atoms = extract_gemmi_atoms(model, chains=None, split_chains=True)
+        assert len(atoms) == 2  # expecting two chains
+        atoms = extract_gemmi_atoms(model, chains=["A"], split_chains=True)
+        assert len(atoms) == 1  # expecting one chain
+        atoms = extract_gemmi_atoms(model)
+        assert len(atoms) == 2201  # number of atoms, post-cleaning
+
+    def test_extract_atomic_parameters(self):
+        """Check that form factors are same for same element type."""
+        pdb_filename = "2dhb.pdb"
+        path = os.path.join(DATA, pdb_filename)
+        os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
+        model = read_atomic_model(path, assemble=False)
+        os.remove(path)
+        atoms = extract_gemmi_atoms(model)
+
+        atomic_coordinates = extract_atomic_parameter(atoms, "cartesian_coordinates")
+        assert len(atomic_coordinates[0]) == 3  # x, y and z
+
+        indices = [i for i in range(len(atoms)) if atoms[i].element.name == "N"]
+        for ptype in ["electron_form_factor_a", "electron_form_factor_b"]:
+            params = extract_atomic_parameter(atoms, ptype)
+            ffs_N = np.array(params)[np.array(indices).astype(int)]
+            assert np.allclose(ffs_N[0], ffs_N)
+
+        expected = "Atomic parameter type not recognized."
+        with pytest.raises(ValueError) as exception_context:
+            _ = extract_atomic_parameter(atoms, "color")
+        actual = str(exception_context.value)
+        assert expected in actual
+
+        atoms = extract_gemmi_atoms(model, split_chains=True)
+        params = extract_atomic_parameter(
+            atoms, "cartesian_coordinates", split_chains=True
+        )
+        assert len(params) == 2  # expect two chains
 
     def test_write_atomic_model_to_pdb(self):
         """Test test_write_gemmi_model_pdb."""
@@ -66,9 +114,11 @@ class TestAtomicModels:
         path_input = os.path.join(DATA, pdb_filename)
         os.system(f"wget https://files.rcsb.org/download/{pdb_filename} -P {DATA}")
         model = read_atomic_model(path_input, assemble=False)
+        os.remove(path_input)
         path_output = os.path.join(OUT, f"test_{pdb_filename}")
         write_atomic_model(path_output, model)
         model = read_atomic_model(path_output, assemble=False)
+        os.remove(path_output)
         assert model.__class__ is gemmi.Model
 
     def test_write_atomic_model_to_cif(self):
@@ -77,9 +127,11 @@ class TestAtomicModels:
         path_input = os.path.join(DATA, cif_filename)
         os.system(f"wget https://files.rcsb.org/download/{cif_filename} -P tests/data")
         model = read_atomic_model(path_input, assemble=False)
+        os.remove(path_input)
         path_output = os.path.join(OUT, f"test_{cif_filename}")
         write_atomic_model(path_output, model)
         model = read_atomic_model(path_output, assemble=False)
+        os.remove(path_output)
         assert model.__class__ is gemmi.Model
 
     def test_write_cartesian_coordinates_filename_extension_error(self):
@@ -106,6 +158,7 @@ class TestAtomicModels:
         path_output = os.path.join(OUT, "test_cartesian.pdb")
         write_cartesian_coordinates(path_output)
         model = read_atomic_model(path_output, assemble=False)
+        os.remove(path_output)
         assert model.__class__ is gemmi.Model
 
     def test_write_cartesian_coordinates_to_cif(self):
@@ -113,4 +166,5 @@ class TestAtomicModels:
         path_output = os.path.join(OUT, "test_cartesian.cif")
         write_cartesian_coordinates(path_output)
         model = read_atomic_model(path_output, assemble=False)
+        os.remove(path_output)
         assert model.__class__ is gemmi.Model
