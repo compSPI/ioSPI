@@ -10,13 +10,15 @@ Welcome to the Python package: `ioSPI`: Methods and tools to read and write data
 
 # Download
 
-First create a conda environment with the required dependencies using the `enviroment.yml` file as follows:
-
-    conda env create --file environment.yml
-
-Then download:
+Clone the repository:
 
     git clone https://github.com/compSPI/ioSPI.git
+    cd ioSPI
+    
+Create a conda environment with the required dependencies using the `enviroment.yml` file:
+
+    conda env create --file environment.yml
+    conda activate ioSPI
 
 # Contribute
 
