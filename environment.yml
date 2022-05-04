@@ -18,6 +18,6 @@ dependencies:
   - pytorch
   - pyyaml
   - pip :
-      - git+https://github.com/compSPI/simSPI.git
+      - osfclient
       - starfile
 
