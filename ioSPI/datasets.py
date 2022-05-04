@@ -28,6 +28,8 @@ class Project:
     """
 
     def __init__(self, username: str, token: str, project_id: str = "7g42j") -> None:
+        self.username = username
+        self.token = token
         self.project_id = project_id
 
         config_path = os.path.join(".osfcli.config")
@@ -80,7 +82,7 @@ class Project:
             E.g. 4v6x_randomrot_copy6_defocus3.0_yes_noise.txt
         """
         print(f"Uploading {local_path} to {remote_path}...")
-        os.system(f"osf upload {local_path} {remote_path} ")
+        os.system(f"osf upload {local_path} {remote_path}")
         print("Done!")
 
 
