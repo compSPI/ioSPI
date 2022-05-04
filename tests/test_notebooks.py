@@ -12,7 +12,14 @@ NOTEBOOKS_TO_SKIP = os.path.join(NOTEBOOKS_DIR, "download_and_upload_with_osf.ip
 
 
 def _exec_notebook(path):
+    """Execute notebook at path.
 
+    Parameters
+    ----------
+    path : str
+        Relative path of the notebook.
+        E.g. notebooks/particle_metadata.ipynb
+    """
     file_name = tempfile.NamedTemporaryFile(suffix=".ipynb").name
     args = [
         "jupyter",
