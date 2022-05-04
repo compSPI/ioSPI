@@ -45,7 +45,8 @@ class Project:
         print(f"Listing files from OSF project: {self.project_id}...")
         os.system("osf ls")
 
-    def download(self, remote_path, local_path):
+    @staticmethod
+    def download(remote_path, local_path):
         """Download file from osf and save it locally.
 
         Parameters
@@ -63,7 +64,8 @@ class Project:
         os.system(f"osf fetch {remote_path} {local_path}")
         print("Done!")
 
-    def upload(self, remote_path, local_path):
+    @staticmethod
+    def upload(remote_path, local_path):
         """Upload file to osf.
 
         Notes
