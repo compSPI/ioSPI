@@ -15,6 +15,12 @@ Verify that your PR checks all the following items.
 - [ ] The code of this PR is properly documented, with [docstrings following ioSPI conventions](https://github.com/compspi/compspi/blob/master/docs/contributing.rst#the-anatomy-of-a-docstring).
 - [ ] The code of this PR follows international guidelines for coding style (refer to comment below).
 
+If some items are not checked, mark your PR as draft (Look for "Still in progress? Convert to Draft" on your PR) . Only mark the PR as "Ready for review" if all the items above are checked.
+
+If you do not know how to address some items, reach out to a maintainer by requesting reviewers.
+
+If some items cannot be addressed, explain the reason in the Description of your PR, and mark the PR ready for review
+
 <!-- Checking that the PR passes the test workflow, i.e. passes the tests added in the tests folder.
 First, run the tests related to your changes. For example, if you changed something in ioSPI/particle_metadata.py:
 $ pytest tests/test_particle_meta_data.py
