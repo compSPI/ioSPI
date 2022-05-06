@@ -1,9 +1,6 @@
 """Read density maps."""
 
-import os
-
 import mrcfile
-import numpy as np
 
 
 def read_density_map_from_mrc(path):
