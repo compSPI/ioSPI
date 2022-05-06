@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import requests
 
-from ..ioSPI import datasets
+from ioSPI import datasets
 
 
 @pytest.fixture(autouse=True, scope="session")
