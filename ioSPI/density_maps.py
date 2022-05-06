@@ -1,7 +1,8 @@
 """Read density maps."""
 
-import mrcfile
 import math
+
+import mrcfile
 import numpy as np
 
 
