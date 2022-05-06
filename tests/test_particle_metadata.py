@@ -5,7 +5,7 @@ import os
 import numpy as np
 import pytest
 
-from ..ioSPI.particle_metadata import (
+from ioSPI.particle_metadata import (
     check_star_file,
     format_metadata_for_writing,
     format_metadata_for_writing_cryoem_convention,

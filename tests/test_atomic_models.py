@@ -6,7 +6,7 @@ import gemmi
 import numpy as np
 import pytest
 
-from ..ioSPI.atomic_models import (
+from ioSPI.atomic_models import (
     extract_atomic_parameter,
     extract_gemmi_atoms,
     read_atomic_model,
