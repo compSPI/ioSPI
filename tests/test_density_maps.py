@@ -10,7 +10,7 @@ from ..ioSPI import density_maps
 
 
 def test_read_density_map_from_mrc():
-    """Test read_density_map_from_mrc util function with a random small mrc file."""
+    """Test read_density_map_from_mrc util function with a random mrc file."""
     tmp_mrc = tempfile.NamedTemporaryFile(delete=False, suffix=".mrc")
     tmp_mrc.close()
     data = np.random.uniform(0, 1, (5, 5, 5)).astype(dtype='float32')

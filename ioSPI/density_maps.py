@@ -16,4 +16,3 @@ def read_density_map_from_mrc(path):
     """
     map_mrc = mrcfile.open(path)
     return map_mrc.data
-    
