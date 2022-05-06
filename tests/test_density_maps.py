@@ -6,7 +6,7 @@ import tempfile
 import mrcfile
 import numpy as np
 
-from ..ioSPI import density_maps
+from ioSPI import density_maps
 
 
 def test_read_density_map_from_mrc():
