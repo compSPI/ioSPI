@@ -13,6 +13,7 @@ NOTEBOOKS_TO_SKIP = os.path.join(NOTEBOOKS_DIR, "download_and_upload_with_osf.ip
 
 def _exec_notebook(path):
     """Execute notebook at path.
+
     Parameters
     ----------
     path : str
@@ -41,6 +42,7 @@ paths = sorted(glob.glob(f"{NOTEBOOKS_DIR}/*.ipynb"))
 @pytest.mark.parametrize("path", paths)
 def test_notebook(path):
     """Test the notebook at path by executing it.
+
     Parameters
     ----------
     path : str
