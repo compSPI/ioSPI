@@ -34,11 +34,11 @@ class OSFProject:
         storage: str = "osfstorage",
     ) -> None:
         if username is None:
-            raise ValueError("username must be provided.")
+            raise TypeError("username must be provided.")
         self.username = username
 
         if token is None:
-            raise ValueError("token must be provided.")
+            raise TypeError("token must be provided.")
         self.token = token
 
         self.project_id = project_id
@@ -74,9 +74,9 @@ class OSFProject:
             E.g. 4v6x_randomrot_copy6_defocus3.0_yes_noise.txt
         """
         if remote_path is None:
-            raise ValueError("remote_path must be provided.")
+            raise TypeError("remote_path must be provided.")
         if local_path is None:
-            raise ValueError("local_path must be provided.")
+            raise TypeError("local_path must be provided.")
 
         full_remote_path = self.storage + "/" + remote_path
         print(f"Downloading {full_remote_path} to {local_path}...")
@@ -103,9 +103,9 @@ class OSFProject:
             4v6x_randomrot_copy6_defocus3.0_yes_noise.txt
         """
         if local_path is None:
-            raise ValueError("local_path must be provided.")
+            raise TypeError("local_path must be provided.")
         if remote_path is None:
-            raise ValueError("remote_path must be provided.")
+            raise TypeError("remote_path must be provided.")
 
         full_remote_path = self.storage + "/" + remote_path
         print(f"Uploading {local_path} to {full_remote_path}...")
@@ -125,7 +125,7 @@ class OSFProject:
             4v6x_randomrot_copy6_defocus3.0_yes_noise.txt
         """
         if remote_path is None:
-            raise ValueError("remote_path must be provided.")
+            raise TypeError("remote_path must be provided.")
 
         full_remote_path = self.storage + "/" + remote_path
         print(f"Removing {full_remote_path} in the project...")

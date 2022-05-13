@@ -40,13 +40,13 @@ def test_constructor_valid():
 
 def test_constructor_invalid_because_no_username():
     """Test if an error is raised when no username is provided to the constructor."""
-    with pytest.raises(ValueError):
-        _ = datasets.OSFProject(token="token")
+    with pytest.raises(TypeError):
+        datasets.OSFProject(token="token")
 
 
 def test_constructor_invalid_because_no_token():
     """Test if an error is raised when no token is provided to the constructor."""
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         datasets.OSFProject(username="username")
 
 
@@ -63,13 +63,13 @@ def test_upload_valid(setup, create_upload_file):
 
 def test_upload_invalid_because_no_local_path(setup):
     """Test if an error is raised when no local_path is provided."""
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         setup.upload(remote_path="remote_path")
 
 
 def test_upload_invalid_because_no_remote_path(setup):
     """Test if an error is raised when no remote_path is provided."""
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         setup.upload(local_path="local_path")
 
 
@@ -81,13 +81,13 @@ def test_download_valid(setup, create_upload_file):
 
 def test_download_invalid_because_no_remote_path(setup):
     """Test if an error is raised when no remote_path is provided."""
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         setup.download(local_path="local_path")
 
 
 def test_download_invalid_because_no_local_path(setup):
     """Test if an error is raised when no local_path is provided."""
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         setup.download(remote_path="remote_path")
 
 
@@ -104,5 +104,5 @@ def test_remove_valid(setup, create_upload_file):
 
 def test_remove_invalid_because_no_remote_path(setup):
     """Test if an error is raised when no remote_path is provided."""
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         setup.remove()
