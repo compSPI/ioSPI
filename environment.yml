@@ -6,7 +6,7 @@ dependencies:
   - codecov
   - coverage
   - gemmi
-  - jupyter
+  - conda-forge::jupyter
   - mrcfile
   - numba
   - numpy
