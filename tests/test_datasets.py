@@ -20,18 +20,20 @@ def setup():
     yield project
 
 
-@pytest.fixture
-def create_upload_file():
+@pytest.fixture(autouse=True, scope="session")
+def set_file_path():
     """Create a temporary text file for upload."""
-    file_path = "test_upload.txt"
-    with open(file_path, "w") as f:
-        f.write("Hello World")
-    return file_path
+    file_path = "./tests/data/"
+    file_name = "test_upload.txt"
+    return file_path, file_name
 
 
 def test_constructor_valid():
     """Test the constructor."""
-    project = datasets.OSFProject(username="username", token="token")
+    project = datasets.OSFProject(
+        username="ninamio78@gmail.com",
+        token="HBGGBOJcLYQfadEKIOyXJiLTum3ydXK4nGP3KmbkYUeBuYkZma9LPBSYennQn92gjP2NHn",
+    )
     assert project.username is not None
     assert project.token is not None
     assert project.project_id is not None
@@ -50,13 +52,17 @@ def test_constructor_invalid_because_no_token():
         datasets.OSFProject(username="username")
 
 
-def test_upload_valid(setup, create_upload_file):
+def test_upload_valid(setup, set_file_path):
     """Test the upload method."""
-    setup.upload(create_upload_file, create_upload_file)
-    out = os.popen("osf ls").read()
+    setup.upload(set_file_path[0] + set_file_path[1], set_file_path[1])
     file_exists = False
-    for file in out:
-        file_exists = create_upload_file == file.split("/")[1]
+    file_list = os.popen("osf ls")
+    line = file_list.readline()
+    while line:
+        file_exists = set_file_path[1] == line.split("/")[1].strip()
+        if file_exists:
+            break
+        line = file_list.readline()
 
     assert file_exists
 
@@ -73,10 +79,11 @@ def test_upload_invalid_because_no_remote_path(setup):
         setup.upload(local_path="local_path")
 
 
-def test_download_valid(setup, create_upload_file):
+def test_download_valid(setup, set_file_path):
     """Test the download method."""
-    setup.download(create_upload_file, create_upload_file)
-    assert os.path.exists(create_upload_file)
+    os.system(f"rm {set_file_path[0] + set_file_path[1]}")
+    setup.download(set_file_path[1], set_file_path[0] + set_file_path[1])
+    assert os.path.exists(set_file_path[0] + set_file_path[1])
 
 
 def test_download_invalid_because_no_remote_path(setup):
@@ -91,13 +98,17 @@ def test_download_invalid_because_no_local_path(setup):
         setup.download(remote_path="remote_path")
 
 
-def test_remove_valid(setup, create_upload_file):
+def test_remove_valid(setup, set_file_path):
     """Test the remove method."""
-    setup.remove(create_upload_file)
-    out = os.popen("osf ls").read()
+    setup.remove(set_file_path[1])
     file_exists = False
-    for file in out:
-        file_exists = create_upload_file == file.split("/")[1]
+    file_list = os.popen("osf ls")
+    line = file_list.readline()
+    while line:
+        file_exists = set_file_path[1] == line.split("/")[1].strip()
+        if file_exists:
+            break
+        line = file_list.readline()
 
     assert not file_exists
 

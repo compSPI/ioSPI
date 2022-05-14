@@ -48,9 +48,9 @@ class OSFProject:
         with open(config_path, "w") as out_file:
             out_file.write("[osf]\n")
             out_file.write(f"username = {username}\n")
-            out_file.write(f"token = {token}\n")
             out_file.write(f"project = {project_id}\n")
-            out_file.write(f"storage = {storage}\n")
+            out_file.write(f"token = {token}\n")
+            # out_file.write(f"storage = {storage}\n")
         print("OSF config written to .osfcli.config!")
 
     def ls(self):
