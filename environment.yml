@@ -17,8 +17,8 @@ dependencies:
   - pytest-cov
   - pytorch
   - pyyaml
+  - osfclient
   - pip :
       - git+https://github.com/compSPI/simSPI.git
       - starfile
-      - osfclient
 
