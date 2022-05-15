@@ -56,7 +56,8 @@ def test_upload_valid(setup, set_file_path):
     """Test the upload method."""
     setup.upload(set_file_path[0] + set_file_path[1], set_file_path[1])
     file_exists = False
-    file_list = os.popen("osf ls")
+    # file_list = os.popen("osf ls")
+    file_list = os.popen("/usr/share/miniconda/envs/ioSPI/bin/osf ls")
     line = file_list.readline()
     while line:
         file_exists = set_file_path[1] == line.split("/")[1].strip()
@@ -102,7 +103,8 @@ def test_remove_valid(setup, set_file_path):
     """Test the remove method."""
     setup.remove(set_file_path[1])
     file_exists = False
-    file_list = os.popen("osf ls")
+    # file_list = os.popen("osf ls")
+    file_list = os.popen("/usr/share/miniconda/envs/ioSPI/bin/osf ls")
     line = file_list.readline()
     while line:
         file_exists = set_file_path[1] == line.split("/")[1].strip()
