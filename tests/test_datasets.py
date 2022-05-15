@@ -10,7 +10,7 @@ from ioSPI import datasets
 @pytest.fixture(autouse=True, scope="session")
 def setup():
     """Test node creation and clean-up for tests."""
-    print(f"Creating a test project for dataset")
+    print("Creating a test project for dataset")
     project = datasets.OSFProject(
         username="ninamio78@gmail.com",
         token="HBGGBOJcLYQfadEKIOyXJiLTum3ydXK4nGP3KmbkYUeBuYkZma9LPBSYennQn92gjP2NHn",
