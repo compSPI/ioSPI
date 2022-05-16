@@ -117,12 +117,13 @@ class OSFProject:
         full_remote_path = self.storage + "/" + remote_path
         print(f"Uploading {local_path} to {full_remote_path}...")
         # os.system(f"osf upload {local_path} {full_remote_path}")
-        subprocess.run(
+        f = subprocess.run(
             f"osf upload {local_path} {full_remote_path}",
             shell=True,
             text=True,
             capture_output=True,
-        )
+        ).stdout
+        print(f)
         print("Done!")
 
     def remove(self, remote_path: str):
