@@ -1,6 +1,7 @@
 """Module to house methods related to datasets (micrographs, meta-data, etc.)."""
 
 import os
+import subprocess
 
 
 class OSFProject:
@@ -56,7 +57,7 @@ class OSFProject:
         """List all files in the project."""
         print(f"Listing files from OSF project: {self.project_id}...")
         # os.system("osf ls")
-        os.system(f"/usr/share/miniconda/envs/ioSPI/bin/osf ls")
+        subprocess.run(["osf", "ls"], text=True, capture_output=True)
 
     def download(self, remote_path: str, local_path: str):
         """Download a file from an OSF project and save it locally.
@@ -81,9 +82,10 @@ class OSFProject:
         full_remote_path = self.storage + "/" + remote_path
         print(f"Downloading {full_remote_path} to {local_path}...")
         # os.system(f"osf fetch {full_remote_path} {local_path}")
-        os.system(
-            f"/usr/share/miniconda/envs/ioSPI/bin/osf fetch "
-            f"{full_remote_path} {local_path}"
+        subprocess.run(
+            ["osf", "fetch", f"{full_remote_path}, f{local_path}"],
+            text=True,
+            capture_output=True,
         )
         print("Done!")
 
@@ -114,9 +116,10 @@ class OSFProject:
         full_remote_path = self.storage + "/" + remote_path
         print(f"Uploading {local_path} to {full_remote_path}...")
         # os.system(f"osf upload {local_path} {full_remote_path}")
-        os.system(
-            f"/usr/share/miniconda/envs/ioSPI/bin/osf upload "
-            f"{local_path} {full_remote_path}"
+        subprocess.run(
+            ["osf", "upload", f"{local_path}", f"{full_remote_path}"],
+            text=True,
+            capture_output=True,
         )
         print("Done!")
 
@@ -138,7 +141,7 @@ class OSFProject:
         full_remote_path = self.storage + "/" + remote_path
         print(f"Removing {full_remote_path} in the project...")
         # os.system(f"osf remove {full_remote_path}")
-        os.system(
-            f"/usr/share/miniconda/envs/ioSPI/bin/osf remove " f"{full_remote_path}"
+        subprocess.run(
+            ["osf", "remove", f"{full_remote_path}"], text=True, capture_output=True
         )
         print("Done!")

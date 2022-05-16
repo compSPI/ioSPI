@@ -1,6 +1,7 @@
 """Unit tests for listing/uploading/downloading datasets on an OSF project."""
-
+import io
 import os
+import subprocess
 
 import pytest
 
@@ -57,9 +58,11 @@ def test_upload_valid(setup, set_file_path):
     setup.upload(set_file_path[0] + set_file_path[1], set_file_path[1])
     file_exists = False
     # file_list = os.popen("osf ls")
-    file_list = os.popen("/usr/share/miniconda/envs/ioSPI/bin/osf ls")
+    file_list = subprocess.run(["osf", "ls"], text=True, capture_output=True).stdout
+    file_list = io.StringIO(file_list)
     line = file_list.readline()
     while line:
+        print(line)
         file_exists = set_file_path[1] == line.split("/")[1].strip()
         if file_exists:
             break
@@ -82,9 +85,11 @@ def test_upload_invalid_because_no_remote_path(setup):
 
 def test_download_valid(setup, set_file_path):
     """Test the download method."""
-    os.system(f"rm {set_file_path[0] + set_file_path[1]}")
-    setup.download(set_file_path[1], set_file_path[0] + set_file_path[1])
+    setup.download(
+        set_file_path[1], set_file_path[0] + "downloaded_" + set_file_path[1]
+    )
     assert os.path.exists(set_file_path[0] + set_file_path[1])
+    os.system(f"rm {set_file_path[0]}downloaded_{set_file_path[1]}")
 
 
 def test_download_invalid_because_no_remote_path(setup):
@@ -104,7 +109,8 @@ def test_remove_valid(setup, set_file_path):
     setup.remove(set_file_path[1])
     file_exists = False
     # file_list = os.popen("osf ls")
-    file_list = os.popen("/usr/share/miniconda/envs/ioSPI/bin/osf ls")
+    file_list = subprocess.run(["osf", "ls"], text=True, capture_output=True).stdout
+    file_list = io.StringIO(file_list)
     line = file_list.readline()
     while line:
         file_exists = set_file_path[1] == line.split("/")[1].strip()
