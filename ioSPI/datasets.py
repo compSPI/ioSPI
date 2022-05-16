@@ -57,7 +57,7 @@ class OSFProject:
         """List all files in the project."""
         print(f"Listing files from OSF project: {self.project_id}...")
         # os.system("osf ls")
-        subprocess.run(["osf", "ls"], text=True, capture_output=True)
+        subprocess.run(f"osf ls", shell=True, text=True, capture_output=True)
 
     def download(self, remote_path: str, local_path: str):
         """Download a file from an OSF project and save it locally.
@@ -83,7 +83,8 @@ class OSFProject:
         print(f"Downloading {full_remote_path} to {local_path}...")
         # os.system(f"osf fetch {full_remote_path} {local_path}")
         subprocess.run(
-            ["osf", "fetch", f"{full_remote_path}, f{local_path}"],
+            f"osf fetch {full_remote_path} {local_path}",
+            shell=True,
             text=True,
             capture_output=True,
         )
@@ -117,7 +118,8 @@ class OSFProject:
         print(f"Uploading {local_path} to {full_remote_path}...")
         # os.system(f"osf upload {local_path} {full_remote_path}")
         subprocess.run(
-            ["osf", "upload", f"{local_path}", f"{full_remote_path}"],
+            f"osf upload {local_path} {full_remote_path}",
+            shell=True,
             text=True,
             capture_output=True,
         )
@@ -142,6 +144,6 @@ class OSFProject:
         print(f"Removing {full_remote_path} in the project...")
         # os.system(f"osf remove {full_remote_path}")
         subprocess.run(
-            ["osf", "remove", f"{full_remote_path}"], text=True, capture_output=True
+            f"osf remove {full_remote_path}", shell=True, text=True, capture_output=True
         )
         print("Done!")
