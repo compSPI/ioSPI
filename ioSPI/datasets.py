@@ -10,10 +10,10 @@ class OSFProject:
 
     Parameters
     ----------
-    username : str
+    username : str, default = None
         Username corresponding to an account on OSF.
         E.g. email address used to create an OSF account.
-    token : str
+    token : str, default = None
         Personal token from osf.io.
         See: https://osf.io/settings/tokens
     project_id : str, default = "xbr2m"
@@ -21,6 +21,7 @@ class OSFProject:
         E.g. xbr2m for project at https://osf.io/xbr2m/
     storage : str, default = "osfstorage"
         Storage provider of the project.
+    osfclient_path : str, default = None
 
     See Also
     --------
@@ -34,7 +35,7 @@ class OSFProject:
         token: str = None,
         project_id: str = "xbr2m",
         storage: str = "osfstorage",
-        osflient_path: str = None,
+        osfclient_path: str = None,
     ) -> None:
         if username is None:
             raise TypeError("username must be provided.")
@@ -46,9 +47,9 @@ class OSFProject:
 
         self.project_id = project_id
         self.storage = storage
-        self.osfclient_path = osflient_path
+        self.osfclient_path = osfclient_path
         self.osfclient_command = "osf "
-        if osflient_path is not None:
+        if osfclient_path is not None:
             self.osfclient_command = self.osfclient_path + self.osfclient_command
 
         config_path = os.path.join(".osfcli.config")
@@ -70,18 +71,18 @@ class OSFProject:
             stdout=subprocess.PIPE,
         ).stdout
 
-    def download(self, remote_path: str, local_path: str):
+    def download(self, remote_path: str = None, local_path: str = None):
         """Download a file from an OSF project and save it locally.
 
         Parameters
         ----------
-        remote_path : str
+        remote_path : str, default = None
             Remote path of the file in an OSF project,
             which will be appended to the project storage name (by default, osfstorage).
             E.g. osfstorage/
             randomrot1D_nodisorder/
             4v6x_randomrot_copy6_defocus3.0_yes_noise.txt
-        local_path : str
+        local_path : str, default = None
             Local path where the file will be saved.
             E.g. 4v6x_randomrot_copy6_defocus3.0_yes_noise.txt
         """
@@ -101,7 +102,7 @@ class OSFProject:
         )
         print("Done!")
 
-    def upload(self, local_path: str, remote_path: str):
+    def upload(self, local_path: str = None, remote_path: str = None):
         """Upload a file to an OSF project.
 
         Notes
@@ -110,10 +111,10 @@ class OSFProject:
 
         Parameters
         ----------
-        local_path : str
+        local_path : str, default = None
             Local path where the file will be saved.
             E.g. 4v6x_randomrot_copy6_defocus3.0_yes_noise.txt
-        remote_path : str
+        remote_path : str, default = None
             Remote path of the file in an OSF project,
             which will be appended to the project storage name (by default, osfstorage).
             E.g. osfstorage/
@@ -137,12 +138,12 @@ class OSFProject:
         print(io.StringIO(f).readlines())
         print("Done!")
 
-    def remove(self, remote_path: str):
+    def remove(self, remote_path: str = None):
         """Remove a file in an OSF project.
 
         Parameters
         ----------
-        remote_path : str
+        remote_path : str, default = None
             Remote path of the file to remove in an OSF project,
             which will be appended to the project storage name (by default, osfstorage).
             E.g. osfstorage/
