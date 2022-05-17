@@ -64,7 +64,11 @@ def test_upload_valid(setup, set_file_path):
     file_exists = False
     # file_list = os.popen("osf ls")
     file_list = subprocess.run(
-        "osf ls", shell=True, text=True, check=True, stdout=subprocess.PIPE
+        "$CONDA/bin/" + "osf ls",
+        shell=True,
+        text=True,
+        check=True,
+        stdout=subprocess.PIPE,
     ).stdout
     file_list = io.StringIO(file_list)
     line = file_list.readline()
