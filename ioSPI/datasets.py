@@ -6,7 +6,9 @@ import subprocess
 
 
 class OSFProject:
-    """Class to list, download and upload data in an OSF project using osfclient library.
+    """Class to list, download and upload data in an OSF project.
+
+    It uses osfclient library.
 
     Parameters
     ----------
