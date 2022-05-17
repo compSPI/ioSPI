@@ -24,7 +24,7 @@ def setup():
 @pytest.fixture(autouse=True, scope="session")
 def set_file_path():
     """Create a temporary text file for upload."""
-    file_path = "/home/runner/work/ioSPI/ioSPI/tests/data/"
+    file_path = "./data/"
     file_name = "test_upload.txt"
     return file_path, file_name
 
