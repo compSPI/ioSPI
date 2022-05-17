@@ -30,10 +30,11 @@ class OSFProject:
 
     def __init__(
         self,
-        username: str,
-        token: str,
+        username: str = None,
+        token: str = None,
         project_id: str = "xbr2m",
         storage: str = "osfstorage",
+        osflient_path: str = None,
     ) -> None:
         if username is None:
             raise TypeError("username must be provided.")
@@ -45,6 +46,10 @@ class OSFProject:
 
         self.project_id = project_id
         self.storage = storage
+        self.osfclient_path = osflient_path
+        self.osfclient_command = "osf "
+        if osflient_path is not None:
+            self.osfclient_command = self.osfclient_path + self.osfclient_command
 
         config_path = os.path.join(".osfcli.config")
         with open(config_path, "w") as out_file:
@@ -57,14 +62,13 @@ class OSFProject:
     def ls(self):
         """List all files in the project."""
         print(f"Listing files from OSF project: {self.project_id}...")
-        # os.system("osf ls")
-        subprocess.run(
-            "$CONDA/bin/" + f"osf ls",
+        return subprocess.run(
+            self.osfclient_command + "ls",
             shell=True,
             text=True,
             check=True,
             stdout=subprocess.PIPE,
-        )
+        ).stdout
 
     def download(self, remote_path: str, local_path: str):
         """Download a file from an OSF project and save it locally.
@@ -88,9 +92,8 @@ class OSFProject:
 
         full_remote_path = self.storage + "/" + remote_path
         print(f"Downloading {full_remote_path} to {local_path}...")
-        # os.system(f"osf fetch {full_remote_path} {local_path}")
         subprocess.run(
-            "$CONDA/bin/" + f"osf fetch {full_remote_path} {local_path}",
+            self.osfclient_command + f"fetch {full_remote_path} {local_path}",
             shell=True,
             text=True,
             check=True,
@@ -124,9 +127,8 @@ class OSFProject:
 
         full_remote_path = self.storage + "/" + remote_path
         print(f"Uploading {local_path} to {full_remote_path}...")
-        # os.system(f"osf upload {local_path} {full_remote_path}")
         f = subprocess.run(
-            "$CONDA/bin/" + f"osf upload --force {local_path} " f"{full_remote_path}",
+            self.osfclient_command + f"upload {local_path} " f"{full_remote_path}",
             shell=True,
             text=True,
             check=True,
@@ -152,9 +154,8 @@ class OSFProject:
 
         full_remote_path = self.storage + "/" + remote_path
         print(f"Removing {full_remote_path} in the project...")
-        # os.system(f"osf remove {full_remote_path}")
         subprocess.run(
-            "$CONDA/bin/" + f"osf remove {full_remote_path}",
+            self.osfclient_command + f"remove {full_remote_path}",
             shell=True,
             text=True,
             check=True,

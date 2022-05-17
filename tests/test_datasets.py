@@ -1,11 +1,13 @@
 """Unit tests for listing/uploading/downloading datasets on an OSF project.
 
-These assume the tests are executed in a Conda environment.
+These assume the tests are executed in a Conda environment and GitHub actions
+when tested non-locally.
 """
 
 import io
 import os
-import subprocess
+import random
+import string
 
 import pytest
 
@@ -14,23 +16,41 @@ from ioSPI import datasets
 
 @pytest.fixture(autouse=True, scope="session")
 def setup():
-    """Test node creation and clean-up for tests."""
+    """Set up for tests."""
     print("Creating a test project for dataset")
     project = datasets.OSFProject(
         username="ninamio78@gmail.com",
         token="HBGGBOJcLYQfadEKIOyXJiLTum3ydXK4nGP3KmbkYUeBuYkZma9LPBSYennQn92gjP2NHn",
         project_id="xbr2m",
+        # osflient_path="$CONDA/bin/"
     )
-
     yield project
 
 
 @pytest.fixture(autouse=True, scope="session")
 def set_file_path():
-    """Create a temporary text file for upload."""
-    file_path = "/home/runner/work/ioSPI/ioSPI/tests/data/"
-    file_name = "test_upload.txt"
+    """Set up a temporary text file path for upload.
+
+    Set local_testing = True when testing locally, False if on GitHub.
+    """
+    file_path = "tests/data/"
+    local_testing = True
+    if not local_testing:
+        file_path = "/home/runner/work/ioSPI/ioSPI/" + file_path
+
+    file_name = (
+        "test_upload-"
+        + "".join(random.choice(string.ascii_letters) for i in range(5))
+        + ".txt"
+    )
     return file_path, file_name
+
+
+@pytest.fixture(autouse=True, scope="session")
+def create_test_file(set_file_path):
+    """Create a temporary text file for upload."""
+    with open(set_file_path[0] + set_file_path[1], "w") as f:
+        f.write("Hello World!")
 
 
 def test_constructor_valid():
@@ -61,24 +81,17 @@ def test_upload_valid(setup, set_file_path):
     """Test the upload method."""
     setup.upload(set_file_path[0] + set_file_path[1], set_file_path[1])
     file_exists = False
-    # file_list = os.popen("osf ls")
-    file_list = subprocess.run(
-        "$CONDA/bin/" + "osf ls",
-        shell=True,
-        text=True,
-        check=True,
-        stdout=subprocess.PIPE,
-    ).stdout
+    file_list = setup.ls()
     file_list = io.StringIO(file_list)
     line = file_list.readline()
     while line:
-        print(line)
         file_exists = set_file_path[1] == line.split("/")[1].strip()
         if file_exists:
             break
         line = file_list.readline()
 
     assert file_exists
+    os.system(f"rm {set_file_path[0]}{set_file_path[1]}")
 
 
 def test_upload_invalid_because_no_local_path(setup):
@@ -95,11 +108,9 @@ def test_upload_invalid_because_no_remote_path(setup):
 
 def test_download_valid(setup, set_file_path):
     """Test the download method."""
-    setup.download(
-        set_file_path[1], set_file_path[0] + "downloaded_" + set_file_path[1]
-    )
+    setup.download(set_file_path[1], set_file_path[0] + set_file_path[1])
     assert os.path.exists(set_file_path[0] + set_file_path[1])
-    os.system(f"rm {set_file_path[0]}downloaded_{set_file_path[1]}")
+    os.system(f"rm {set_file_path[0]}{set_file_path[1]}")
 
 
 def test_download_invalid_because_no_remote_path(setup):
@@ -118,14 +129,7 @@ def test_remove_valid(setup, set_file_path):
     """Test the remove method."""
     setup.remove(set_file_path[1])
     file_exists = False
-    # file_list = os.popen("osf ls")
-    file_list = subprocess.run(
-        "$CONDA/bin/" + "osf ls",
-        shell=True,
-        text=True,
-        check=True,
-        stdout=subprocess.PIPE,
-    ).stdout
+    file_list = setup.ls()
     file_list = io.StringIO(file_list)
     line = file_list.readline()
     while line:
