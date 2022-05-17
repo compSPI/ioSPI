@@ -59,7 +59,7 @@ def test_upload_valid(setup, set_file_path):
     file_exists = False
     # file_list = os.popen("osf ls")
     file_list = subprocess.run(
-        f"osf ls", shell=True, text=True, capture_output=True
+        f"osf lsu", shell=True, text=True, capture_output=True
     ).stdout
     file_list = io.StringIO(file_list)
     line = file_list.readline()
