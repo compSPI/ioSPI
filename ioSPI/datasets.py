@@ -123,7 +123,7 @@ class OSFProject:
             text=True,
             capture_output=True,
         ).stdout
-        print(io.StringIO(f))
+        print(io.StringIO(f).readlines())
         print("Done!")
 
     def remove(self, remote_path: str):
