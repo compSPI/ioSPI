@@ -56,7 +56,7 @@ def test_constructor_invalid_because_no_token():
 def test_upload_valid(setup, set_file_path):
     """Test the upload method."""
     file_list = subprocess.run(
-        "osf ls", shell=True, text=True, check=True, stdout=subprocess.PIPE
+        "echo $CONDA", shell=True, text=True, check=True, stdout=subprocess.PIPE
     ).stdout
     print(io.StringIO(file_list).readlines())
 
