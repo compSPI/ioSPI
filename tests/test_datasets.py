@@ -55,11 +55,16 @@ def test_constructor_invalid_because_no_token():
 
 def test_upload_valid(setup, set_file_path):
     """Test the upload method."""
+    file_list = subprocess.run(
+        f"osf ls", shell=True, text=True, capture_output=True
+    ).stdout
+    print(io.StringIO(file_list).readlines())
+
     setup.upload(set_file_path[0] + set_file_path[1], set_file_path[1])
     file_exists = False
     # file_list = os.popen("osf ls")
     file_list = subprocess.run(
-        f"osf lsu", shell=True, text=True, capture_output=True
+        f"osf ls", shell=True, text=True, capture_output=True
     ).stdout
     file_list = io.StringIO(file_list)
     line = file_list.readline()
