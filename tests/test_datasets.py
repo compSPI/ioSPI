@@ -8,6 +8,7 @@ import io
 import os
 import random
 import string
+import subprocess
 
 import pytest
 
@@ -22,7 +23,7 @@ def setup():
         username="ninamio78@gmail.com",
         token="HBGGBOJcLYQfadEKIOyXJiLTum3ydXK4nGP3KmbkYUeBuYkZma9LPBSYennQn92gjP2NHn",
         project_id="xbr2m",
-        osflient_path="$CONDA/bin/",
+        osfclient_path="$CONDA/bin/",
     )
     yield project
 
@@ -91,7 +92,7 @@ def test_upload_valid(setup, set_file_path):
         line = file_list.readline()
 
     assert file_exists
-    os.system(f"rm {set_file_path[0]}{set_file_path[1]}")
+    subprocess.run(f"rm {set_file_path[0]}{set_file_path[1]}", shell=True)
 
 
 def test_upload_invalid_because_no_local_path(setup):
@@ -110,7 +111,7 @@ def test_download_valid(setup, set_file_path):
     """Test the download method."""
     setup.download(set_file_path[1], set_file_path[0] + set_file_path[1])
     assert os.path.exists(set_file_path[0] + set_file_path[1])
-    os.system(f"rm {set_file_path[0]}{set_file_path[1]}")
+    subprocess.run(f"rm {set_file_path[0]}{set_file_path[1]}", shell=True)
 
 
 def test_download_invalid_because_no_remote_path(setup):
