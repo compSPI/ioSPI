@@ -92,7 +92,7 @@ def test_upload_valid(setup, set_file_path):
         line = file_list.readline()
 
     assert file_exists
-    subprocess.run(f"rm {set_file_path[0]}{set_file_path[1]}", shell=True)
+    subprocess.run(f"rm {set_file_path[0]}{set_file_path[1]}", shell=True, check=True)
 
 
 def test_upload_invalid_because_no_local_path(setup):
@@ -111,7 +111,7 @@ def test_download_valid(setup, set_file_path):
     """Test the download method."""
     setup.download(set_file_path[1], set_file_path[0] + set_file_path[1])
     assert os.path.exists(set_file_path[0] + set_file_path[1])
-    subprocess.run(f"rm {set_file_path[0]}{set_file_path[1]}", shell=True)
+    subprocess.run(f"rm {set_file_path[0]}{set_file_path[1]}", shell=True, check=True)
 
 
 def test_download_invalid_because_no_remote_path(setup):
