@@ -1,5 +1,5 @@
 """Module to house methods related to datasets (micrographs, meta-data, etc.)."""
-
+import io
 import os
 import subprocess
 
@@ -123,7 +123,7 @@ class OSFProject:
             text=True,
             capture_output=True,
         ).stdout
-        print(f)
+        print(io.StringIO(f))
         print("Done!")
 
     def remove(self, remote_path: str):
