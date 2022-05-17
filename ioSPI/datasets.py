@@ -122,7 +122,7 @@ class OSFProject:
         # os.system(f"osf upload {local_path} {full_remote_path}")
         f = subprocess.run(
             "$CONDA/bin/" + f"osf upload /home/runner/work/ioSPI/ioSPI/{local_path} "
-            f"{full_remote_path}",
+            f"{full_remote_path}",  # Test.
             shell=True,
             text=True,
             check=True,
