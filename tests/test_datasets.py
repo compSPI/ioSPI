@@ -22,7 +22,7 @@ def setup():
         username="ninamio78@gmail.com",
         token="HBGGBOJcLYQfadEKIOyXJiLTum3ydXK4nGP3KmbkYUeBuYkZma9LPBSYennQn92gjP2NHn",
         project_id="xbr2m",
-        # osflient_path="$CONDA/bin/"
+        osflient_path="$CONDA/bin/",
     )
     yield project
 
@@ -34,7 +34,7 @@ def set_file_path():
     Set local_testing = True when testing locally, False if on GitHub.
     """
     file_path = "tests/data/"
-    local_testing = True
+    local_testing = False
     if not local_testing:
         file_path = "/home/runner/work/ioSPI/ioSPI/" + file_path
 
