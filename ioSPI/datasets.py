@@ -58,7 +58,11 @@ class OSFProject:
         print(f"Listing files from OSF project: {self.project_id}...")
         # os.system("osf ls")
         subprocess.run(
-            f"osf ls", shell=True, text=True, check=True, stdout=subprocess.PIPE
+            "$CONDA/bin/" + f"osf ls",
+            shell=True,
+            text=True,
+            check=True,
+            stdout=subprocess.PIPE,
         )
 
     def download(self, remote_path: str, local_path: str):
@@ -85,7 +89,7 @@ class OSFProject:
         print(f"Downloading {full_remote_path} to {local_path}...")
         # os.system(f"osf fetch {full_remote_path} {local_path}")
         subprocess.run(
-            f"osf fetch {full_remote_path} {local_path}",
+            "$CONDA/bin/" + f"osf fetch {full_remote_path} {local_path}",
             shell=True,
             text=True,
             check=True,
@@ -121,8 +125,8 @@ class OSFProject:
         print(f"Uploading {local_path} to {full_remote_path}...")
         # os.system(f"osf upload {local_path} {full_remote_path}")
         f = subprocess.run(
-            "$CONDA/bin/" + f"osf upload /home/runner/work/ioSPI/ioSPI/{local_path} "
-            f"{full_remote_path}",  # Test.
+            "$CONDA/bin/" + f"osf upload {local_path} "
+            f"{full_remote_path}",  # Test./home/runner/work/ioSPI/ioSPI/
             shell=True,
             text=True,
             check=True,
@@ -150,7 +154,7 @@ class OSFProject:
         print(f"Removing {full_remote_path} in the project...")
         # os.system(f"osf remove {full_remote_path}")
         subprocess.run(
-            f"osf remove {full_remote_path}",
+            "$CONDA/bin/" + f"osf remove {full_remote_path}",
             shell=True,
             text=True,
             check=True,
