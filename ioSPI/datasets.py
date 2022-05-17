@@ -1,4 +1,5 @@
 """Module to house methods related to datasets (micrographs, meta-data, etc.)."""
+
 import io
 import os
 import subprocess
@@ -125,7 +126,7 @@ class OSFProject:
         print(f"Uploading {local_path} to {full_remote_path}...")
         # os.system(f"osf upload {local_path} {full_remote_path}")
         f = subprocess.run(
-            "$CONDA/bin/" + f"osf upload {local_path} " f"{full_remote_path}",
+            "$CONDA/bin/" + f"osf upload --force {local_path} " f"{full_remote_path}",
             shell=True,
             text=True,
             check=True,
