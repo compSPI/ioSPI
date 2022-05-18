@@ -65,13 +65,15 @@ class OSFProject:
     def ls(self):
         """List all files in the project."""
         print(f"Listing files from OSF project: {self.project_id}...")
-        return subprocess.run(
+        file_list = subprocess.run(
             self.osfclient_command + "ls",
             shell=True,
             text=True,
             check=True,
             stdout=subprocess.PIPE,
         ).stdout
+
+        return io.StringIO(file_list).readlines()
 
     def download(self, remote_path: str = None, local_path: str = None):
         """Download a file from an OSF project and save it locally.
@@ -130,14 +132,13 @@ class OSFProject:
 
         full_remote_path = self.storage + "/" + remote_path
         print(f"Uploading {local_path} to {full_remote_path}...")
-        f = subprocess.run(
+        subprocess.run(
             self.osfclient_command + f"upload {local_path} " f"{full_remote_path}",
             shell=True,
             text=True,
             check=True,
             stdout=subprocess.PIPE,
-        ).stdout
-        print(io.StringIO(f).readlines())
+        )
         print("Done!")
 
     def remove(self, remote_path: str = None):
