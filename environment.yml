@@ -9,7 +9,6 @@ dependencies:
   - mrcfile
   - numba
   - numpy
-  - jupyter
   - h5py>=2.10.0
   - pandas
   - pillow>=8.2.0
@@ -20,6 +19,6 @@ dependencies:
   - pyyaml
   - osfclient
   - pip :
-      - git+https://github.com/compSPI/simSPI.git
+      - jupyter
       - starfile
 
