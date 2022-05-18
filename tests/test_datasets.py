@@ -4,7 +4,6 @@ These assume the tests are executed in a Conda environment and GitHub actions
 when tested non-locally.
 """
 
-import io
 import os
 import random
 import string
@@ -83,13 +82,10 @@ def test_upload_valid(setup, set_file_path):
     setup.upload(set_file_path[0] + set_file_path[1], set_file_path[1])
     file_exists = False
     file_list = setup.ls()
-    file_list = io.StringIO(file_list)
-    line = file_list.readline()
-    while line:
+    for line in file_list:
         file_exists = set_file_path[1] == line.split("/")[1].strip()
         if file_exists:
             break
-        line = file_list.readline()
 
     assert file_exists
     subprocess.run(f"rm {set_file_path[0]}{set_file_path[1]}", shell=True, check=True)
@@ -131,13 +127,10 @@ def test_remove_valid(setup, set_file_path):
     setup.remove(set_file_path[1])
     file_exists = False
     file_list = setup.ls()
-    file_list = io.StringIO(file_list)
-    line = file_list.readline()
-    while line:
+    for line in file_list:
         file_exists = set_file_path[1] == line.split("/")[1].strip()
         if file_exists:
             break
-        line = file_list.readline()
 
     assert not file_exists
 

@@ -19,6 +19,6 @@ dependencies:
   - pyyaml
   - osfclient
   - pip :
-      - git+https://github.com/compSPI/simSPI.git
+      - jupyter
       - starfile
 
