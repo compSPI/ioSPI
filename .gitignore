@@ -1,3 +1,7 @@
+# Mac
+*.DS_Store
+
+
 # Files output by the tests
 2dhb.*
 
