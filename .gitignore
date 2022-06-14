@@ -1,3 +1,6 @@
+# Files output by the notebooks
+notebooks/data/metadata.star
+
 # Files output by the tests
 2dhb.*
 
