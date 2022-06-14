@@ -21,18 +21,6 @@ def _exec_notebook(path):
         E.g. notebooks/particle_metadata.ipynb
     """
     file_name = tempfile.NamedTemporaryFile(suffix=".ipynb").name
-    # args = [
-    #     "jupyter",
-    #     "nbconvert",
-    #     "--to",
-    #     "notebook",
-    #     "--execute",
-    #     "--ExecutePreprocessor.timeout=1000",
-    #     "--ExecutePreprocessor.kernel_name=python3",
-    #     "--output",
-    #     file_name,
-    #     path,
-    # ]
     args = (
         f"jupyter nbconvert --to notebook --execute "
         f"--ExecutePreprocessor.timeout=1000 "
