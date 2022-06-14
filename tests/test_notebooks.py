@@ -38,7 +38,7 @@ def _exec_notebook(path):
         f"--ExecutePreprocessor.timeout=1000 "
         f"--ExecutePreprocessor.kernel_name=python3 --output {file_name} {path}"
     )
-    subprocess.check_call(args, shell=True)
+    subprocess.run(args, shell=True)
 
 
 paths = sorted(glob.glob(f"{NOTEBOOKS_DIR}/*.ipynb"))
