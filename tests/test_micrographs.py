@@ -8,7 +8,7 @@ import mrcfile
 import numpy as np
 import torch
 
-from ..ioSPI import micrographs
+from ioSPI import micrographs
 
 
 def test_populate_hdf5_with_dict():

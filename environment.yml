@@ -6,7 +6,6 @@ dependencies:
   - codecov
   - coverage
   - gemmi
-  - jupyter
   - mrcfile
   - numba
   - numpy
@@ -20,5 +19,6 @@ dependencies:
   - pyyaml
   - pip :
       - osfclient
+      - jupyter
       - starfile
 
